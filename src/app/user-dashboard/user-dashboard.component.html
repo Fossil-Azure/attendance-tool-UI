@@ -1,0 +1,282 @@
+<div class="main-container">
+    <app-loader></app-loader>
+    <app-header></app-header>
+    <div class="content-wrapper">
+        <app-sidenav></app-sidenav>
+        <div class="content">
+            <div *ngIf="approvalSuccess" class="alert alert-success center-bottom-alert" role="alert">
+                Approval Request Submitted Successfully
+            </div>
+            <div *ngIf="approvalError" class="alert alert-danger center-bottom-alert" role="alert">
+                Approval Request with this date and status 'Extra WFH' already exists
+            </div>
+            <div class="dropdowns">
+                <div class="form-field">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Year</mat-label>
+                        <mat-select [(ngModel)]="selectedYear" (selectionChange)="getUserAttendance()">
+                            <mat-option *ngFor="let year of distinctYears" [value]="year">{{year}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="dropdown" appearance="outline">
+                        <mat-label>Quarter</mat-label>
+                        <mat-select [(ngModel)]="selectedQuarter" (selectionChange)="getUserAttendance()">
+                            <mat-option *ngFor="let qtr of distinctQuarters" [value]="qtr">{{qtr}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="admin" class="dropdown" appearance="outline">
+                        <mat-label>Users</mat-label>
+                        <mat-select [(ngModel)]="selectedUser" (selectionChange)="getUserAttendance()">
+                            <mat-option *ngFor="let user of subOrdinates"
+                                [value]="user.emailId">{{user.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="buttons">
+                    <button mat-raised-button color="primary" (click)="openDialog()" style="margin-right: 10px;">Mark
+                        Attendance</button>
+                    <button type="button" class="btn btn-warning" (click)="categoryAttendance('Attendance')">Attendance
+                        History</button>
+                </div>
+            </div>
+            <table>
+                <tr>
+                    <td>
+                        <div class="card">
+                            <div class="header">
+                                <span>Work From Home</span>
+                            </div>
+                            <div class="footer">
+                                <div (click)="categoryAttendance('Work From Home')" class="progress pointer"
+                                    [ngClass]="{'over-50': cappedPercentage > 50}" [class]="getProgressBarClass()">
+                                    <span class="progress-left">
+                                        <span class="progress-bar" [ngStyle]="{'transform': leftRotation}"></span>
+                                    </span>
+                                    <span class="progress-right">
+                                        <span class="progress-bar" [ngStyle]="{'transform': rightRotation}"></span>
+                                    </span>
+                                    <div class="progress-value">
+                                        <div class="number">{{ number }}</div>
+                                        <div class="max-number">{{ maxNumber }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="card">
+                            <div class="header pointer" (click)="categoryAttendance('Work From Office')">
+                                <span>Work From Office</span>
+                            </div>
+                            <div class="footer">
+                                <div class="singleCard">
+                                    <span class="internalTableData">{{ attendanceData.wfo }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="card">
+                            <div class="header">
+                                <span>Leave Balance</span>
+                            </div>
+                            <div class="footer">
+                                <div (click)="categoryAttendance('Leave')" class="progress pointer"
+                                    [ngClass]="{'over-50': cappedPercentage > 50}"
+                                    [class]="getProgressBarClassForLeaves()">
+                                    <span class="progress-left">
+                                        <span class="progress-bar" [ngStyle]="{'transform': 'rotate(180deg)'}"></span>
+                                    </span>
+                                    <span class="progress-right">
+                                        <span class="progress-bar" [ngStyle]="{'transform': 'rotate(180deg)'}"></span>
+                                    </span>
+                                    <div class="progress-value">
+                                        <div class="number">{{ leaves }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="card">
+                            <div class="header pointer" (click)="categoryAttendance('Work From Home - Friday')">
+                                <span>WFH (Fridays/ Others)</span>
+                            </div>
+                            <div class="footer">
+                                <div class="singleCard">
+                                    <span class="internalTableData">{{ attendanceData.wfhFriday }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="card">
+                            <div class="header pointer" (click)="categoryAttendance('Work From Office - Friday')">
+                                <span>WFO (Fridays/ Others)</span>
+                            </div>
+                            <div class="footer">
+                                <div class="singleCard">
+                                    <span class="internalTableData">{{ attendanceData.wfoFriday }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="card">
+                            <div class="header">
+                                <span>Shift Allowance</span>
+                            </div>
+                            <div class="footer">
+                                <table class="allowanceTable">
+                                    <tr *ngFor="let month of filteredMonths">
+                                        <th style="text-align: left;">{{ month }} {{selectedYear}}</th>
+                                        <td>{{ allowanceData[month] || 0 }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div *ngIf="attendanceSuccess" class="alert alert-success center-bottom-alert" role="alert">
+                Attendance Recorded Successfully
+            </div>
+            <div *ngIf="attendanceError" class="alert alert-danger center-bottom-alert" role="alert">
+                Attendance already recorded for the selected date
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #dialogTemplate>
+    <span mat-dialog-title class="popUpTitle" style="background-color: #5D54A4; color: white;">Attendance Marking</span>
+    <mat-dialog-content class="dialogContent">
+        <div class="form-row">
+            <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Select Date</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate placeholder="Start date" [(ngModel)]="startDate">
+                    <input matEndDate placeholder="End date" [(ngModel)]="endDate" (ngModelChange)="onDateChange()">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Select Attendance</mat-label>
+                <mat-select [(ngModel)]="selectedAttendance" [disabled]="!endDate"
+                    (selectionChange)="onAttendanceChange()">
+                    <ng-container *ngFor="let option of options">
+                        <mat-option [value]="option">{{ option }}</mat-option>
+                    </ng-container>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Select Shift</mat-label>
+                <mat-select [(ngModel)]="shift" [disabled]="!endDate">
+                    <ng-container *ngFor="let option of shiftOptions">
+                        <mat-option [value]="option">{{ option }}</mat-option>
+                    </ng-container>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="info-row">
+            <p *ngIf="endDate">Selected Date Range: <strong>{{ startDate | date: 'dd MMMM yyyy' }} to {{ endDate | date:
+                    'dd MMMM yyyy' }}</strong></p>
+            <p *ngIf="selectedAttendance">Selected Option: <strong>{{selectedAttendance}}</strong></p>
+        </div>
+        <hr>
+        <div class="shift-options">
+            <ul>
+                <li><strong>Shift A - </strong>8:00 AM to 8 PM</li>
+                <li><strong>Shift B - </strong>Shifts starting before 8:00 AM OR ending between 8:00 PM to 10 PM</li>
+                <li><strong>Shift C - </strong>Shifts extending beyond 10:00 PM upto 12 Mid Night</li>
+                <li><strong>Shift D - </strong>Shift extending beyond 12:00 mid night</li>
+                <li><strong>Shift F - </strong>On Call from Home (beyond 12 mid night and Weekly offs)</li>
+            </ul>
+        </div>
+        <button mat-raised-button color="warn" mat-dialog-close class="popupButton">Close</button>
+        <button mat-raised-button color="primary" [disabled]="!selectedAttendance" class="popupButton"
+            (click)="openDialog2()">Save</button>
+    </mat-dialog-content>
+</ng-template>
+
+<ng-template #confirmationPopUp>
+    <span mat-dialog-title class="popUpTitle" style="background-color: #5D54A4; color: white;">Attendance Marking from
+        {{
+        startDate | date: 'dd MMMM yyyy' }} to {{ endDate | date: 'dd MMMM yyyy' }}</span>
+    <mat-dialog-content class="dialogContent">
+        <div class="form-row">
+            <span>
+                <table style="border: 1px solid black;">
+                    <tr style="border: 1px solid black;">
+                        <td style="font-weight: bolder;">Date</td>
+                        <td style="font-weight: bolder;">Attendance</td>
+                    </tr>
+                    <tr *ngFor="let day of workFromHomeDays">
+                        <td style="border: 1px solid black;">{{day.date | date: 'dd MMMM yyyy'}}</td>
+                        <td *ngIf="showDummy" style="border: 1px solid black;">{{selectedAttendance}} - Others</td>
+                        <td *ngIf="!showDummy" style="border: 1px solid black;">{{day.label}}</td>
+                    </tr>
+                </table>
+                <br>
+                <strong>Please make sure the above values are correct</strong>
+                <strong class="approvalMessage" *ngIf="approvalMessage && !showDummy">
+                    <br><br>
+                    Your current WFH in {{ selectedQuarter }} is {{ number }} and updated WFH count will be
+                    {{wfhNumber}} hence this attendance needs manager's approval
+                </strong>
+
+                <strong class="approvalMessage" *ngIf="oldShift != shift">
+                    <br><br>
+                    Your seleted shift is not matching with your default shift hence this attendance
+                    needs manager's approval
+                </strong>
+
+                <strong class="approvalMessage" *ngIf="showDummy">
+                    <br><br>
+                    Attendance on weekends requires manager's approval
+                </strong>
+            </span>
+        </div>
+        <hr>
+        <button mat-raised-button color="warn" class="popupButton" (click)="cancelAttendance()">Cancel</button>
+        <button mat-raised-button *ngIf="!(approvalMessage || (oldShift != shift) || showDummy)" color="primary" class="popupButton"
+            (click)="confirmAttendance()">Confirm</button>
+        <button class="popupButton" *ngIf="(approvalMessage || (oldShift != shift) || showDummy)" mat-raised-button color="primary"
+            (click)="sendForApproval()">Send for Approval</button>
+    </mat-dialog-content>
+</ng-template>
+
+<ng-template #detailedAttendance>
+    <div mat-dialog-title class="popUpTitle2">{{ popUpTitle }}</div>
+    <div mat-dialog-content class="popUpContent">
+        <div class="scrollable-content">
+            <table class="table-container">
+                <thead>
+                    <tr>
+                        <td class="popupTableHeader" (click)="sortData()">Date
+                            <span *ngIf="sortAscending">&#9650;</span>
+                            <span *ngIf="!sortAscending">&#9660;</span>
+                        </td>
+                        <td class="popupTableHeader">Attendance</td>
+                        <td class="popupTableHeader">Shift</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of detailedArray">
+                        <td class="detailTableFields2">{{ item.date | date: 'dd MMMM yyyy' }}</td>
+                        <td class="detailTableFields2">{{ item.attendance }}</td>
+                        <td class="detailTableFields2">{{ item.shift }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-raised-button color="warn" mat-dialog-close class="popupButton2">Close</button>
+    </div>
+</ng-template>

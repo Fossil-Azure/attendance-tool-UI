@@ -1,0 +1,126 @@
+<div class="main-container">
+    <app-loader></app-loader>
+    <app-header></app-header>
+    <div class="content-wrapper">
+        <app-sidenav></app-sidenav>
+        <div class="content">
+            <div class="header-section">
+                <span class="sectionHeader">Attendance Data for {{time | date: 'dd MMMM yyyy'}}</span>
+                <button class="matButton" mat-raised-button color="primary"
+                    (click)="downloadReportPopUp()"><mat-icon>get_app</mat-icon>Download Report</button>
+            </div>
+
+            <div class="todaysSection">
+                <div class="sectionItem">
+                    <span class="sectionText">Reportees</span><span (click)="openUsersList('Reportees')"
+                        class="sectionCount">{{detailedArray.length}}</span>
+                </div>
+                <div class="sectionItem">
+                    <span class="sectionText">Attendance Not Marked</span><span>{{detailedArray.length -
+                        todaysAttendanceData.length}}</span>
+                </div>
+                <div class="sectionItem">
+                    <span class="sectionText">Active Today</span><span>{{wfh + wfo}}</span>
+                </div>
+                <div class="sectionItem">
+                    <span class="sectionText">Working From Home</span><span (click)="openUsersList('Working From Home')"
+                        class="sectionCount">{{wfh}}</span>
+                </div>
+                <div class="sectionItem">
+                    <span class="sectionText">Working From Office</span><span
+                        (click)="openUsersList('Working From Office')" class="sectionCount">{{wfo}}</span>
+                </div>
+                <div class="sectionItem">
+                    <span class="sectionText">On Leave</span><span (click)="openUsersList('On Leave')"
+                        class="sectionCount">{{leave}}</span>
+                </div>
+            </div>
+            <hr>
+            <div class="quarterSection">
+                <div>
+                    <span class="sectionHeader">Attendance Data for Q{{currentQuarter}} {{currentYear}}</span>
+                </div>
+                <div style="border: 1px solid black;" class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="detailTableHeader2">Name</th>
+                                <th class="detailTableHeader2 center-align">WFH Consumed</th>
+                                <th class="detailTableHeader2 center-align">WFH Balance</th>
+                                <th class="detailTableHeader2 center-align">WFO</th>
+                                <th class="detailTableHeader2">Upcoming Leaves</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of mergedArray">
+                                <td class="detailTableFields2">{{item.name}}</td>
+                                <td class="detailTableFields2 center-align">{{item.wfh}}</td>
+                                <td class="detailTableFields2 center-align">{{13 - item.wfh}}</td>
+                                <td class="detailTableFields2 center-align">{{item.wfo + item.wfoFriday}}</td>
+                                <td class="detailTableFields2">{{item.upcomingLeaveDates}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #downloadAttendanceReport>
+    <div mat-dialog-title class="popUpTitle2" style="background-color: #5D54A4; color: white; margin-bottom: 20px;">
+        Download Attendance Report</div>
+    <div mat-dialog-content>
+        <div mat-dialog-content>
+            <div class="form-container">
+                <div class="form-field">
+                    <mat-form-field>
+                        <mat-label>Year</mat-label>
+                        <mat-select [(ngModel)]="selectedYear">
+                            <mat-option *ngFor="let year of distinctYears" [value]="year">{{year}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="form-field">
+                    <mat-form-field>
+                        <mat-label>Month</mat-label>
+                        <mat-select [(ngModel)]="selectedMonth">
+                            <mat-option *ngFor="let month of distinctMonths"
+                                [value]="month">{{monthNames[month]}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div mat-dialog-actions class="dialogActions">
+        <button mat-raised-button color="warn" mat-dialog-close class="popupButton2">Close</button>
+        <button mat-raised-button color="primary" (click)="downloadReport()" class="popupButton2">Download</button>
+    </div>
+</ng-template>
+
+<ng-template #usersReport>
+    <div mat-dialog-title class="popUpTitle2" style="background-color: #5D54A4; color: white; margin-bottom: 20px;">
+        List Of {{reportType}}</div>
+
+    <div mat-dialog-content>
+        <table>
+            <thead>
+                <tr>
+                    <td class="detailTableHeader2">Name </td>
+                    <td class="detailTableHeader2">Email Id</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of popUpList">
+                    <td class="detailTableFields2">{{ item.name }}</td>
+                    <td class="detailTableFields2">{{ item.emailId }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div mat-dialog-actions class="dialogActions">
+        <button mat-raised-button color="warn" mat-dialog-close class="popupButton2">Close</button>
+    </div>
+</ng-template>

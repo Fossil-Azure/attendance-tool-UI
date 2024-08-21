@@ -1,0 +1,145 @@
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: hidden;
+}
+
+.content-wrapper {
+    display: flex;
+    flex: 1;
+    overflow-y: hidden;
+}
+
+.content {
+    flex: 1;
+    padding: 16px;
+    width: 100%;
+    margin: 0 auto;
+    overflow-y: hidden;
+}
+
+.dropdowns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: -15px;
+}
+
+.form-field {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.dropdown {
+    margin-left: 25px;
+}
+
+.table-container {
+    width: 100%;
+    height: 80vh;
+    max-height: 82vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-bottom: 16px;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: rgb(163, 163, 163);
+    border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: rgb(163, 163, 163);
+}
+
+.detailTableHeader2 {
+    position: sticky;
+    top: 0;
+    background-color: #5D54A4;
+    color: white;
+    font-size: 16px;
+    padding: 10px;
+    z-index: 1;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    user-select: none;
+    text-align: center;
+}
+
+.detailTableHeader2:after {
+    content: '';
+    margin-left: 5px;
+    display: inline-block;
+}
+
+.detailTableHeader2.sort-asc:after {
+    content: '▲';
+}
+
+.detailTableHeader2.sort-desc:after {
+    content: '▼';
+}
+
+.detailTableFields2 {
+    text-align: center;
+}
+
+.popUpContent {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.form-field {
+    margin-top: 10px;
+    flex: 1 1 auto;
+    min-width: 200px;
+    max-width: 300px;
+}
+
+.mat-form-field {
+    width: 100%;
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.inputWidth {
+    width: 100%;
+}
+
+.center-bottom-alert {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: auto;
+    max-width: 80%;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.alert {
+    margin-bottom: 0;
+}

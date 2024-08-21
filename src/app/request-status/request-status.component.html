@@ -1,0 +1,128 @@
+<div class="main-container">
+    <app-loader></app-loader>
+    <app-header></app-header>
+    <div class="content-wrapper">
+        <app-sidenav></app-sidenav>
+        <div class="content">
+            <div class="table-container">
+                <div *ngIf="admin" class="table-left">
+                    <h2 class="table-heading">Pending Approvals</h2>
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="detailTableHeader2">Raised By</th>
+                                    <th class="detailTableHeader2">Type</th>
+                                    <th class="detailTableHeader2">Status</th>
+                                    <th class="detailTableHeader2">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of raisedToList">
+                                    <td class="detailTableFields2">{{item.raisedBy}}</td>
+                                    <td class="detailTableFields2">{{item.type}}</td>
+                                    <td class="detailTableFields2">{{item.status}}</td>
+                                    <td class="detailTableFields2">
+                                        <mat-icon style="cursor: pointer;"
+                                            (click)="openReqDetails(item)">visibility</mat-icon>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div [ngClass]="{'table-full': !admin, 'table-right': admin}">
+                    <h2 class="table-heading">Raised Requests</h2>
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="detailTableHeader2">Raised To</th>
+                                    <th class="detailTableHeader2">Date</th>
+                                    <th class="detailTableHeader2">Comments</th>
+                                    <th class="detailTableHeader2">Status</th>
+                                    <th class="detailTableHeader2">Type</th>
+                                    <th class="detailTableHeader2">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of raisedByList">
+                                    <td class="detailTableFields2">{{item.raisedBy}}</td>
+                                    <td class="detailTableFields2">{{item.date}}</td>
+                                    <td class="detailTableFields2">{{item.comments}}</td>
+                                    <td class="detailTableFields2">{{item.status}}</td>
+                                    <td class="detailTableFields2">{{item.type}}</td>
+                                    <td class="detailTableFields2">
+                                        <mat-icon *ngIf="item.status == 'Pending'" style="cursor: pointer;"
+                                            (click)="openReqDetails(item)">cancel
+                                        </mat-icon>
+                                        <mat-icon *ngIf="item.status != 'Pending'" style="cursor: pointer;"
+                                            (click)="openReqDetails(item)">visibility
+                                        </mat-icon>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #reqDetails>
+    <div mat-dialog-title class="popUpTitle2"
+        style="background-color: #5D54A4; color: white; display: flex; justify-content: space-between; align-items: center;">
+        <span>Request Details</span>
+        <button mat-icon-button (click)="dialogRef.close()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div mat-dialog-content class="content">
+        <div class="approval-list-container">
+            <div class="approval-list-grid">
+                <div class="approval-list-item">
+                    <strong>Date:</strong>
+                    <span>{{ approvalList.date }}</span>
+                </div>
+                <div class="approval-list-item">
+                    <strong>Raised By:</strong>
+                    <span>{{ approvalList.raisedBy }}</span>
+                </div>
+                <div class="approval-list-item">
+                    <strong>Previous Attendance:</strong>
+                    <span>{{ approvalList.prevAttendance }}</span>
+                </div>
+                <div class="approval-list-item">
+                    <strong>New Attendance:</strong>
+                    <span>{{ approvalList.newAttendance }}</span>
+                </div>
+                <div class="approval-list-item">
+                    <strong>Previous Shift:</strong>
+                    <span>{{ approvalList.prevShift }}</span>
+                </div>
+                <div class="approval-list-item">
+                    <strong>New Shift:</strong>
+                    <span>{{ approvalList.newShift }}</span>
+                </div>
+                <div class="approval-list-item">
+                    <strong>Comments:</strong>
+                    <span>{{ approvalList.comments }}</span>
+                </div>
+                <div class="approval-list-item">
+                    <strong>Status:</strong>
+                    <span>{{ approvalList.status }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="approvalList.status == 'Pending' && admin" mat-dialog-actions class="dialogActions"
+        style="justify-content: flex-end;">
+        <button class="btn approve-btn" (click)="approve(approvalList)">Approve</button>
+        <button class="btn reject-btn" (click)="reject(approvalList)">Reject</button>
+    </div>
+    <div *ngIf="approvalList.status == 'Pending' && !admin" mat-dialog-actions class="dialogActions"
+        style="justify-content: flex-end;">
+        <button class="btn reject-btn" (click)="revoke(approvalList)">Delete Request</button>
+    </div>
+</ng-template>

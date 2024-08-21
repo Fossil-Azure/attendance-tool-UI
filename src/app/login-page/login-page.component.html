@@ -1,0 +1,48 @@
+<div class="main-container">
+    <app-loader></app-loader>
+    <div class="screen">
+        <div class="screen__content">
+            <form class="login" (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+                <img src="../assets/download.png" class="fossilLogo" alt="Fossil Global">
+
+                <div class="login__field">
+                    <input type="email" class="login__input" formControlName="email" placeholder="User name / Email">
+                    <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['required']"
+                        class="error">
+                        Email is required
+                    </div>
+                    <div *ngIf="loginForm.get('email')?.errors?.['pattern']" class="error">
+                        Must be a valid Fossil.com email
+                    </div>
+                </div>
+
+                <div class="login__field">
+                    <input [type]="showPassword ? 'text' : 'password'" class="login__input" formControlName="password"
+                        placeholder="Password">
+                    <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['required']"
+                        class="error">
+                        Password is required
+                    </div>
+                </div>
+
+                <button type="submit" class="button login__submit" [disabled]="!loginForm.valid">
+                    <span class="button__text">Log In</span>
+                </button>
+            </form>
+        </div>
+        <div class="screen__background">
+            <span class="screen__background__shape screen__background__shape4"></span>
+            <span class="screen__background__shape screen__background__shape3"></span>
+            <span class="screen__background__shape screen__background__shape1"></span>
+        </div>
+    </div>
+
+    <div class="alert-wrapper">
+        <div class="alert alert-success custom-success-alert" role="alert" *ngIf="resetSuccess">
+            Password reset successful
+        </div>
+        <div class="alert alert-danger custom-error-alert" *ngIf="loginError">
+            {{errorMessage}}
+        </div>
+    </div>
+</div>

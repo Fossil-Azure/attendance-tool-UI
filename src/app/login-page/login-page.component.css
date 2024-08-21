@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Raleway, sans-serif;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #C7C5F4;
+    opacity: 1;
+    background-image: radial-gradient(#ffffff 1.25px, transparent 1.25px), radial-gradient(#ffffff 1.25px, #C7C5F4 1.25px);
+    background-size: 50px 50px;
+    background-position: 0 0, 25px 25px;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow-y: hidden;
+}
+
+.screen {
+    background: linear-gradient(90deg, #5D54A4, #7C78B8);
+    position: relative;
+    height: 650px;
+    width: 750px;
+    box-shadow: 0px 0px 24px #5C5696;
+}
+
+.screen__content {
+    z-index: 1;
+    position: relative;
+    height: 100%;
+}
+
+.screen__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    -webkit-clip-path: inset(0 0 0 0);
+    clip-path: inset(0 0 0 0);
+}
+
+.screen__background__shape {
+    transform: rotate(45deg);
+    position: absolute;
+}
+
+.screen__background__shape1 {
+    height: 500px;
+    width: 500px;
+    background: #FFF;
+    margin: 10% 5% 10% 17%;
+    border-radius: 95px;
+}
+
+.screen__background__shape3 {
+    height: 750px;
+    width: 750px;
+    background: linear-gradient(20deg, #504b8b, #615e91);
+    top: -20px;
+    right: 0;
+    border-radius: 32px;
+}
+
+.screen__background__shape4 {
+    height: 630px;
+    width: 300px;
+    background: #7E7BB9;
+    top: 400px;
+    right: 20px;
+    border-radius: 60px;
+}
+
+.login {
+    width: 520px;
+    margin-top: 20%;
+    margin-left: 25%;
+}
+
+.login__field {
+    padding: 10px 0px;
+    position: relative;
+}
+
+.login__icon {
+    position: absolute;
+    top: 30px;
+    color: #7875B5;
+}
+
+.login__input {
+    border: none;
+    border-bottom: 2px solid #D1D1D4;
+    background: none;
+    padding: 10px;
+    padding-left: 24px;
+    font-weight: 700;
+    width: 75%;
+    transition: .2s;
+}
+
+.login__input:active,
+.login__input:focus,
+.login__input:hover {
+    outline: none;
+    border-bottom-color: #6A679E;
+}
+
+.login__submit {
+    background: #fff;
+    font-size: 14px;
+    margin-top: 20px;
+    padding: 16px 20px;
+    border-radius: 46px;
+    border: 2px solid #9997bb;
+    text-transform: uppercase;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    width: 75%;
+    color: #4C489D;
+    box-shadow: 0px 2px 2px #5C5696;
+    cursor: pointer;
+    transition: .2s;
+    justify-content: center;
+}
+
+.login__submit:active,
+.login__submit:focus,
+.login__submit:hover {
+    background-color: #4C489D;
+    color: white;
+}
+
+.button__text {
+    text-align: center;
+}
+
+.fossilLogo {
+    margin-left: 20%;
+    margin-bottom: 5%;
+    width: 180px;
+    height: 60px;
+    mix-blend-mode: multiply;
+}
+
+.error {
+    color: red;
+    font-size: 0.6rem;
+    margin-top: 2px;
+}
+
+.login__input.ng-invalid.ng-touched {
+    border-color: red;
+}
+
+.alert-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.custom-success-alert {
+    background-color: #baf1b6;
+    font-weight: bolder;
+    color: #12a924;
+    border-color: #00541c;
+    max-width: 250px;
+    padding: 10px;
+    text-align: center;
+}
+
+.custom-error-alert {
+    background-color: #ffb2b2;
+    font-weight: bolder;
+    color: #ff0000;
+    border-color: #960000;
+    max-width: 200px;
+    padding: 10px;
+    text-align: center;
+}

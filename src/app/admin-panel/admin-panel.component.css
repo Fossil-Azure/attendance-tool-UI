@@ -1,0 +1,239 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: hidden;
+}
+
+.header {
+    flex: 0 0 auto;
+}
+
+.content-wrapper {
+    display: flex;
+    flex: 1;
+}
+
+.side-nav {
+    flex: 0 0 200px;
+}
+
+.content {
+    flex: 1;
+    padding: 16px;
+}
+
+.table-container {
+    width: 100%;
+    height: 60vh;
+    max-height: 60vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-top: 10px;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.detailTableHeader2 {
+    position: sticky;
+    top: 0;
+    background-color: #5D54A4;
+    color: white;
+    font-size: 16px;
+    padding: 5px;
+    z-index: 1;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    user-select: none;
+}
+
+.detailTableHeader2 span {
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+
+.detailTableFields2 {
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+}
+
+.table-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: rgb(163, 163, 163);
+    border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: rgb(163, 163, 163);
+}
+
+.popUpTitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.closeButton {
+    margin: -12px -12px -12px auto;
+}
+
+.attendanceHeader {
+    color: black;
+    font-size: 18px;
+}
+
+.buttonDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.tableTitle {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.radio-container {
+    margin-bottom: 20px;
+}
+
+.right-radio {
+    margin-left: 200px;
+}
+
+.popUpTitle2 {
+    background-color: #5D54A4;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.content {
+    padding: 20px;
+}
+
+.details-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.details-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.details-item strong {
+    min-width: 150px;
+}
+
+.attendance-section {
+    margin-top: 20px;
+}
+
+.attendance-header {
+    font-size: 18px;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.dialogActions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+}
+
+.popupButton2 {
+    font-size: 16px;
+    padding: 6px 12px;
+}
+
+.matButton {
+    margin-top: -15px;
+}
+
+.todaysSection {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    /* padding: 10px; */
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+.sectionItem {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.sectionText {
+    font-weight: bold;
+    color: #333;
+}
+
+.sectionCount {
+    color: #007bff;
+    cursor: pointer;
+}
+
+.sectionHeader {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.center-align {
+    text-align: center;
+}
+
+.popupTableHeader {
+    font-size: 18px;
+    background-color: #5D54A4;
+    color: white;
+    padding: 15px;
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.sectionHeader {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.matButton {
+    margin-top: 2px;
+}
+
+.form-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.form-field {
+    flex: 1;
+}

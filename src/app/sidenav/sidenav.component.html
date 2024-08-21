@@ -1,0 +1,16 @@
+<div class="sidenav">
+    <ul>
+        <li><a routerLink="/user-dashboard"><mat-icon>home</mat-icon></a></li>
+        <li><a routerLink="/edit-attendance"><mat-icon>edit</mat-icon></a></li>
+        <li *ngIf="admin"><a routerLink="/admin-panel"><mat-icon>supervisor_account</mat-icon></a></li>
+        <li *ngIf="!admin"><a routerLink="/request-status"><mat-icon>assignment_turned_in</mat-icon>
+            </a>
+        </li>
+        <li *ngIf="admin">
+            <a routerLink="/request-status">
+                <mat-icon [matBadge]="badgeCount > 0 ? badgeCount : null" matBadgeColor="warn"
+                    matBadgeClass="custom-badge">assignment_turned_in</mat-icon>
+            </a>
+        </li>
+    </ul>
+</div>

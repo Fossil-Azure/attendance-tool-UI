@@ -1,0 +1,438 @@
+div.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    text-align: center;
+    background-color: #ffffff;
+    opacity: 1;
+    background-image: linear-gradient(30deg, #eeeeee 12%, transparent 12.5%, transparent 87%, #eeeeee 87.5%, #eeeeee), linear-gradient(150deg, #eeeeee 12%, transparent 12.5%, transparent 87%, #eeeeee 87.5%, #eeeeee), linear-gradient(30deg, #eeeeee 12%, transparent 12.5%, transparent 87%, #eeeeee 87.5%, #eeeeee), linear-gradient(150deg, #eeeeee 12%, transparent 12.5%, transparent 87%, #eeeeee 87.5%, #eeeeee), linear-gradient(60deg, #eeeeee77 25%, transparent 25.5%, transparent 75%, #eeeeee77 75%, #eeeeee77), linear-gradient(60deg, #eeeeee77 25%, transparent 25.5%, transparent 75%, #eeeeee77 75%, #eeeeee77);
+    background-size: 50px 88px;
+    background-position: 0 0, 0 0, 25px 44px, 25px 44px, 0 0, 25px 44px;
+}
+
+div.header {
+    background-color: #5D54A4;
+    color: white;
+    padding: 25px;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+}
+
+div.footer {
+    padding: 10px;
+    text-align: center;
+}
+
+table {
+    height: 91%;
+    width: 99%;
+    overflow-y: hidden;
+}
+
+table,
+th,
+td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.card {
+    border-radius: 20%;
+    display: inline-block;
+    height: 300px;
+    width: 400px;
+    background-color: rgb(255, 255, 255);
+}
+
+.internalTableRow {
+    height: 110px;
+}
+
+.internalTableHead {
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+}
+
+.internalTableData {
+    font-size: 68px;
+    font-weight: bold;
+    color: black;
+}
+
+.popUpTitle {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.popupButton {
+    float: right;
+    margin: 10px;
+}
+
+.dialogContent {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.demo-inline-calendar-card {
+    width: 300px;
+}
+
+.singleCard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 220px;
+    width: 380px
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detailTableFields {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.detailTableHeader {
+    border: 1px solid black;
+    border-collapse: collapse;
+    background-color: #5D54A4;
+    color: white;
+}
+
+.popUpTitle2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.content {
+    flex: 1;
+    padding: 16px;
+    width: 100%;
+    margin: 0 auto;
+    overflow-y: hidden;
+}
+
+.table-container {
+    width: 100%;
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-bottom: 16px;
+    overflow-y: hidden;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.detailTableHeader2 {
+    position: sticky;
+    top: 0;
+    background-color: #5D54A4;
+    color: white;
+    z-index: 1;
+    border-bottom: 1px solid #ddd;
+}
+
+.detailTableFields2 {
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+}
+
+.popupButton2 {
+    display: block;
+    margin: 16px auto 0;
+}
+
+.dialogContent .form-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.dialogContent .example-full-width {
+    width: 32%;
+    margin-top: 15px;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.tdButton {
+    margin-left: 30px;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: hidden;
+}
+
+.header {
+    flex: 0 0 auto;
+    font-weight: bold;
+}
+
+.content-wrapper {
+    display: flex;
+    flex: 1;
+    overflow-y: hidden;
+}
+
+.side-nav {
+    flex: 0 0 200px;
+}
+
+.detailTableHeader2 {
+    cursor: pointer;
+    user-select: none;
+}
+
+.detailTableHeader2 span {
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+
+.center-bottom-alert {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: auto;
+    max-width: 80%;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.alert {
+    margin-bottom: 0;
+}
+
+.popUpContent {
+    display: flex;
+    flex-direction: column;
+}
+
+.scrollable-content {
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+.scrollable-content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.scrollable-content::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+    background: rgb(163, 163, 163);
+    border-radius: 10px;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb:hover {
+    background: rgb(163, 163, 163);
+}
+
+.table-container {
+    width: 100%;
+}
+
+.updateButton {
+    margin-left: auto;
+    margin-top: -15px;
+}
+
+.dropdowns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: -15px;
+}
+
+.dropdown {
+    margin-left: 25px;
+}
+
+.form-field {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 30px;
+}
+
+.buttons {
+    margin-top: -15px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.allowanceTable {
+    border-collapse: collapse;
+    width: 350px;
+    margin-top: 25px;
+    margin-left: 20px;
+}
+
+.allowanceTable td,
+th {
+    font-size: 22px;
+    padding: 15px;
+}
+
+.popupTableHeader {
+    font-size: 18px;
+    background-color: #5D54A4;
+    color: white;
+    padding: 15px;
+}
+
+.approvalMessage {
+    color: red;
+}
+
+.center-bottom-alert {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: auto;
+    max-width: 80%;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* PROGRESS BAR */
+
+.progress {
+    width: 180px;
+    height: 180px;
+    line-height: 180px;
+    background: none;
+    margin: 0 auto;
+    box-shadow: none;
+    position: relative;
+}
+
+.progress:after {
+    content: "";
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 12px solid #e9e9e9;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.progress>span {
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+}
+
+.progress .progress-left {
+    left: 0;
+}
+
+.progress .progress-bar {
+    width: 100%;
+    height: 100%;
+    background: none;
+    border-width: 12px;
+    border-style: solid;
+    position: absolute;
+    top: 0;
+}
+
+.progress .progress-left .progress-bar {
+    left: 100%;
+    border-top-right-radius: 90px;
+    border-bottom-right-radius: 90px;
+    border-left: 0;
+    -webkit-transform-origin: center left;
+    transform-origin: center left;
+}
+
+.progress .progress-right {
+    right: 0;
+}
+
+.progress .progress-right .progress-bar {
+    left: -100%;
+    border-top-left-radius: 90px;
+    border-bottom-left-radius: 90px;
+    border-right: 0;
+    -webkit-transform-origin: center right;
+    transform-origin: center right;
+}
+
+.progress .progress-value {
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    background: #ffffff;
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #000000;
+}
+
+.progress .progress-value .number {
+    font-size: 60px;
+    font-weight: bolder;
+    line-height: 1;
+}
+
+.progress .progress-value .max-number {
+    font-size: 32px;
+    text-decoration: overline;
+    line-height: 1;
+    margin-top: 4px;
+}
+
+/* Define colors for different percentage ranges */
+.green .progress-bar {
+    border-color: #4caf50;
+}
+
+.yellow .progress-bar {
+    border-color: #ffeb3b;
+}
+
+.orange .progress-bar {
+    border-color: #ff9800;
+}
+
+.red .progress-bar {
+    border-color: #f44336;
+}
+
+.progress.over-50 .progress-left .progress-bar {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+/* PROGRESS BAR END */

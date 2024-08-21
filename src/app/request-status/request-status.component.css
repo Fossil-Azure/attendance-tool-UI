@@ -1,0 +1,187 @@
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: hidden;
+}
+
+.content-wrapper {
+    display: flex;
+    flex: 1;
+}
+
+.content {
+    flex: 1;
+    padding: 16px;
+}
+
+.tableTitle {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.table-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.table-left {
+    width: 48%;
+}
+
+.table-right {
+    width: 48%;
+}
+
+.table-full {
+    width: 100%;
+}
+
+.table-heading {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.table-scroll {
+    height: 85vh;
+    max-height: 85vh;
+    overflow-y: auto;
+    border: 1px solid black;
+}
+
+.table-left table,
+.table-right table,
+.table-full table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-left th,
+.table-left td,
+.table-right th,
+.table-right td,
+.table-full th,
+.table-full td {
+    padding: 8px;
+    text-align: left;
+}
+
+.table-scroll::-webkit-scrollbar {
+    width: 10px;
+}
+
+.table-scroll::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+    background: rgb(163, 163, 163);
+    border-radius: 10px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgb(163, 163, 163);
+}
+
+.detailTableHeader2 {
+    position: sticky;
+    top: 0;
+    background-color: #5D54A4;
+    color: white;
+    font-size: 16px;
+    padding: 5px;
+    z-index: 1;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    user-select: none;
+}
+
+.detailTableHeader2 span {
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+
+.detailTableFields2 {
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+}
+
+.btn {
+    padding: 5px 10px;
+    margin-right: 15px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.approve-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.approve-btn:hover {
+    background-color: #349039;
+}
+
+.reject-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+.reject-btn:hover {
+    background-color: #d12727;
+}
+
+.popUpTitle2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.approval-list-container {
+    margin: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.approval-list-grid {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.approval-list-item {
+    width: 47%;
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.approval-list-item strong {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.dialogActions {
+    padding: 10px;
+}
+
+.btn {
+    margin-left: 10px;
+}
+
+.approve-btn {
+    background-color: green;
+    color: white;
+}
+
+.reject-btn {
+    background-color: red;
+    color: white;
+}

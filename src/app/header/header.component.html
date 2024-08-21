@@ -1,0 +1,13 @@
+<div class="header">
+    <h1>{{ title }}</h1>
+
+    <div class="user-details">
+        <span class="username">{{username}}</span>
+        <span class="role">{{team}}</span>
+    </div>
+
+    <mat-icon class="user-icon" [matMenuTriggerFor]="userMenu" aria-label="User menu">account_circle</mat-icon>
+    <mat-menu #userMenu="matMenu">
+        <button mat-menu-item (click)="logOut()">Log out</button>
+    </mat-menu>
+</div>
