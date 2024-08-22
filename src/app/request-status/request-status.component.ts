@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { concatMap, finalize, from, Observable } from 'rxjs';
 import { ApiCallingService } from 'src/service/API/api-calling.service';
 import { LoaderService } from 'src/service/Loader/loader.service';
 import { environment } from 'src/environments/environment.prod';
@@ -29,6 +29,7 @@ export class RequestStatusComponent {
   popupdetail: any;
   approvalList: any;
   dialogRef: any;
+  selectedItems: any[] = [];
 
   constructor(private loader: LoaderService, private api: ApiCallingService,
     private http: HttpClient, private dialog: MatDialog, private router: Router) { }
@@ -136,5 +137,71 @@ export class RequestStatusComponent {
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigate([currentUrl]);
     });
+  }
+
+  onSelectionChange(item: any, event: any): void {
+    if (event.target.checked) {
+      this.selectedItems.push(item);
+    } else {
+      this.selectedItems = this.selectedItems.filter(i => i !== item);
+    }
+  }
+
+  isSelected(item: any): boolean {
+    return this.selectedItems.includes(item);
+  }
+
+  approveMultiple() {
+    this.loader.show();
+    from(this.selectedItems)
+      .pipe(
+        concatMap((element) => {
+          element.status = "Approved";
+          return this.api.updateAttendanceApproval(element).pipe(
+            concatMap(() => {
+              if (element.type === "Leave") {
+                return this.api.updateUserLeave(element.raisedBy).pipe(
+                  finalize(() => {
+                    console.log("Leaves Updated");
+                  })
+                );
+              } else {
+                return from([null]);
+              }
+            })
+          );
+        }),
+        finalize(() => {
+          this.refreshPage();
+          this.loader.hide();
+        })
+      )
+      .subscribe({
+        error: (error) => {
+          console.error("Error during API call:", error);
+          this.loader.hide();
+        }
+      });
+  }
+
+  rejectMultiple() {
+    this.loader.show();
+    from(this.selectedItems)
+      .pipe(
+        concatMap((element) => {
+          element.status = "Rejected";
+          return this.api.updateAttendanceApproval(element).pipe();
+        }),
+        finalize(() => {
+          this.refreshPage();
+          this.loader.hide();
+        })
+      )
+      .subscribe({
+        error: (error) => {
+          console.error("Error during API call:", error);
+          this.loader.hide();
+        }
+      });
   }
 }

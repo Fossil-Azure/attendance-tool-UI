@@ -58,6 +58,8 @@ export class UserDashboardComponent {
     "Q4": ['October', 'November', 'December']
   };
 
+  wfhTuesday: boolean = false;
+
   filteredMonths: string[] = [];
 
   @ViewChild('dialogTemplate')
@@ -107,6 +109,7 @@ export class UserDashboardComponent {
   leaves!: number;
   isSaveDisabled: boolean = true;
   showDummy: boolean = false;
+  tuesdayError!: boolean;
 
   constructor(private loader: LoaderService, private router: Router, private sharedService: SharedService,
     private dialog: MatDialog, private api: ApiCallingService) {
@@ -442,7 +445,7 @@ export class UserDashboardComponent {
   refreshPage() {
     const currentUrl = this.router.url;
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate([currentUrl]);
+      this.router.navigate([currentUrl], { state: { popupVisible: true } });
     });
   }
 
@@ -520,6 +523,22 @@ export class UserDashboardComponent {
       }
       currentDate.setDate(currentDate.getDate() + 1);
     }
+  }
+
+  isTuesday(date: string | Date): boolean {
+    const day = new Date(date).getDay();
+    this.tuesdayError = false;
+    if (day === 2) {
+      this.tuesdayError = true;
+      return true;
+    } else {
+      this.tuesdayError = false;
+      return false;
+    }
+  }
+
+  needsManagerApprovalForWFH(): boolean {
+    return this.workFromHomeDays.some(day => this.isTuesday(day.date) && day.label === 'Work From Home');
   }
 
   onAttendanceChange(): void {
@@ -690,7 +709,9 @@ export class UserDashboardComponent {
       let allowance: number = 0;
       let foodAllowance: number = 0;
 
-      if ((this.oldShift != this.shift) && this.wfhNumber > 13 && (element.label == "Work From Home")) {
+      if (this.isTuesday(element.date) && element.label == "Work From Home") {
+        type = "Work From Home Tuesday"
+      } else if ((this.oldShift != this.shift) && this.wfhNumber > 13 && (element.label == "Work From Home")) {
         type = "Extra WFH and Shift Change";
       } else if ((this.oldShift != this.shift) && element.label != "Leave" && !this.showDummy) {
         type = "Shift Change";
@@ -700,11 +721,9 @@ export class UserDashboardComponent {
         type = "Weekends and Shift Change";
       } else if (this.showDummy) {
         type = "Weekends";
-      }else if (currentWFHCount > 13) {
+      } else if (currentWFHCount > 13) {
         type = "Extra WFH";
       }
-
-      console.log(type)
 
       if (element.label == 'Leave') {
         allowance = 0;
@@ -766,7 +785,7 @@ export class UserDashboardComponent {
         continue;
       }
 
-      if (type != "Extra WFH and Shift Change" && currentWFHCount <= 13 && element.label == "Work From Home" && !this.showDummy) {
+      if (type != "Work From Home Tuesday" && type != "Extra WFH and Shift Change" && currentWFHCount <= 13 && element.label == "Work From Home" && !this.showDummy) {
         await this.api.attendance(this.email, this.email, this.formattedDate, element.label, year.toString(),
           "Q" + quarter, (month + 1).toString(), this.email, this.time.toString(), this.shift, allowance, foodAllowance).toPromise();
 
@@ -802,15 +821,9 @@ export class UserDashboardComponent {
         if (checkResponse.status === "Not Exist") {
           const sendResponse = await this.api.sendForApproval(approvalList).toPromise();
           if (sendResponse === "ApprovalList saved successfully.") {
-            this.approvalSuccess = true;
-            setTimeout(() => {
-              this.approvalSuccess = false;
-            }, 3000);
+            this.showPopup('approvalSuccess');
           } else if (sendResponse === "Error: ApprovalList with this ID already exists.") {
-            this.approvalError = true;
-            setTimeout(() => {
-              this.approvalError = false;
-            }, 3000);
+            this.showPopup('approvalError');
           }
         } else if (checkResponse.status === "Exist") {
           this.attendanceError = true;
@@ -826,6 +839,32 @@ export class UserDashboardComponent {
       }
       this.loader.hide();
     }
-    this.refreshPage();
+  }
+
+  showPopup(type: 'approvalSuccess' | 'approvalError', refresh = false) {
+    this.approvalSuccess = false;
+    this.approvalError = false;
+
+    if (type === 'approvalSuccess') {
+      this.approvalSuccess = true;
+    } else if (type === 'approvalError') {
+      this.approvalError = true;
+    }
+
+    if (refresh) {
+      this.refreshPageWithState(type);
+    } else {
+      setTimeout(() => {
+        this.approvalSuccess = false;
+        this.approvalError = false;
+      }, 3000);
+    }
+  }
+
+  refreshPageWithState(type: 'approvalSuccess' | 'approvalError') {
+    const currentUrl = this.router.url;
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate([currentUrl], { state: { popupVisible: type } });
+    });
   }
 }

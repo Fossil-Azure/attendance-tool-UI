@@ -436,3 +436,7 @@ th {
 }
 
 /* PROGRESS BAR END */
+
+.red-text {
+    color: red;
+}

@@ -93,11 +93,6 @@
             </mat-form-field>
         </div>
 
-        <mat-form-field class="inputWidth" appearance="outline">
-            <mat-label>Leave a comment</mat-label>
-            <textarea matInput [(ngModel)]="textComment"></textarea>
-        </mat-form-field>
-
         <div class="shift-options">
             <ul>
                 <li><strong>Shift A - </strong>8:00 AM to 8 PM</li>
@@ -109,7 +104,7 @@
         </div>
     </div>
     <div mat-dialog-actions class="dialog-actions">
-        <button mat-raised-button color="primary" style="margin: 10px;" (click)="sendForApproval()">Send for
+        <button [disabled]="!popUpAttendance || !popUpShift" mat-raised-button color="primary" style="margin: 10px;" (click)="sendForApproval()">Send for
             Approval</button>
         <button mat-raised-button color="warn" mat-dialog-close>Close</button>
     </div>
