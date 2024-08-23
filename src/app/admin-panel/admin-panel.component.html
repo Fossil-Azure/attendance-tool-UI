@@ -23,17 +23,17 @@
                     <span class="sectionText">Active Today</span><span>{{wfh + wfo}}</span>
                 </div>
                 <div class="sectionItem">
+                    <span class="sectionText">On Leave</span><span (click)="openUsersList('On Leave')"
+                        class="sectionCount">{{leave}}</span>
+                </div>
+                <div class="sectionItem">
                     <span class="sectionText">Working From Home</span><span (click)="openUsersList('Working From Home')"
                         class="sectionCount">{{wfh}}</span>
                 </div>
                 <div class="sectionItem">
                     <span class="sectionText">Working From Office</span><span
                         (click)="openUsersList('Working From Office')" class="sectionCount">{{wfo}}</span>
-                </div>
-                <div class="sectionItem">
-                    <span class="sectionText">On Leave</span><span (click)="openUsersList('On Leave')"
-                        class="sectionCount">{{leave}}</span>
-                </div>
+                </div>                
             </div>
             <hr>
             <div class="quarterSection">

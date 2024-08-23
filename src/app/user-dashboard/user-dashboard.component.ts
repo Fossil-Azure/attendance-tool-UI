@@ -110,6 +110,22 @@ export class UserDashboardComponent {
   isSaveDisabled: boolean = true;
   showDummy: boolean = false;
   tuesdayError!: boolean;
+  holidays: { date: string, name: string }[] = [
+    { date: '2024-01-01', name: 'New Year' },
+    { date: '2024-01-15', name: 'Makara Sankranti' },
+    { date: '2024-01-26', name: 'Republic Day' },
+    { date: '2024-04-09', name: 'Ugadi' },
+    { date: '2024-05-01', name: 'May Day' },
+    { date: '2024-06-17', name: 'Bakrid' },
+    { date: '2024-08-15', name: 'Independence Day' },
+    { date: '2024-10-02', name: 'Gandhi Jayanti' },
+    { date: '2024-10-31', name: 'Deepawali' },
+    { date: '2024-11-01', name: 'Kannada Rajyotsava/Diwali' },
+    { date: '2024-12-25', name: 'Christmas' },
+  ];
+
+  isHolidayInRange: boolean = false;
+  holidayDateInRange: string | null = null;
 
   constructor(private loader: LoaderService, private router: Router, private sharedService: SharedService,
     private dialog: MatDialog, private api: ApiCallingService) {
@@ -245,6 +261,11 @@ export class UserDashboardComponent {
         }
       });
     });
+  }
+
+  async userChange() {
+    await this.getUserAttendance();
+    await this.getUserLeave()
   }
 
   getUserAttendance(): Promise<void> {
@@ -651,6 +672,7 @@ export class UserDashboardComponent {
 
     if (this.startDate && this.endDate) {
       this.isSaveDisabled = this.checkIfOnlyWeekendsSelected();
+      this.checkIfHolidaySelected();
     } else {
       this.isSaveDisabled = true;
     }
@@ -666,10 +688,8 @@ export class UserDashboardComponent {
         }
       } else {
         if (this.startDate > today || this.endDate > today) {
-          console.log("Weekdays and Weekends and Future Dates");
           this.options = ['Leave'];
         } else {
-          console.log("Weekdays and Weekends and Past Dates");
           this.options = ['Work From Office', 'Work From Home', 'Leave'];
         }
       }
@@ -694,6 +714,23 @@ export class UserDashboardComponent {
       currentDate.setDate(currentDate.getDate() + 1);
     }
     return !weekdaysFound;
+  }
+
+  checkIfHolidaySelected() {
+    this.isHolidayInRange = false;
+    this.holidayDateInRange = null;
+    const startDateMoment = moment(this.startDate);
+    const endDateMoment = moment(this.endDate);
+
+    for (const holiday of this.holidays) {
+      const holidayMoment = moment(holiday.date);
+
+      if (holidayMoment.isSameOrAfter(startDateMoment) && holidayMoment.isSameOrBefore(endDateMoment)) {
+        this.isHolidayInRange = true;
+        this.holidayDateInRange = `${holiday.name} on ${holidayMoment.format('DD-MMMM-YYYY')}`;
+        break;
+      }
+    }
   }
 
   async sendForApproval() {
