@@ -388,15 +388,15 @@ export class UserDashboardComponent {
   }
 
   async confirmAttendance() {
-    this.dialogRef2.close('confirm');
-    this.now = moment.tz('Asia/Kolkata');
-    this.time = this.now.format("DD-MMMM-YYYY HH:mm:ss");
-    let allowance = 0;
-    let foodAllowance = 0;
-
     this.loader.show();
-    for (const element of this.workFromHomeDays) {
-      try {
+    try {
+      this.dialogRef2.close('confirm');
+      this.now = moment.tz('Asia/Kolkata');
+      this.time = this.now.format("DD-MMMM-YYYY HH:mm:ss");
+      let allowance = 0;
+      let foodAllowance = 0;
+
+      for (const element of this.workFromHomeDays) {
         if (element.label == 'Leave') {
           allowance = 0;
           foodAllowance = 0;
@@ -437,31 +437,44 @@ export class UserDashboardComponent {
             }
           }
         }
+
         this.formattedDate = moment(element.date).format('DD-MMMM-YYYY');
         const selDate = moment(element.date);
         const year = selDate.year();
         const quarter = selDate.quarter();
         const month = selDate.month();
 
-        await this.api.attendance(this.email, this.email, this.formattedDate, element.label, year.toString(),
-          "Q" + quarter, (month + 1).toString(), this.email, this.time.toString(), this.shift, allowance, foodAllowance).toPromise();
+        try {
+          await this.api.attendance(this.email, this.email, this.formattedDate, element.label, year.toString(),
+            "Q" + quarter, (month + 1).toString(), this.email, this.time.toString(), this.shift, allowance, foodAllowance).toPromise();
 
-        await this.api.addUserAttendance(this.email, this.email, element.label, year.toString(),
-          "Q" + quarter, this.username).toPromise();
+          await this.api.addUserAttendance(this.email, this.email, element.label, year.toString(),
+            "Q" + quarter, this.email).toPromise();
 
-        await this.api.addMonthlyAttendance(this.email, this.email, element.label, year.toString(),
-          "Q" + quarter, this.username, (month + 1).toString(), allowance, foodAllowance).toPromise();
+          await this.api.addMonthlyAttendance(this.email, this.email, element.label, year.toString(),
+            "Q" + quarter, this.email, (month + 1).toString(), allowance, foodAllowance).toPromise();
+
+          this.attendanceSuccess = true;
+          setTimeout(() => {
+            this.attendanceSuccess = false;
+          }, 3000);
+        } catch (error) {
+          this.attendanceError = true;
+          setTimeout(() => {
+            this.attendanceError = false;
+          }, 3000);
+        }
+      }
+    } finally {
+      try {
+        await this.getUserAttendance();
+        await this.getUserLeave();
       } catch (error) {
+        console.error('Error in finally block:', error);
+      } finally {
         this.loader.hide();
-        this.attendanceError = true;
-        setTimeout(() => {
-          this.attendanceError = false;
-        }, 2000);
-        console.error("Error handling attendance for date:", this.formattedDate, error);
       }
     }
-    this.loader.hide();
-    this.refreshPage();
   }
 
   refreshPage() {
