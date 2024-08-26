@@ -6,7 +6,8 @@
         <div class="content">
             <div class="table-container">
                 <div *ngIf="admin" class="table-left">
-                    <div class="table-heading" style="display: flex; align-items: center; justify-content: space-between;">
+                    <div class="table-heading"
+                        style="display: flex; align-items: center; justify-content: space-between;">
                         <h2 class="table-heading" style="margin: 0;">Pending Approvals</h2>
                         <div *ngIf="selectedItems.length > 0" class="button-container"
                             style="display: flex; gap: 10px;">
@@ -124,6 +125,10 @@
                 <div class="approval-list-item">
                     <strong>Status:</strong>
                     <span>{{ approvalList.status }}</span>
+                </div>
+                <div class="approval-list-item">
+                    <strong>Work From Home Consumed:</strong>
+                    <span style="color: orangered; font-weight: bold;">{{ userQtrReport?.wfh || 0 }}</span>
                 </div>
             </div>
         </div>

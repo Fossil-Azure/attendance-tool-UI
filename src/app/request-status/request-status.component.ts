@@ -30,6 +30,7 @@ export class RequestStatusComponent {
   approvalList: any;
   dialogRef: any;
   selectedItems: any[] = [];
+  userQtrReport: any;
 
   constructor(private loader: LoaderService, private api: ApiCallingService,
     private http: HttpClient, private dialog: MatDialog, private router: Router) { }
@@ -124,11 +125,26 @@ export class RequestStatusComponent {
   }
 
   openReqDetails(item: any) {
-    this.approvalList = item;
-    this.dialogRef = this.dialog.open(this.reqDetailsPopup, {
-      panelClass: 'custom-dialog-container',
-      disableClose: true,
-      width: '800px'
+    this.loader.show();
+    const emailIds: any[] = [];
+    emailIds.push(item.raisedBy);
+
+    this.api.getQtrAttendance(emailIds, item.year, item.quarter).subscribe({
+      next: (response) => {
+        console.log('User Quarter Report:', response);
+        this.userQtrReport = response[0];
+        this.loader.hide();
+
+        this.approvalList = item;
+        this.dialogRef = this.dialog.open(this.reqDetailsPopup, {
+          panelClass: 'custom-dialog-container',
+          disableClose: true,
+          width: '800px'
+        });
+      },
+      error: () => {
+        this.loader.hide();
+      }
     });
   }
 
