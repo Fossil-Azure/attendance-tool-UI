@@ -340,6 +340,7 @@ export class UserDashboardComponent {
   }
 
   openDialog() {
+    this.isHolidayInRange = false;
     this.shift = this.oldShift
     this.startDate = null;
     this.endDate = null;
@@ -740,7 +741,7 @@ export class UserDashboardComponent {
       let currentWFHCount = this.number;
 
       for (const element of this.workFromHomeDays) {
-        if (element.label === "Work From Home") {
+        if (element.label === "Work From Home" && !this.isTuesday(element.date)) {
           currentWFHCount++;
         }
 
@@ -811,7 +812,7 @@ export class UserDashboardComponent {
         const quarter = selDate.quarter();
         const month = selDate.month();
 
-        if ((type === "Extra WFH" && element.label === "Work From Home - Friday") || element.label == "Work From Home - Friday") {
+        if ((type === "Extra WFH" && element.label === "Work From Home - Friday") || (element.label == "Work From Home - Friday" && !this.showDummy)) {
 
           await this.api.attendance(this.email, this.email, this.formattedDate, element.label, year.toString(),
             "Q" + quarter, (month + 1).toString(), this.email, this.time.toString(), this.shift, allowance, foodAllowance).toPromise();
