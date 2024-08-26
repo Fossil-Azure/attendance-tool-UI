@@ -152,11 +152,6 @@ export class AdminPanelComponent {
       next: (attendance) => {
         this.todaysAttendanceData = attendance;
         attendance.forEach((att: any) => {
-          const userInfo = this.reporteeList.find((user: any) => user.emailId === att.emailId);
-          if (userInfo) {
-            att.name = userInfo.name;
-          }
-          console.log(att)
           if (att.attendance === 'Work From Home' || att.attendance === 'Work From Home - Friday') {
             this.wfhList.push(att);
             this.wfh++;
@@ -199,9 +194,9 @@ export class AdminPanelComponent {
               wfoFriday: 0,
               leaves: 0,
               holidays: 0,
+              reporteeName: user.name,
               upcomingLeaveDates: upcomingLeave.upcomingLeaveDates || ''
             };
-
             return { ...defaultValues, ...user, ...report };
           });
           this.reporteeList = this.mergedArray;
@@ -325,10 +320,28 @@ export class AdminPanelComponent {
     if (type == 'Reportees') {
       this.popUpList = this.reporteeList;
     } else if (type == 'Working From Home') {
+      this.wfhList.forEach((wfhItem: any) => {
+        const reportee = this.reporteeList.find((user: any) => user.emailId === wfhItem.emailId);
+        if (reportee) {
+          wfhItem.reporteeName = reportee.reporteeName;
+        }
+      });
       this.popUpList = this.wfhList;
     } else if (type == 'Working From Office') {
+      this.wfoList.forEach((wfoItem: any) => {
+        const reportee = this.reporteeList.find((user: any) => user.emailId === wfoItem.emailId);
+        if (reportee) {
+          wfoItem.reporteeName = reportee.reporteeName;
+        }
+      });
       this.popUpList = this.wfoList;
     } else if (type == 'On Leave') {
+      this.leaveList.forEach((leaveItem: any) => {
+        const reportee = this.reporteeList.find((user: any) => user.emailId === leaveItem.emailId);
+        if (reportee) {
+          leaveItem.reporteeName = reportee.reporteeName;
+        }
+      });
       this.popUpList = this.leaveList;
     } else if (type == 'Not Marked') {
       this.popUpList = this.notMarkedList;

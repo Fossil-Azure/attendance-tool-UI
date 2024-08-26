@@ -237,3 +237,12 @@
 .form-field {
     flex: 1;
 }
+
+.tableDiv {
+    margin: 15px;
+    width: 90%;
+}
+
+.tableDiv table {
+    width: 100%;
+}

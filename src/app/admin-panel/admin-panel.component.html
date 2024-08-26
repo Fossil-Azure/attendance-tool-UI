@@ -33,7 +33,7 @@
                 <div class="sectionItem">
                     <span class="sectionText">Working From Office</span><span
                         (click)="openUsersList('Working From Office')" class="sectionCount">{{wfo}}</span>
-                </div>                
+                </div>
             </div>
             <hr>
             <div class="quarterSection">
@@ -53,7 +53,7 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let item of mergedArray">
-                                <td class="detailTableFields2">{{item.name}}</td>
+                                <td class="detailTableFields2">{{item.reporteeName}}</td>
                                 <td class="detailTableFields2 center-align">{{item.wfh}}</td>
                                 <td class="detailTableFields2 center-align">{{13 - item.wfh}}</td>
                                 <td class="detailTableFields2 center-align">{{item.wfo + item.wfoFriday}}</td>
@@ -101,9 +101,9 @@
 
 <ng-template #usersReport>
     <div mat-dialog-title class="popUpTitle2" style="background-color: #5D54A4; color: white; margin-bottom: 20px;">
-        List Of {{reportType}}</div>
+        {{reportType}}</div>
 
-    <div mat-dialog-content>
+    <div class="tableDiv">
         <table>
             <thead>
                 <tr>
@@ -113,7 +113,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let item of popUpList">
-                    <td class="detailTableFields2">{{ item.name }}</td>
+                    <td class="detailTableFields2">{{ item.reporteeName }}</td>
                     <td class="detailTableFields2">{{ item.emailId }}</td>
                 </tr>
             </tbody>
