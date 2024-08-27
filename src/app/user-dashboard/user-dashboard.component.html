@@ -188,8 +188,12 @@
                     'dd MMMM yyyy' }}</strong></p>
             <p *ngIf="selectedAttendance">Selected Option: <strong>{{selectedAttendance}}</strong></p>
         </div>
-        <div *ngIf="isHolidayInRange" class="error-message">
-            There is a holiday in the selected date range. {{ holidayDateInRange }}
+        <div *ngIf="isHolidayInRange && !onlyHoliday" class="error-message">
+            {{ holidayDateInRange }} is a public holiday, to mark attendance, please select it as an individual date.
+        </div>
+
+        <div *ngIf="isHolidayInRange && onlyHoliday" class="error-message">
+            {{ holidayDateInRange }} is a public holiday
         </div>
         <hr>
         <div class="shift-options">
@@ -221,8 +225,8 @@
                     </tr>
                     <tr *ngFor="let day of workFromHomeDays">
                         <td style="border: 1px solid black; color: 'black'">{{day.date | date: 'dd MMMM yyyy'}}</td>
-                        <td *ngIf="showDummy" style="border: 1px solid black;">{{selectedAttendance}} - Others</td>
-                        <td *ngIf="!showDummy"
+                        <td *ngIf="showDummy || onlyHoliday" style="border: 1px solid black;">{{selectedAttendance}} - Others</td>
+                        <td *ngIf="!showDummy && !onlyHoliday"
                             [ngStyle]="{'color': (isTuesday(day.date) && day.label === 'Work From Home') ? 'red' : 'black'}"
                             style="border: 1px solid black;">
                             {{day.label}}
@@ -252,15 +256,20 @@
                     <br><br>
                     Attendance on weekends requires manager's approval
                 </strong>
+
+                <strong class="approvalMessage" *ngIf="onlyHoliday">
+                    <br><br>
+                    Attendance on Public Holiday requires manager's approval
+                </strong>
             </span>
         </div>
         <hr>
         <button mat-raised-button color="warn" class="popupButton" (click)="cancelAttendance()">Cancel</button>
         <button mat-raised-button
-            *ngIf="!(approvalMessage || (oldShift != shift) || showDummy || needsManagerApprovalForWFH())"
+            *ngIf="!(approvalMessage || (oldShift != shift) || showDummy || needsManagerApprovalForWFH() || onlyHoliday)"
             color="primary" class="popupButton" (click)="confirmAttendance()">Confirm</button>
         <button class="popupButton"
-            *ngIf="(approvalMessage || (oldShift != shift) || showDummy || needsManagerApprovalForWFH())"
+            *ngIf="(approvalMessage || (oldShift != shift) || showDummy || needsManagerApprovalForWFH() || onlyHoliday)"
             mat-raised-button color="primary" (click)="sendForApproval()">Send for Approval</button>
     </mat-dialog-content>
 </ng-template>

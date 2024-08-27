@@ -126,6 +126,7 @@ export class UserDashboardComponent {
 
   isHolidayInRange: boolean = false;
   holidayDateInRange: string | null = null;
+  onlyHoliday: boolean = false;
 
   constructor(private loader: LoaderService, private router: Router, private sharedService: SharedService,
     private dialog: MatDialog, private api: ApiCallingService) {
@@ -540,21 +541,28 @@ export class UserDashboardComponent {
     while (currentDate <= end) {
       const day = currentDate.getDay();
       let label = '';
+
       if (day !== 0 && day !== 6) {
-        if (this.selectedAttendance == "Work From Office") {
-          label = 'Work From Office';
-          if (day === 5) {
-            label = 'Work From Office - Friday';
+        const isHoliday = this.holidays.some(holiday => {
+          return new Date(holiday.date).toDateString() === currentDate.toDateString();
+        });
+
+        if (!isHoliday) {
+          if (this.selectedAttendance == "Work From Office") {
+            label = 'Work From Office';
+            if (day === 5) {
+              label = 'Work From Office - Friday';
+            }
+          } else if (this.selectedAttendance == "Work From Home") {
+            label = 'Work From Home';
+            if (day === 5) {
+              label = 'Work From Home - Friday';
+            }
+          } else if (this.selectedAttendance == "Leave") {
+            label = 'Leave';
           }
-        } else if (this.selectedAttendance == "Work From Home") {
-          label = 'Work From Home';
-          if (day === 5) {
-            label = 'Work From Home - Friday';
-          }
-        } else if (this.selectedAttendance == "Leave") {
-          label = 'Leave'
+          this.workFromHomeDays.push({ date: new Date(currentDate), label });
         }
-        this.workFromHomeDays.push({ date: new Date(currentDate), label });
       }
       currentDate.setDate(currentDate.getDate() + 1);
     }
@@ -586,11 +594,15 @@ export class UserDashboardComponent {
       this.filteredShiftOptions = this.shiftOptions.filter(option => option !== 'Holiday' && option !== 'Absent');
       this.shift = this.defaultShift;
     }
-    if (!this.isSaveDisabled && this.startDate && this.endDate) {
+    if (!this.isSaveDisabled && this.startDate && this.endDate && !this.onlyHoliday) {
       this.showDummy = false;
       this.filterWorkFromHomeDays(this.startDate, this.endDate);
     } else {
-      this.showDummy = true;
+      if (this.isSaveDisabled) {
+        this.showDummy = true;
+      } else {
+        this.showDummy = false;
+      }
       this.workFromHomeDays = [];
       if (this.startDate && this.endDate) {
         const currentDate = new Date(this.startDate);
@@ -682,10 +694,11 @@ export class UserDashboardComponent {
   onDateChange(): void {
     this.isSaveDisabled = true;
     this.selectedAttendance = '';
+    this.onlyHoliday = false;
     const today = new Date();
-
     if (this.startDate && this.endDate) {
       this.isSaveDisabled = this.checkIfOnlyWeekendsSelected();
+      this.onlyHoliday = this.checkIfOnlyHolidaySelected();
       this.checkIfHolidaySelected();
     } else {
       this.isSaveDisabled = true;
@@ -694,10 +707,8 @@ export class UserDashboardComponent {
     if (this.startDate && this.endDate) {
       if (this.isSaveDisabled) {
         if (this.startDate > today || this.endDate > today) {
-          console.log("Only Weekends and Future Dates");
           this.options = [];
         } else {
-          console.log("Only Weekends and Past Dates");
           this.options = ['Work From Office', 'Work From Home'];
         }
       } else {
@@ -710,8 +721,37 @@ export class UserDashboardComponent {
     } else {
       this.options = [];
     }
+    if (this.startDate && this.endDate) {
+      if (this.onlyHoliday) {
+        if (this.startDate > today || this.endDate > today) {
+          this.options = [];
+        } else {
+          this.options = ['Work From Office', 'Work From Home'];
+        }
+      }
+    }
   }
 
+  checkIfOnlyHolidaySelected(): boolean {
+    if (!this.startDate || !this.endDate) {
+      return false;
+    }
+    const currentDate = new Date(this.startDate);
+    let nonHolidayFound = false;
+    while (currentDate <= this.endDate) {
+      const dayIsHoliday = this.holidays.some(holiday => {
+        return new Date(holiday.date).toDateString() === currentDate.toDateString();
+      });
+
+      if (!dayIsHoliday) {
+        nonHolidayFound = true;
+        break;
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return !nonHolidayFound;
+  }
 
   checkIfOnlyWeekendsSelected(): boolean {
     if (!this.startDate || !this.endDate) {
@@ -741,7 +781,8 @@ export class UserDashboardComponent {
 
       if (holidayMoment.isSameOrAfter(startDateMoment) && holidayMoment.isSameOrBefore(endDateMoment)) {
         this.isHolidayInRange = true;
-        this.holidayDateInRange = `${holiday.name} on ${holidayMoment.format('DD-MMMM-YYYY')}`;
+        // this.holidayDateInRange = `${holiday.name} on ${holidayMoment.format('DD-MMMM-YYYY')}`;
+        this.holidayDateInRange = `${holidayMoment.format('DD-MMMM-YYYY')}`
         break;
       }
     }
@@ -764,6 +805,8 @@ export class UserDashboardComponent {
 
         if (this.isTuesday(element.date) && element.label == "Work From Home") {
           type = "Work From Home Tuesday"
+        } else if (this.onlyHoliday) {
+          type = "Public Holiday"
         } else if ((this.oldShift != this.shift) && this.wfhNumber > 13 && (element.label == "Work From Home")) {
           type = "Extra WFH and Shift Change";
         } else if ((this.oldShift != this.shift) && element.label != "Leave" && !this.showDummy) {
@@ -825,7 +868,7 @@ export class UserDashboardComponent {
         const quarter = selDate.quarter();
         const month = selDate.month();
 
-        if ((type === "Extra WFH" && element.label === "Work From Home - Friday") || (element.label == "Work From Home - Friday" && !this.showDummy)) {
+        if ((type === "Extra WFH" && element.label === "Work From Home - Friday") || (element.label == "Work From Home - Friday" && !this.showDummy && !this.onlyHoliday)) {
 
           await this.api.attendance(this.email, this.email, this.formattedDate, element.label, year.toString(),
             "Q" + quarter, (month + 1).toString(), this.email, this.time.toString(), this.shift, allowance, foodAllowance).toPromise();
@@ -838,7 +881,7 @@ export class UserDashboardComponent {
           continue;
         }
 
-        if (type != "Work From Home Tuesday" && type != "Extra WFH and Shift Change" && currentWFHCount <= 13 && element.label == "Work From Home" && !this.showDummy) {
+        if (type != "Work From Home Tuesday" && type != "Extra WFH and Shift Change" && currentWFHCount <= 13 && element.label == "Work From Home" && !this.showDummy && !this.onlyHoliday) {
           await this.api.attendance(this.email, this.email, this.formattedDate, element.label, year.toString(),
             "Q" + quarter, (month + 1).toString(), this.email, this.time.toString(), this.shift, allowance, foodAllowance).toPromise();
 
