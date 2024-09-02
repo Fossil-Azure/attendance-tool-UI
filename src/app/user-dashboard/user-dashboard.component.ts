@@ -751,6 +751,23 @@ export class UserDashboardComponent {
       }
     }
 
+    // Check the additional condition for onlyWeekends
+    if (this.startDate && this.endDate && this.isSaveDisabled) {
+      const startMonth = this.startDate.getMonth();
+      const startYear = this.startDate.getFullYear();
+      const endMonth = this.endDate.getMonth();
+      const endYear = this.endDate.getFullYear();
+
+      if ((startYear < currentYear) ||
+        (startYear === currentYear && startMonth <= currentMonth) &&
+        (endYear < currentYear) ||
+        (endYear === currentYear && endMonth <= currentMonth)) {
+        this.options = ['Work From Office', 'Work From Home'];
+      } else {
+        this.options = [];
+      }
+    }
+
     // if (this.startDate && this.endDate) {
     //   if (this.isSaveDisabled) {
     //     if (this.startDate > today || this.endDate > today) {
