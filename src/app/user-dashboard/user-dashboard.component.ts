@@ -696,6 +696,8 @@ export class UserDashboardComponent {
     this.selectedAttendance = '';
     this.onlyHoliday = false;
     const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
     if (this.startDate && this.endDate) {
       this.isSaveDisabled = this.checkIfOnlyWeekendsSelected();
       this.onlyHoliday = this.checkIfOnlyHolidaySelected();
@@ -705,31 +707,76 @@ export class UserDashboardComponent {
     }
 
     if (this.startDate && this.endDate) {
-      if (this.isSaveDisabled) {
-        if (this.startDate > today || this.endDate > today) {
-          this.options = [];
-        } else {
-          this.options = ['Work From Office', 'Work From Home'];
-        }
+      // Extract the month and year of startDate and endDate
+      const startMonth = this.startDate.getMonth();
+      const startYear = this.startDate.getFullYear();
+      const endMonth = this.endDate.getMonth();
+      const endYear = this.endDate.getFullYear();
+
+      // Compare the months and years
+      if ((startYear < currentYear) ||
+        (startYear === currentYear && startMonth <= currentMonth) &&
+        (endYear < currentYear) ||
+        (endYear === currentYear && endMonth <= currentMonth)) {
+        // If the selected dates are in the current month or any previous month
+        this.options = ['Work From Office', 'Work From Home', 'Leave'];
+      } else if ((startYear > currentYear) ||
+        (startYear === currentYear && startMonth > currentMonth) ||
+        (endYear > currentYear) ||
+        (endYear === currentYear && endMonth > currentMonth)) {
+        // If the selected dates are in any month after the current month
+        this.options = ['Leave'];
       } else {
-        if (this.startDate > today || this.endDate > today) {
-          this.options = ['Leave'];
-        } else {
-          this.options = ['Work From Office', 'Work From Home', 'Leave'];
-        }
+        this.options = [];
       }
     } else {
+      // If either startDate or endDate is not selected, clear the options
       this.options = [];
     }
-    if (this.startDate && this.endDate) {
-      if (this.onlyHoliday) {
-        if (this.startDate > today || this.endDate > today) {
-          this.options = [];
-        } else {
-          this.options = ['Work From Office', 'Work From Home'];
-        }
+
+    // Check the additional condition for onlyHoliday
+    if (this.startDate && this.endDate && this.onlyHoliday) {
+      const startMonth = this.startDate.getMonth();
+      const startYear = this.startDate.getFullYear();
+      const endMonth = this.endDate.getMonth();
+      const endYear = this.endDate.getFullYear();
+
+      if ((startYear < currentYear) ||
+        (startYear === currentYear && startMonth <= currentMonth) &&
+        (endYear < currentYear) ||
+        (endYear === currentYear && endMonth <= currentMonth)) {
+        this.options = ['Work From Office', 'Work From Home'];
+      } else {
+        this.options = [];
       }
     }
+
+    // if (this.startDate && this.endDate) {
+    //   if (this.isSaveDisabled) {
+    //     if (this.startDate > today || this.endDate > today) {
+    //       this.options = [];
+    //     } else {
+    //       this.options = ['Work From Office', 'Work From Home'];
+    //     }
+    //   } else {
+    //     if (this.startDate > today || this.endDate > today) {
+    //       this.options = ['Leave'];
+    //     } else {
+    //       this.options = ['Work From Office', 'Work From Home', 'Leave'];
+    //     }
+    //   }
+    // } else {
+    //   this.options = [];
+    // }
+    // if (this.startDate && this.endDate) {
+    //   if (this.onlyHoliday) {
+    //     if (this.startDate > today || this.endDate > today) {
+    //       this.options = [];
+    //     } else {
+    //       this.options = ['Work From Office', 'Work From Home'];
+    //     }
+    //   }
+    // }
   }
 
   checkIfOnlyHolidaySelected(): boolean {

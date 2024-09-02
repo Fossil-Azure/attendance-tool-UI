@@ -38,4 +38,8 @@ export class HeaderComponent {
       this.loader.hide();
     }, 2000);
   }
+
+  openFeedbackForm() {
+    window.open('https://docs.google.com/forms/d/1ARyFGxwRkfENNj-xgm5MvSnCBwiDMmw7fpvKcjY8Tsc', '_blank');
+  }
 }
