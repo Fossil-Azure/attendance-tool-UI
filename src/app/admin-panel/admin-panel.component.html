@@ -102,24 +102,24 @@
 <ng-template #usersReport>
     <div mat-dialog-title class="popUpTitle2" style="background-color: #5D54A4; color: white; margin-bottom: 20px;">
         {{reportType}}</div>
-
-    <div class="tableDiv">
-        <table>
-            <thead>
-                <tr>
-                    <td class="detailTableHeader2">Name </td>
-                    <td class="detailTableHeader2">Email Id</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let item of popUpList">
-                    <td class="detailTableFields2">{{ item.reporteeName }}</td>
-                    <td class="detailTableFields2">{{ item.emailId }}</td>
-                </tr>
-            </tbody>
-        </table>
+    <div mat-dialog-content class="popUpContent">
+        <div class="scrollable-content">
+            <table>
+                <thead>
+                    <tr>
+                        <td class="detailTableHeader2">Name </td>
+                        <td class="detailTableHeader2">Email Id</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of popUpList">
+                        <td class="detailTableFields2">{{ item.reporteeName }}</td>
+                        <td class="detailTableFields2">{{ item.emailId }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-
     <div mat-dialog-actions class="dialogActions">
         <button mat-raised-button color="warn" mat-dialog-close class="popupButton2">Close</button>
     </div>
