@@ -1,0 +1,63 @@
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: hidden;
+}
+
+.content-wrapper {
+    display: flex;
+    flex: 1;
+    overflow-y: hidden;
+}
+
+.content {
+    flex: 1;
+    padding: 16px;
+    width: 100%;
+    margin: 0 auto;
+    overflow-y: hidden;
+}
+
+.user-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.form-column {
+    flex: 1;
+    min-width: 300px;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+button {
+    margin-top: 16px;
+    width: 100%;
+}
+
+.center-bottom-alert {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: auto;
+    max-width: 80%;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.alert {
+    margin-bottom: 0;
+}

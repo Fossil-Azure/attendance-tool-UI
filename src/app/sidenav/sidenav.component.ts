@@ -22,6 +22,7 @@ export class SidenavComponent {
   email: any;
   detailedArray: any;
   admin: boolean = false;
+  superAdmin: boolean = false;
   raisedByList!: any[];
   raisedToList!: any[];
   badgeCount: any;
@@ -35,6 +36,7 @@ export class SidenavComponent {
       const userData = JSON.parse(userDataString);
       this.email = userData.emailId;
       this.admin = userData.admin;
+      this.superAdmin = userData.superAdmin;
     } else {
       this.router.navigateByUrl('/');
     }

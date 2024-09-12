@@ -47,6 +47,7 @@ export class RequestStatusComponent {
       (response: ApprovalListResponse) => {
         this.raisedByList = response.raisedByList;
         this.raisedToList = response.raisedToList;
+        this.sortRaisedToAndByList();
         this.loader.hide();
       },
       (error) => {
@@ -219,5 +220,31 @@ export class RequestStatusComponent {
           this.loader.hide();
         }
       });
+  }
+
+  sortRaisedToAndByList() {
+    if (this.raisedToList && this.raisedToList.length > 0) {
+      // Sorting raisedToList
+      this.raisedToList.sort((a, b) => {
+        if (a.status === 'Pending' && b.status !== 'Pending') {
+          return -1; // Pending at the top
+        }
+        if (a.status !== 'Pending' && b.status === 'Pending') {
+          return 1; // Non-pending at the bottom
+        }
+        return 0; // Keep the rest unchanged
+      });
+      this.raisedByList.sort((a, b) => {
+        if (a.status === 'Pending' && b.status !== 'Pending') {
+          return -1; // Pending at the top
+        }
+        if (a.status !== 'Pending' && b.status === 'Pending') {
+          return 1; // Non-pending at the bottom
+        }
+        return 0; // Keep the rest unchanged
+      });
+    } else {
+      console.warn('raisedToList is empty or undefined.');
+    }
   }
 }

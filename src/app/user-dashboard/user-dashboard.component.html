@@ -246,7 +246,7 @@
                     WFH on Tuesday requires manager's approval.
                 </strong>
 
-                <strong class="approvalMessage" *ngIf="oldShift != shift">
+                <strong class="approvalMessage" *ngIf="oldShift != shift && selectedAttendance != 'Leave'">
                     <br><br>
                     Your seleted shift is not matching with your default shift hence this attendance
                     needs manager's approval
@@ -266,10 +266,10 @@
         <hr>
         <button mat-raised-button color="warn" class="popupButton" (click)="cancelAttendance()">Cancel</button>
         <button mat-raised-button
-            *ngIf="!(approvalMessage || (oldShift != shift) || showDummy || needsManagerApprovalForWFH() || onlyHoliday)"
+            *ngIf="!(approvalMessage || (oldShift != shift && shift != 'Absent') || showDummy || needsManagerApprovalForWFH() || onlyHoliday)"
             color="primary" class="popupButton" (click)="confirmAttendance()">Confirm</button>
         <button class="popupButton"
-            *ngIf="(approvalMessage || (oldShift != shift) || showDummy || needsManagerApprovalForWFH() || onlyHoliday)"
+            *ngIf="(approvalMessage || (oldShift != shift && shift != 'Absent') || showDummy || needsManagerApprovalForWFH() || onlyHoliday)"
             mat-raised-button color="primary" (click)="sendForApproval()">Send for Approval</button>
     </mat-dialog-content>
 </ng-template>

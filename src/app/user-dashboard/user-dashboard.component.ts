@@ -957,6 +957,18 @@ export class UserDashboardComponent {
           continue;
         }
 
+        if (type == 'Leave') {
+          await this.api.attendance(this.email, this.email, this.formattedDate, element.label, year.toString(),
+            "Q" + quarter, (month + 1).toString(), this.email, this.time.toString(), this.shift, allowance, foodAllowance).toPromise();
+
+          await this.api.addUserAttendance(this.email, this.email, element.label, year.toString(),
+            "Q" + quarter, this.email).toPromise();
+
+          await this.api.addMonthlyAttendance(this.email, this.email, element.label, year.toString(),
+            "Q" + quarter, this.email, (month + 1).toString(), allowance, foodAllowance).toPromise();
+          continue;
+        }
+
         const approvalList = {
           id: this.email + this.formattedDate,
           date: this.formattedDate,

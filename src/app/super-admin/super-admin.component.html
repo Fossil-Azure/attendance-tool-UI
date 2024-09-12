@@ -1,0 +1,147 @@
+<div class="main-container">
+    <app-loader></app-loader>
+    <app-header></app-header>
+    <div class="content-wrapper">
+        <app-sidenav></app-sidenav>
+        <div class="content">
+            <div *ngIf="added" class="alert alert-success center-bottom-alert" role="alert">
+                User added Successfully
+            </div>
+            <div *ngIf="error" class="alert alert-danger center-bottom-alert" role="alert">
+                Something went wrong
+            </div>
+            <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form">
+
+                <div class="form-container">
+                    <!-- Column 1 -->
+                    <div class="form-column">
+                        <!-- Email ID -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>Email ID</mat-label>
+                            <input matInput formControlName="emailId" type="email">
+                            <mat-error *ngIf="userForm.get('emailId')?.errors?.['required']">Email is
+                                required.</mat-error>
+                            <mat-error *ngIf="userForm.get('emailId')?.errors?.['email']">Enter a valid
+                                email.</mat-error>
+                        </mat-form-field>
+
+                        <!-- SAP ID (Optional) -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>SAP ID</mat-label>
+                            <input matInput formControlName="sapId">
+                        </mat-form-field>
+
+                        <!-- Region Dropdown -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>Region</mat-label>
+                            <mat-select formControlName="region">
+                                <mat-option *ngFor="let region of regions" [value]="region">{{ region }}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="userForm.get('region')?.errors?.['required']">Region is
+                                required.</mat-error>
+                        </mat-form-field>
+
+                        <!-- Manager Name -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>Manager's Name</mat-label>
+                            <input matInput formControlName="managerName">
+                            <mat-error *ngIf="userForm.get('managerName')?.errors?.['required']">Manager name is
+                                required.</mat-error>
+                        </mat-form-field>
+
+                        <!-- Password -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>Password</mat-label>
+                            <input matInput formControlName="password" type="password">
+                            <mat-error *ngIf="userForm.get('password')?.errors?.['required']">Password is
+                                required.</mat-error>
+                        </mat-form-field>
+
+                        <!-- Shift Dropdown -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>Shift</mat-label>
+                            <mat-select formControlName="shift">
+                                <mat-option *ngFor="let shift of shifts" [value]="shift">{{ shift }}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="userForm.get('shift')?.errors?.['required']">Shift is
+                                required.</mat-error>
+                        </mat-form-field>
+
+                        <!-- Admin Checkbox -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>Admin</mat-label>
+                            <mat-select formControlName="admin" [value]="false">
+                                <mat-option [value]="true">True</mat-option>
+                                <mat-option [value]="false">False</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div class="form-column">
+                        <!-- Name -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>Name</mat-label>
+                            <input matInput formControlName="name">
+                            <mat-error *ngIf="userForm.get('name')?.errors?.['required']">Name is required.</mat-error>
+                        </mat-form-field>
+
+                        <!-- Employee ID (Optional) -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>Employee ID</mat-label>
+                            <input matInput formControlName="empId">
+                        </mat-form-field>
+
+                        <!-- Work Location Dropdown -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>Work Location</mat-label>
+                            <mat-select formControlName="workLocation">
+                                <mat-option *ngFor="let location of workLocations" [value]="location">{{ location
+                                    }}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="userForm.get('workLocation')?.errors?.['required']">Work location is
+                                required.</mat-error>
+                        </mat-form-field>
+
+                        <!-- Manager Email ID -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>Manager's Email ID</mat-label>
+                            <input matInput formControlName="managerId" type="email">
+                            <mat-error *ngIf="userForm.get('managerId')?.errors?.['required']">Manager Email is
+                                required.</mat-error>
+                            <mat-error *ngIf="userForm.get('managerId')?.errors?.['email']">Enter a valid
+                                email.</mat-error>
+                        </mat-form-field>
+
+                        <!-- Team -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>Team</mat-label>
+                            <input matInput formControlName="team" value="Digital GBS">
+                        </mat-form-field>
+
+                        <!-- Leave Balance -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>Leave Balance</mat-label>
+                            <input matInput formControlName="leave" type="number" step="1.00">
+                            <mat-error *ngIf="userForm.get('leave')?.errors?.['required']">Leave balance is
+                                required.</mat-error>
+                            <mat-error *ngIf="userForm.get('leave')?.errors?.['min']">Leave balance cannot be
+                                negative.</mat-error>
+                        </mat-form-field>
+
+                        <!-- Super Admin Dropdown -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>Super Admin</mat-label>
+                            <mat-select formControlName="superAdmin" [value]="false">
+                                <mat-option [value]="true">True</mat-option>
+                                <mat-option [value]="false">False</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <!-- Submit Button -->
+                <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -41,6 +41,7 @@ export class ApiCallingService {
   private todaysAttendance = `${this.baseUrl}/todayAttendance`;
   private qtrAttendance = `${this.baseUrl}/qtrAttendance`;
   private upcomingLeaves = `${this.baseUrl}/upcomingLeaves`;
+  private addUser = `${this.baseUrl}/addUser`;
 
   constructor(private http: HttpClient) { }
 
@@ -197,5 +198,9 @@ export class ApiCallingService {
 
   getUpcomingLeaves(): Observable<any> {
     return this.http.post<any>(this.upcomingLeaves, {});
+  }
+
+  addNewUser(user: any): Observable<any> {
+    return this.http.post<any>(this.addUser, user)
   }
 }
