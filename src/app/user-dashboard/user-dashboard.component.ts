@@ -381,7 +381,13 @@ export class UserDashboardComponent {
   }
 
   checkWFHApproval(): void {
-    if (this.wfhNumber > 13 && this.selectedAttendance === 'Work From Home') {
+    const isWeekday = this.workFromHomeDays.some(day => {
+      const date = new Date(day.date);
+      const dayOfWeek = date.getDay();
+      return dayOfWeek >= 1 && dayOfWeek <= 4;
+    });
+
+    if (this.wfhNumber > 13 && this.selectedAttendance === 'Work From Home' && isWeekday) {
       this.approvalMessage = true;
     } else {
       this.approvalMessage = false;
@@ -454,6 +460,8 @@ export class UserDashboardComponent {
 
           await this.api.addMonthlyAttendance(this.email, this.email, element.label, year.toString(),
             "Q" + quarter, this.email, (month + 1).toString(), allowance, foodAllowance).toPromise();
+
+          await this.api.updateUserLeave(this.email).subscribe();
 
           this.attendanceSuccess = true;
           setTimeout(() => {
@@ -580,8 +588,21 @@ export class UserDashboardComponent {
     }
   }
 
+  isFriday(date: string | Date): boolean {
+    const day = new Date(date).getDay();
+    if (day === 5) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   needsManagerApprovalForWFH(): boolean {
     return this.workFromHomeDays.some(day => this.isTuesday(day.date) && day.label === 'Work From Home');
+  }
+
+  workFromHomeFriday(): boolean {
+    return this.workFromHomeDays.some(day => this.isFriday(day.date) && (day.label === 'Work From Home - Friday' || day.label === 'Work From Office - Friday'));
   }
 
   onAttendanceChange(): void {
@@ -751,7 +772,6 @@ export class UserDashboardComponent {
       }
     }
 
-    // Check the additional condition for onlyWeekends
     if (this.startDate && this.endDate && this.isSaveDisabled) {
       const startMonth = this.startDate.getMonth();
       const startYear = this.startDate.getFullYear();
@@ -767,33 +787,6 @@ export class UserDashboardComponent {
         this.options = [];
       }
     }
-
-    // if (this.startDate && this.endDate) {
-    //   if (this.isSaveDisabled) {
-    //     if (this.startDate > today || this.endDate > today) {
-    //       this.options = [];
-    //     } else {
-    //       this.options = ['Work From Office', 'Work From Home'];
-    //     }
-    //   } else {
-    //     if (this.startDate > today || this.endDate > today) {
-    //       this.options = ['Leave'];
-    //     } else {
-    //       this.options = ['Work From Office', 'Work From Home', 'Leave'];
-    //     }
-    //   }
-    // } else {
-    //   this.options = [];
-    // }
-    // if (this.startDate && this.endDate) {
-    //   if (this.onlyHoliday) {
-    //     if (this.startDate > today || this.endDate > today) {
-    //       this.options = [];
-    //     } else {
-    //       this.options = ['Work From Office', 'Work From Home'];
-    //     }
-    //   }
-    // }
   }
 
   checkIfOnlyHolidaySelected(): boolean {
@@ -933,7 +926,6 @@ export class UserDashboardComponent {
         const month = selDate.month();
 
         if ((type === "Extra WFH" && element.label === "Work From Home - Friday") || (element.label == "Work From Home - Friday" && !this.showDummy && !this.onlyHoliday)) {
-
           await this.api.attendance(this.email, this.email, this.formattedDate, element.label, year.toString(),
             "Q" + quarter, (month + 1).toString(), this.email, this.time.toString(), this.shift, allowance, foodAllowance).toPromise();
 
@@ -945,7 +937,7 @@ export class UserDashboardComponent {
           continue;
         }
 
-        if (type != "Work From Home Tuesday" && type != "Extra WFH and Shift Change" && currentWFHCount <= 13 && element.label == "Work From Home" && !this.showDummy && !this.onlyHoliday) {
+        if (type != "Work From Home Tuesday" && type != "Shift Change" && type != "Extra WFH and Shift Change" && currentWFHCount <= 13 && element.label == "Work From Home" && !this.showDummy && !this.onlyHoliday) {
           await this.api.attendance(this.email, this.email, this.formattedDate, element.label, year.toString(),
             "Q" + quarter, (month + 1).toString(), this.email, this.time.toString(), this.shift, allowance, foodAllowance).toPromise();
 

@@ -31,6 +31,10 @@ export class RequestStatusComponent {
   dialogRef: any;
   selectedItems: any[] = [];
   userQtrReport: any;
+  showAll: boolean = false;
+  showAllRaised: boolean = false;
+  filteredList: any[] = [];
+  filteredByList: any[] = [];
 
   constructor(private loader: LoaderService, private api: ApiCallingService,
     private http: HttpClient, private dialog: MatDialog, private router: Router) { }
@@ -47,6 +51,8 @@ export class RequestStatusComponent {
       (response: ApprovalListResponse) => {
         this.raisedByList = response.raisedByList;
         this.raisedToList = response.raisedToList;
+        this.filteredList = this.raisedToList.filter(item => item.status === 'Pending');
+        this.filteredByList = this.raisedByList.filter(item => item.status === 'Pending');
         this.sortRaisedToAndByList();
         this.loader.hide();
       },
@@ -224,27 +230,44 @@ export class RequestStatusComponent {
 
   sortRaisedToAndByList() {
     if (this.raisedToList && this.raisedToList.length > 0) {
-      // Sorting raisedToList
       this.raisedToList.sort((a, b) => {
         if (a.status === 'Pending' && b.status !== 'Pending') {
-          return -1; // Pending at the top
+          return -1;
         }
         if (a.status !== 'Pending' && b.status === 'Pending') {
-          return 1; // Non-pending at the bottom
+          return 1;
         }
-        return 0; // Keep the rest unchanged
+        return 0;
       });
       this.raisedByList.sort((a, b) => {
         if (a.status === 'Pending' && b.status !== 'Pending') {
-          return -1; // Pending at the top
+          return -1;
         }
         if (a.status !== 'Pending' && b.status === 'Pending') {
-          return 1; // Non-pending at the bottom
+          return 1;
         }
-        return 0; // Keep the rest unchanged
+        return 0;
       });
     } else {
       console.warn('raisedToList is empty or undefined.');
+    }
+  }
+
+  toggleShowAll() {
+    this.showAll = !this.showAll;
+    if (this.showAll) {
+      this.filteredList = this.raisedToList;
+    } else {
+      this.filteredList = this.raisedToList.filter(item => item.status === 'Pending');
+    }
+  }
+
+  toggleShowAllRaised() {
+    this.showAllRaised = !this.showAllRaised;
+    if (this.showAllRaised) {
+      this.filteredByList = this.raisedByList;
+    } else {
+      this.filteredByList = this.raisedByList.filter(item => item.status === 'Pending');
     }
   }
 }

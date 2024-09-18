@@ -14,6 +14,11 @@
                             <button class="btn approve-btn" (click)="approveMultiple()">Approve</button>
                             <button class="btn reject-btn" (click)="rejectMultiple()">Reject</button>
                         </div>
+                        <div>
+                            <button mat-flat-button color="primary" (click)="toggleShowAll()">{{ showAll ? 'Show Pending
+                                Only' : 'Show
+                                All Requests' }}</button>
+                        </div>
                     </div>
                     <div class="table-scroll">
                         <table>
@@ -27,7 +32,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let item of raisedToList">
+                                <tr *ngFor="let item of filteredList">
                                     <td class="detailTableFields2">
                                         <input type="checkbox" [disabled]="item.status !== 'Pending'"
                                             (change)="onSelectionChange(item, $event)" [checked]="isSelected(item)">
@@ -45,7 +50,12 @@
                     </div>
                 </div>
                 <div [ngClass]="{'table-full': !admin, 'table-right': admin}">
-                    <h2 class="table-heading">Raised Requests</h2>
+                    <div class="heading-button-container">
+                        <h2 class="table-heading2">Raised Requests</h2>
+                        <button mat-flat-button color="primary" (click)="toggleShowAllRaised()">{{ showAllRaised ? 'Show Pending
+                            Only' : 'Show All Requests' }}</button>
+                    </div>
+
                     <div class="table-scroll">
                         <table>
                             <thead>
@@ -59,7 +69,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let item of raisedByList">
+                                <tr *ngFor="let item of filteredByList">
                                     <td class="detailTableFields2">{{item.raisedTo}}</td>
                                     <td class="detailTableFields2">{{item.date}}</td>
                                     <td class="detailTableFields2">{{item.comments}}</td>
@@ -67,11 +77,9 @@
                                     <td class="detailTableFields2">{{item.type}}</td>
                                     <td class="detailTableFields2">
                                         <mat-icon *ngIf="item.status == 'Pending'" style="cursor: pointer;"
-                                            (click)="openReqDetails(item)">cancel
-                                        </mat-icon>
+                                            (click)="openReqDetails(item)">cancel</mat-icon>
                                         <mat-icon *ngIf="item.status != 'Pending'" style="cursor: pointer;"
-                                            (click)="openReqDetails(item)">visibility
-                                        </mat-icon>
+                                            (click)="openReqDetails(item)">visibility</mat-icon>
                                     </td>
                                 </tr>
                             </tbody>
