@@ -77,6 +77,9 @@ export class AdminPanelComponent {
   @ViewChild('usersReport')
   userReportPopup!: TemplateRef<any>;
 
+  @ViewChild('usersReport2')
+  userReportPopup2!: TemplateRef<any>;
+
   sortedColumn: string = 'wfh';
   sortAscending: boolean = true;
   dialogRef1!: MatDialogRef<any>;
@@ -344,11 +347,37 @@ export class AdminPanelComponent {
       });
       this.popUpList = this.leaveList;
     } else if (type == 'Not Marked') {
-      this.popUpList = this.notMarkedList;
+      const list = [...this.wfhList, ...this.wfoList, ...this.leaveList];
+      const emailIdsInList = list.map(item => item.emailId);
+      const missingEntries = this.reporteeList.filter(reportee =>
+        !emailIdsInList.includes(reportee.emailId)
+      );
+      this.popUpList = missingEntries;
     }
+
     this.dialogRef1 = this.dialog.open(this.userReportPopup, {
       disableClose: true,
       width: '500px'
+    });
+  }
+
+  openActiveTodayPopUp(type: any) {
+    this.reportType = type;
+    this.popUpList = [];
+    if (type == 'Active Today') {
+      const list = [...this.wfhList, ...this.wfoList];
+      list.forEach((wfoItem: any) => {
+        const reportee = this.reporteeList.find((user: any) => user.emailId === wfoItem.emailId);
+        if (reportee) {
+          wfoItem.reporteeName = reportee.reporteeName;
+        }
+      });
+      this.popUpList = list;
+    }
+
+    this.dialogRef1 = this.dialog.open(this.userReportPopup2, {
+      disableClose: true,
+      width: '600px'
     });
   }
 

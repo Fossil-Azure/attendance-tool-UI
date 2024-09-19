@@ -16,11 +16,13 @@
                         class="sectionCount">{{detailedArray.length}}</span>
                 </div>
                 <div class="sectionItem">
-                    <span class="sectionText">Attendance Not Marked</span><span>{{detailedArray.length -
+                    <span class="sectionText">Attendance Not Marked</span><span (click)="openUsersList('Not Marked')"
+                    class="sectionCount">{{detailedArray.length -
                         todaysAttendanceData.length}}</span>
                 </div>
                 <div class="sectionItem">
-                    <span class="sectionText">Active Today</span><span>{{wfh + wfo}}</span>
+                    <span class="sectionText">Active Today</span><span (click)="openActiveTodayPopUp('Active Today')"
+                        class="sectionCount">{{wfh + wfo}}</span>
                 </div>
                 <div class="sectionItem">
                     <span class="sectionText">On Leave</span><span (click)="openUsersList('On Leave')"
@@ -115,6 +117,34 @@
                     <tr *ngFor="let item of popUpList">
                         <td class="detailTableFields2">{{ item.reporteeName }}</td>
                         <td class="detailTableFields2">{{ item.emailId }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div mat-dialog-actions class="dialogActions">
+        <button mat-raised-button color="warn" mat-dialog-close class="popupButton2">Close</button>
+    </div>
+</ng-template>
+
+<ng-template #usersReport2>
+    <div mat-dialog-title class="popUpTitle2" style="background-color: #5D54A4; color: white; margin-bottom: 20px;">
+        {{reportType}}</div>
+    <div mat-dialog-content class="popUpContent">
+        <div class="scrollable-content">
+            <table>
+                <thead>
+                    <tr>
+                        <td class="detailTableHeader2">Name </td>
+                        <td class="detailTableHeader2">Email Id</td>
+                        <td class="detailTableHeader2">Attendance</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of popUpList">
+                        <td class="detailTableFields2">{{ item.reporteeName }}</td>
+                        <td class="detailTableFields2">{{ item.emailId }}</td>
+                        <td class="detailTableFields2">{{ item.attendance }}</td>
                     </tr>
                 </tbody>
             </table>
