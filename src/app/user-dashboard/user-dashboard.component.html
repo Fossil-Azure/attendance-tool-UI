@@ -267,10 +267,10 @@
         <hr>
         <button mat-raised-button color="warn" class="popupButton" (click)="cancelAttendance()">Cancel</button>
         <button mat-raised-button
-            *ngIf="!(approvalMessage || (oldShift != shift && shift != 'Absent') || showDummy || needsManagerApprovalForWFH() || !workFromHomeFriday() || onlyHoliday)"
+            *ngIf="!(approvalMessage || (oldShift != shift && shift != 'Absent') || showDummy || needsManagerApprovalForWFH() || onlyHoliday)"
             color="primary" class="popupButton" (click)="confirmAttendance()">Confirm</button>
         <button class="popupButton"
-            *ngIf="(approvalMessage || (oldShift != shift && shift != 'Absent') || showDummy || needsManagerApprovalForWFH()|| !workFromHomeFriday() || onlyHoliday)"
+            *ngIf="(approvalMessage || (oldShift != shift && shift != 'Absent') || showDummy || needsManagerApprovalForWFH() || onlyHoliday)"
             mat-raised-button color="primary" (click)="sendForApproval()">Send for Approval</button>
     </mat-dialog-content>
 </ng-template>
