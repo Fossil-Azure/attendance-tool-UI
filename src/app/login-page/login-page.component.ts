@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ApiCallingService } from 'src/service/API/api-calling.service';
 import { LoaderService } from 'src/service/Loader/loader.service';
@@ -16,7 +18,12 @@ export class LoginPageComponent {
   resetSuccess = false;
   errorMessage!: string;
 
-  constructor(private loader: LoaderService, private api: ApiCallingService, private router: Router) {
+  @ViewChild('forgotPasswordPopUp')
+  userReportPopup!: TemplateRef<any>;
+
+  dialogRef1!: MatDialogRef<any>;
+
+  constructor(private loader: LoaderService, private api: ApiCallingService, private router: Router, private dialog: MatDialog) {
     this.loginForm = new FormGroup({
       email: new FormControl('', [
         Validators.required,
@@ -99,5 +106,12 @@ export class LoginPageComponent {
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
+  }
+
+  forgotPassword() {
+    this.dialogRef1 = this.dialog.open(this.userReportPopup, {
+      disableClose: true,
+      width: '500px'
+    });
   }
 }

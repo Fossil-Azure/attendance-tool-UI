@@ -191,3 +191,16 @@
     padding: 10px;
     text-align: center;
 }
+
+.forgot_password {
+    font-size: 12px;
+    margin-left: 280px;
+    color: #0048ff;
+    cursor: pointer;
+}
+
+.dialogActions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+}
