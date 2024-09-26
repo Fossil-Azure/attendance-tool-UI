@@ -461,7 +461,9 @@ export class UserDashboardComponent {
           await this.api.addMonthlyAttendance(this.email, this.email, element.label, year.toString(),
             "Q" + quarter, this.email, (month + 1).toString(), allowance, foodAllowance).toPromise();
 
-          await this.api.updateUserLeave(this.email).subscribe();
+          if (element.label == 'Leave') {
+            await this.api.updateUserLeave(this.email).subscribe();
+          }
 
           this.attendanceSuccess = true;
           setTimeout(() => {
