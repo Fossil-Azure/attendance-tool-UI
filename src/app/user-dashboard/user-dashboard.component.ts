@@ -428,7 +428,7 @@ export class UserDashboardComponent {
           } else {
             if (this.shift == "Shift A") {
               allowance = 0;
-              foodAllowance = 0;
+              foodAllowance = 75;
             } else if (this.shift == "Shift B") {
               allowance = 150;
               foodAllowance = 100;
@@ -904,7 +904,7 @@ export class UserDashboardComponent {
           } else {
             if (this.shift == "Shift A") {
               allowance = 0;
-              foodAllowance = 0;
+              foodAllowance = 75;
             } else if (this.shift == "Shift B") {
               allowance = 150;
               foodAllowance = 100;
