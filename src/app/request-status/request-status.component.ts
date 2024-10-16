@@ -270,4 +270,28 @@ export class RequestStatusComponent {
       this.filteredByList = this.raisedByList.filter(item => item.status === 'Pending');
     }
   }
+
+  isAllSelected(): boolean {
+    return this.filteredList.every(item => this.isSelected(item));
+  }
+
+  isIndeterminate(): boolean {
+    const selectedCount = this.selectedItems.length;
+    return selectedCount > 0 && selectedCount < this.filteredList.length;
+  }
+
+  toggleSelectAll(event: any): void {
+    const isChecked = event.target.checked;
+    if (isChecked) {
+      this.filteredList.forEach(item => {
+        if (item.status === 'Pending' && !this.isSelected(item)) {
+          this.selectedItems.push(item);
+        }
+      });
+    } else {
+      this.filteredList.forEach(item => {
+        this.selectedItems = this.selectedItems.filter(i => i !== item);
+      });
+    }
+  }
 }

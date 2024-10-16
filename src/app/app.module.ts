@@ -56,7 +56,8 @@ const routes: Routes = [
         ResetPasswordComponent,
         EditAttendanceComponent,
         RequestStatusComponent,
-        SuperAdminComponent
+        SuperAdminComponent,
+        CalendarViewComponent
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
         BrowserAnimationsModule,

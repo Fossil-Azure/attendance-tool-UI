@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import * as moment from 'moment';
+import moment from 'moment-timezone';
 import { ApiCallingService } from 'src/service/API/api-calling.service';
 import { LoaderService } from 'src/service/Loader/loader.service';
 import { provideNativeDateAdapter } from '@angular/material/core';

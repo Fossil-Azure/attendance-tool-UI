@@ -16,14 +16,14 @@
         <div class="day-name">Fri</div>
         <div class="day-name">Sat</div>
 
-        <!-- Calendar Days -->
-        <div *ngFor="let day of daysInMonth" [ngClass]="getAttendanceClass(day.attendance)">
-            <div class="date-circle">{{ day.displayDate }}</div>
+        <!-- Loop through the daysInMonth array -->
+        <div *ngFor="let day of daysInMonth">
+            <div [ngClass]="getAttendanceClass(day.attendance)" class="date-circle">{{ day.displayDate }}</div>
         </div>
     </div>
 
     <!-- Legend for Attendance Types -->
-    <div class="legend-container">        
+    <div class="legend-container">
         <div class="legend-item">
             <span class="legend-circle office"></span> Work from Office
         </div>

@@ -3,7 +3,7 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApiCallingService } from 'src/service/API/api-calling.service';
 import { LoaderService } from 'src/service/Loader/loader.service';
-import * as moment from 'moment-timezone';
+import moment from 'moment-timezone';
 import { Router } from '@angular/router';
 
 @Component({

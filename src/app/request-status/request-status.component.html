@@ -24,7 +24,10 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th class="detailTableHeader2"></th>
+                                    <th class="detailTableHeader2">
+                                        <input type="checkbox" [checked]="isAllSelected()"
+                                            [indeterminate]="isIndeterminate()" (change)="toggleSelectAll($event)">
+                                    </th>
                                     <th class="detailTableHeader2">Raised By</th>
                                     <th class="detailTableHeader2">Type</th>
                                     <th class="detailTableHeader2">Status</th>
@@ -52,7 +55,8 @@
                 <div [ngClass]="{'table-full': !admin, 'table-right': admin}">
                     <div class="heading-button-container">
                         <h2 class="table-heading2">Raised Requests</h2>
-                        <button mat-flat-button color="primary" (click)="toggleShowAllRaised()">{{ showAllRaised ? 'Show Pending
+                        <button mat-flat-button color="primary" (click)="toggleShowAllRaised()">{{ showAllRaised ? 'Show
+                            Pending
                             Only' : 'Show All Requests' }}</button>
                     </div>
 

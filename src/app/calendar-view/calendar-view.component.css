@@ -114,3 +114,19 @@
 .legend-circle.pending {
     background-color: #FFB74D;
 }
+
+.work-from-office {
+    background-color: #5C6BC0;
+}
+
+.work-from-home {
+    background-color: #81C784;
+}
+
+.leave {
+    background-color: #E57373;
+}
+
+.pending-approval {
+    background-color: yellow;
+}

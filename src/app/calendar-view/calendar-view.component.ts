@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, format } from 'date-fns';
-import * as moment from 'moment';
+import moment from 'moment-timezone';
 import { ApiCallingService } from 'src/service/API/api-calling.service';
-import { LoaderService } from 'src/service/Loader/loader.service';
 
 @Component({
   selector: 'app-calendar-view',
@@ -36,10 +35,9 @@ export class CalendarViewComponent {
   };
   attendanceData: any[] = [];
 
-  constructor(private loader: LoaderService, private api: ApiCallingService, private cdr: ChangeDetectorRef) { }
+  constructor(private api: ApiCallingService, private cdr: ChangeDetectorRef) { }
 
   async ngOnInit() {
-    this.loader.show();
     const userDataString = sessionStorage.getItem('user');
     if (userDataString) {
       const userData = JSON.parse(userDataString);
@@ -66,11 +64,10 @@ export class CalendarViewComponent {
   }
 
   generateCalendar(year: number, month: number): void {
-    const startDate = startOfWeek(startOfMonth(new Date(year, month)), { weekStartsOn: 0 });
-    const endDate = endOfWeek(endOfMonth(new Date(year, month)), { weekStartsOn: 0 });
+    const startDate = startOfWeek(startOfMonth(new Date(year, month - 1)), { weekStartsOn: 0 });
+    const endDate = endOfWeek(endOfMonth(new Date(year, month - 1)), { weekStartsOn: 0 });
     const days = [];
     let day = startDate;
-
     const formatDateForDB = (date: Date) => format(date, 'dd-MMMM-yyyy');
 
     if (!this.attendanceData || !Array.isArray(this.attendanceData)) {
@@ -90,14 +87,14 @@ export class CalendarViewComponent {
         displayDate: day.getDate(),
         attendance: attendanceRecord ? attendanceRecord.attendance : ''
       });
+
       day = addDays(day, 1);
     }
     this.daysInMonth = days;
-    console.log('Days in Month:', this.daysInMonth);
+    this.cdr.detectChanges();
   }
 
   generateAttendanceData(): Promise<void> {
-    this.loader.show();
     const payload = {
       emailId: this.email,
       year: this.selectedYear,
@@ -106,15 +103,11 @@ export class CalendarViewComponent {
     return new Promise((resolve) => {
       const observer = {
         next: (data: any[]) => {
-          console.log('Fetched Attendance Data:', data);
           this.attendanceData = data;
-          this.cdr.detectChanges(); // Force change detection
-          this.loader.hide();
           resolve(); // Resolve after data is fetched
         },
         error: (err: any) => {
           console.error('Error fetching Calendar Data', err);
-          this.loader.hide();
           resolve(); // Resolve even if there's an error
         }
       };
@@ -125,6 +118,7 @@ export class CalendarViewComponent {
   getAttendanceClass(attendance: string): string {
     switch (attendance) {
       case 'Work From Office':
+      case 'Work From Office - Friday':
         return 'work-from-office';
       case 'Work From Home':
       case 'Work From Home - Friday':
@@ -137,7 +131,6 @@ export class CalendarViewComponent {
         return '';
     }
   }
-
 
   loadDistinctYears(): Promise<void> {
     return new Promise((resolve) => {
@@ -161,6 +154,12 @@ export class CalendarViewComponent {
   }
 
   onYearMonthChange(): void {
+    this.generateAttendanceData().then(() => {
+      this.generateCalendar(this.selectedYear, this.selectedMonth);
+    });
+  }
+
+  refreshCalendar() {
     this.generateAttendanceData().then(() => {
       this.generateCalendar(this.selectedYear, this.selectedMonth);
     });

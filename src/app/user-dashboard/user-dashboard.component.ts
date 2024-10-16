@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { LoaderService } from 'src/service/Loader/loader.service';
-import * as moment from 'moment-timezone';
+import moment from 'moment-timezone';
 import { Router } from '@angular/router';
 import { SharedService } from 'src/service/EventEmitter/shared.service';
 import { Subscription } from 'rxjs';
@@ -10,6 +10,7 @@ import { ThemePalette, provideNativeDateAdapter } from '@angular/material/core';
 import { ApiCallingService } from 'src/service/API/api-calling.service';
 import { MatSort } from '@angular/material/sort';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { CalendarViewComponent } from '../calendar-view/calendar-view.component';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -73,6 +74,9 @@ export class UserDashboardComponent {
 
   @ViewChild(MatSort)
   sort!: MatSort;
+
+  @ViewChild(CalendarViewComponent)
+  calendarView!: CalendarViewComponent;
 
   displayedColumns: string[] = ['date', 'attendance'];
 
@@ -478,6 +482,7 @@ export class UserDashboardComponent {
       }
     } finally {
       try {
+        await this.refreshCalendarView();
         await this.getUserAttendance();
         await this.getUserLeave();
       } catch (error) {
@@ -1000,9 +1005,16 @@ export class UserDashboardComponent {
         }
       }
     } finally {
+      await this.refreshCalendarView();
       await this.getUserAttendance()
       await this.getUserLeave();
       this.loader.hide();
+    }
+  }
+
+  refreshCalendarView() {
+    if (this.calendarView) {
+      this.calendarView.refreshCalendar();
     }
   }
 }
