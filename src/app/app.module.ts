@@ -18,7 +18,7 @@ import { LoaderComponent } from './loader/loader.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -43,45 +43,38 @@ const routes: Routes = [
   { path: 'super-admin', component: SuperAdminComponent}
 ];
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    LoginPageComponent,
-    UserDashboardComponent,
-    HeaderComponent,
-    SidenavComponent,
-    LoaderComponent,
-    AdminPanelComponent,
-    ResetPasswordComponent,
-    EditAttendanceComponent,
-    RequestStatusComponent,
-    SuperAdminComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatProgressSpinnerModule,
-    MatCardModule,
-    MatRadioModule,
-    FormsModule,
-    MatSliderModule,
-    MatProgressSpinnerModule,
-    ReactiveFormsModule,
-    RouterModule.forRoot(routes),
-    MatIconModule,
-    MatMenuModule,
-    BaseChartDirective,
-    HttpClientModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatDatepickerModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatTableModule,
-    MatBadgeModule
-  ],
-  providers: [provideCharts(withDefaultRegisterables())],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        LoginPageComponent,
+        UserDashboardComponent,
+        HeaderComponent,
+        SidenavComponent,
+        LoaderComponent,
+        AdminPanelComponent,
+        ResetPasswordComponent,
+        EditAttendanceComponent,
+        RequestStatusComponent,
+        SuperAdminComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        BrowserAnimationsModule,
+        MatProgressSpinnerModule,
+        MatCardModule,
+        MatRadioModule,
+        FormsModule,
+        MatSliderModule,
+        MatProgressSpinnerModule,
+        ReactiveFormsModule,
+        RouterModule.forRoot(routes),
+        MatIconModule,
+        MatMenuModule,
+        BaseChartDirective,
+        MatDialogModule,
+        MatButtonModule,
+        MatDatepickerModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatTableModule,
+        MatBadgeModule], providers: [provideCharts(withDefaultRegisterables()), provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
