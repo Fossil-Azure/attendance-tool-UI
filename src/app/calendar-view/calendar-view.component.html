@@ -1,0 +1,37 @@
+<div class="parentContainer">
+    <div class="dropdown-container">
+        <label for="month-select">Month:</label>
+        <select id="month-select" [(ngModel)]="selectedMonth" (change)="onYearMonthChange()">
+            <option *ngFor="let month of months" [value]="month">{{monthNames[month]}}</option>
+        </select>
+    </div>
+
+    <!-- Calendar Grid Display -->
+    <div class="calendar-grid">
+        <div class="day-name">Sun</div>
+        <div class="day-name">Mon</div>
+        <div class="day-name">Tue</div>
+        <div class="day-name">Wed</div>
+        <div class="day-name">Thu</div>
+        <div class="day-name">Fri</div>
+        <div class="day-name">Sat</div>
+
+        <!-- Calendar Days -->
+        <div *ngFor="let day of daysInMonth" [ngClass]="getAttendanceClass(day.attendance)">
+            <div class="date-circle">{{ day.displayDate }}</div>
+        </div>
+    </div>
+
+    <!-- Legend for Attendance Types -->
+    <div class="legend-container">        
+        <div class="legend-item">
+            <span class="legend-circle office"></span> Work from Office
+        </div>
+        <div class="legend-item">
+            <span class="legend-circle home"></span> Work from Home
+        </div>
+        <div class="legend-item">
+            <span class="legend-circle leave"></span> Leave
+        </div>
+    </div>
+</div>

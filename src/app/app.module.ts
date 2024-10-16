@@ -32,6 +32,7 @@ import { EditAttendanceComponent } from './edit-attendance/edit-attendance.compo
 import { RequestStatusComponent } from './request-status/request-status.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { SuperAdminComponent } from './super-admin/super-admin.component';
+import { CalendarViewComponent } from './calendar-view/calendar-view.component';
 
 const routes: Routes = [
   { path: '', component: LoginPageComponent },
@@ -40,7 +41,8 @@ const routes: Routes = [
   { path: 'rest-password', component: ResetPasswordComponent },
   { path: 'edit-attendance', component: EditAttendanceComponent },
   { path: 'request-status', component: RequestStatusComponent },
-  { path: 'super-admin', component: SuperAdminComponent}
+  { path: 'super-admin', component: SuperAdminComponent},
+  { path: 'calendar-view', component: CalendarViewComponent}
 ];
 
 @NgModule({ declarations: [

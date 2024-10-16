@@ -4,27 +4,33 @@ div.card {
     background-color: #ffffff;
     opacity: 1;
     background-image: linear-gradient(30deg, #eeeeee 12%, transparent 12.5%, transparent 87%, #eeeeee 87.5%, #eeeeee), linear-gradient(150deg, #eeeeee 12%, transparent 12.5%, transparent 87%, #eeeeee 87.5%, #eeeeee), linear-gradient(30deg, #eeeeee 12%, transparent 12.5%, transparent 87%, #eeeeee 87.5%, #eeeeee), linear-gradient(150deg, #eeeeee 12%, transparent 12.5%, transparent 87%, #eeeeee 87.5%, #eeeeee), linear-gradient(60deg, #eeeeee77 25%, transparent 25.5%, transparent 75%, #eeeeee77 75%, #eeeeee77), linear-gradient(60deg, #eeeeee77 25%, transparent 25.5%, transparent 75%, #eeeeee77 75%, #eeeeee77);
-    background-size: 50px 88px;
+    background-size: 25% 38%;
     background-position: 0 0, 0 0, 25px 44px, 25px 44px, 0 0, 25px 44px;
 }
 
 div.header {
     background-color: #5D54A4;
     color: white;
-    padding: 25px;
-    font-size: 22px;
+    padding: 8%;
+    font-size: 20px;
     font-weight: bold;
     text-align: center;
 }
 
 div.footer {
-    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10%;
     text-align: center;
+    height: 70%;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 table {
-    height: 91%;
-    width: 99%;
+    height: 100%;
+    width: 100%;
     overflow-y: hidden;
 }
 
@@ -38,13 +44,13 @@ td {
 .card {
     border-radius: 20%;
     display: inline-block;
-    height: 300px;
-    width: 400px;
+    height: 38vh;
+    width: 20vw;
     background-color: rgb(255, 255, 255);
 }
 
 .internalTableRow {
-    height: 110px;
+    height: 100%;
 }
 
 .internalTableHead {
@@ -54,7 +60,7 @@ td {
 }
 
 .internalTableData {
-    font-size: 68px;
+    font-size: 75px;
     font-weight: bold;
     color: black;
 }
@@ -66,7 +72,7 @@ td {
 
 .popupButton {
     float: right;
-    margin: 10px;
+    margin: 2%;
 }
 
 .dialogContent {
@@ -74,16 +80,12 @@ td {
     margin-top: 15px;
 }
 
-.demo-inline-calendar-card {
-    width: 300px;
-}
-
 .singleCard {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 220px;
-    width: 380px
+    height: 140px;
+    width: 280px
 }
 
 .info-row {
@@ -93,12 +95,10 @@ td {
 }
 
 .detailTableFields {
-    border: 1px solid black;
     border-collapse: collapse;
 }
 
 .detailTableHeader {
-    border: 1px solid black;
     border-collapse: collapse;
     background-color: #5D54A4;
     color: white;
@@ -111,9 +111,10 @@ td {
 
 .content {
     flex: 1;
-    padding: 16px;
     width: 100%;
-    margin: 0 auto;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
     overflow-y: hidden;
 }
 
@@ -261,6 +262,7 @@ td {
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    height: 10%;
     margin-bottom: -15px;
 }
 
@@ -272,26 +274,26 @@ td {
     flex: 1;
     display: flex;
     justify-content: flex-start;
-    margin-left: 30px;
+    margin-left: 2rem;
+    margin-top: 2rem;
 }
 
 .buttons {
-    margin-top: -15px;
     display: flex;
     justify-content: flex-end;
+    margin-right: 2rem;
 }
 
 .allowanceTable {
     border-collapse: collapse;
-    width: 350px;
-    margin-top: 25px;
-    margin-left: 20px;
+    width: 100%;
+    height: 100%;
 }
 
 .allowanceTable td,
 th {
-    font-size: 22px;
-    padding: 15px;
+    font-size: 20px;
+    /* padding: 10px; */
 }
 
 .popupTableHeader {
@@ -320,9 +322,9 @@ th {
 /* PROGRESS BAR */
 
 .progress {
-    width: 180px;
-    height: 180px;
-    line-height: 180px;
+    width: 150px;
+    height: 150px;
+    line-height: 90px;
     background: none;
     margin: 0 auto;
     box-shadow: none;
@@ -402,12 +404,12 @@ th {
 
 .progress .progress-value .number {
     font-size: 60px;
-    font-weight: bolder;
+    font-weight: bold;
     line-height: 1;
 }
 
 .progress .progress-value .max-number {
-    font-size: 32px;
+    font-size: 30px;
     text-decoration: overline;
     line-height: 1;
     margin-top: 4px;
@@ -445,4 +447,38 @@ th {
     color: red;
     font-weight: bold;
     margin-top: 10px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    height: 92%;
+}
+
+.calendar-wrapper {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+}
+
+.table-wrapper {
+    flex: 2;
+    width: 100%;
+    height: 100%;
+}
+
+.top-div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 10%;
+    width: 100%;
+}
+
+.bottom-div {
+    display: flex;
+    width: 100%;
+    height: 90%;
 }

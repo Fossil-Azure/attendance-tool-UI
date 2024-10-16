@@ -1,0 +1,116 @@
+.parentContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Dropdown Styling */
+.dropdown-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5%;
+}
+
+.dropdown-container select {
+    margin: 0 10px;
+    padding: 5px;
+    font-size: 16px;
+}
+
+/* Calendar Grid Styling */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1%;
+    text-align: center;
+    width: 85%;
+    height: 50%;
+    margin: 0 auto;
+}
+
+.day-name {
+    font-weight: bold;
+}
+
+.calendar-grid div {
+    padding: 5%;
+    border: 1px solid #ccc;
+    position: relative;
+}
+
+.date-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    margin: 0 auto;
+    font-size: 16px;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+}
+
+.leave .date-circle {
+    background-color: #E57373;
+}
+
+.office .date-circle {
+    background-color: #5C6BC0;
+}
+
+.home .date-circle {
+    background-color: #81C784;
+}
+
+.pending .date-circle {
+    background-color: #FFB74D;
+}
+
+.calendar-grid div.empty {
+    background-color: #f9f9f9;
+}
+
+.legend-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5%;
+    width: 400px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+}
+
+.legend-circle {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.leave .date-circle,
+.legend-circle.leave {
+    background-color: #E57373;
+}
+
+.office .date-circle,
+.legend-circle.office {
+    background-color: #5C6BC0;
+}
+
+.home .date-circle,
+.legend-circle.home {
+    background-color: #81C784;
+}
+
+.pending .date-circle,
+.legend-circle.pending {
+    background-color: #FFB74D;
+}

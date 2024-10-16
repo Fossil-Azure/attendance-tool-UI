@@ -4,13 +4,7 @@
     <div class="content-wrapper">
         <app-sidenav></app-sidenav>
         <div class="content">
-            <div *ngIf="approvalSuccess" class="alert alert-success center-bottom-alert" role="alert">
-                Approval Request Submitted Successfully
-            </div>
-            <div *ngIf="approvalError" class="alert alert-danger center-bottom-alert" role="alert">
-                Approval Request with this date and status 'Extra WFH' already exists
-            </div>
-            <div class="dropdowns">
+            <div class="top-div">
                 <div class="form-field">
                     <mat-form-field appearance="outline">
                         <mat-label>Year</mat-label>
@@ -39,112 +33,119 @@
                         History</button>
                 </div>
             </div>
-            <table>
-                <tr>
-                    <td>
-                        <div class="card">
-                            <div class="header">
-                                <span>Work From Home</span>
-                            </div>
-                            <div class="footer">
-                                <div (click)="categoryAttendance('Work From Home')" class="progress pointer"
-                                    [ngClass]="{'over-50': cappedPercentage > 50}" [class]="getProgressBarClass()">
-                                    <span class="progress-left">
-                                        <span class="progress-bar" [ngStyle]="{'transform': leftRotation}"></span>
-                                    </span>
-                                    <span class="progress-right">
-                                        <span class="progress-bar" [ngStyle]="{'transform': rightRotation}"></span>
-                                    </span>
-                                    <div class="progress-value">
-                                        <div class="number">{{ number }}</div>
-                                        <div class="max-number">{{ maxNumber }}</div>
+            <div class="bottom-div">
+                <div class="calendar-wrapper">
+                    <app-calendar-view></app-calendar-view>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="card">
+                                    <div class="header">
+                                        <span>Work From Home</span>
+                                    </div>
+                                    <div class="footer">
+                                        <div (click)="categoryAttendance('Work From Home')" class="progress pointer"
+                                            [ngClass]="{'over-50': cappedPercentage > 50}"
+                                            [class]="getProgressBarClass()">
+                                            <span class="progress-left">
+                                                <span class="progress-bar"
+                                                    [ngStyle]="{'transform': leftRotation}"></span>
+                                            </span>
+                                            <span class="progress-right">
+                                                <span class="progress-bar"
+                                                    [ngStyle]="{'transform': rightRotation}"></span>
+                                            </span>
+                                            <div class="progress-value">
+                                                <div class="number">{{ number }}</div>
+                                                <div class="max-number">{{ maxNumber }}</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="card">
-                            <div class="header pointer" (click)="categoryAttendance('Work From Office')">
-                                <span>Work From Office</span>
-                            </div>
-                            <div class="footer">
-                                <div class="singleCard">
-                                    <span class="internalTableData">{{ attendanceData.wfo }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="card">
-                            <div class="header">
-                                <span>Leave Balance</span>
-                            </div>
-                            <div class="footer">
-                                <div (click)="categoryAttendance('Leave')" class="progress pointer"
-                                    [ngClass]="{'over-50': cappedPercentage > 50}"
-                                    [class]="getProgressBarClassForLeaves()">
-                                    <span class="progress-left">
-                                        <span class="progress-bar" [ngStyle]="{'transform': 'rotate(180deg)'}"></span>
-                                    </span>
-                                    <span class="progress-right">
-                                        <span class="progress-bar" [ngStyle]="{'transform': 'rotate(180deg)'}"></span>
-                                    </span>
-                                    <div class="progress-value">
-                                        <div class="number">{{ leaves }}</div>
+                            </td>
+                            <td>
+                                <div class="card">
+                                    <div class="header pointer" (click)="categoryAttendance('Work From Office')">
+                                        <span>Work From Office</span>
+                                    </div>
+                                    <div class="footer">
+                                        <span class="internalTableData">{{ attendanceData.wfo }}</span>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="card">
-                            <div class="header pointer" (click)="categoryAttendance('Work From Home - Friday')">
-                                <span>WFH (Fridays/ Others)</span>
-                            </div>
-                            <div class="footer">
-                                <div class="singleCard">
-                                    <span class="internalTableData">{{ attendanceData.wfhFriday }}</span>
+                            </td>
+                            <td>
+                                <div class="card">
+                                    <div class="header">
+                                        <span>Leave Balance</span>
+                                    </div>
+                                    <div class="footer">
+                                        <div (click)="categoryAttendance('Leave')" class="progress pointer"
+                                            [ngClass]="{'over-50': cappedPercentage > 50}"
+                                            [class]="getProgressBarClassForLeaves()">
+                                            <span class="progress-left">
+                                                <span class="progress-bar"
+                                                    [ngStyle]="{'transform': 'rotate(180deg)'}"></span>
+                                            </span>
+                                            <span class="progress-right">
+                                                <span class="progress-bar"
+                                                    [ngStyle]="{'transform': 'rotate(180deg)'}"></span>
+                                            </span>
+                                            <div class="progress-value">
+                                                <div class="number">{{ leaves }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="card">
-                            <div class="header pointer" (click)="categoryAttendance('Work From Office - Friday')">
-                                <span>WFO (Fridays/ Others)</span>
-                            </div>
-                            <div class="footer">
-                                <div class="singleCard">
-                                    <span class="internalTableData">{{ attendanceData.wfoFriday }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="card">
+                                    <div class="header pointer" (click)="categoryAttendance('Work From Home - Friday')">
+                                        <span>WFH (Fridays/ Others)</span>
+                                    </div>
+                                    <div class="footer">
+                                        <span class="internalTableData">{{ attendanceData.wfhFriday }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="card">
-                            <div class="header">
-                                <span>Shift Allowance</span>
-                            </div>
-                            <div class="footer">
-                                <table class="allowanceTable">
-                                    <tr *ngFor="let month of filteredMonths">
-                                        <th style="text-align: left;">{{ month }} {{selectedYear}}</th>
-                                        <td>{{ allowanceData[month] || 0 }}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-            <div *ngIf="attendanceSuccess" class="alert alert-success center-bottom-alert" role="alert">
-                Attendance Recorded Successfully
+                            </td>
+                            <td>
+                                <div class="card">
+                                    <div class="header pointer"
+                                        (click)="categoryAttendance('Work From Office - Friday')">
+                                        <span>WFO (Fridays/ Others)</span>
+                                    </div>
+                                    <div class="footer">
+                                        <span class="internalTableData">{{ attendanceData.wfoFriday }}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="card">
+                                    <div class="header">
+                                        <span>Shift Allowance</span>
+                                    </div>
+                                    <div class="footer">
+                                        <table class="allowanceTable">
+                                            <tr *ngFor="let month of filteredMonths">
+                                                <th style="text-align: left;">{{ month }} {{selectedYear}}</th>
+                                                <td>{{ allowanceData[month] || 0 }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
-            <div *ngIf="attendanceError" class="alert alert-danger center-bottom-alert" role="alert">
-                Attendance already recorded for the selected date
+            <div *ngIf="approvalSuccess" class="alert alert-success center-bottom-alert" role="alert">
+                Approval Request Submitted Successfully
+            </div>
+            <div *ngIf="approvalError" class="alert alert-danger center-bottom-alert" role="alert">
+                Approval Request with this date and status 'Extra WFH' already exists
             </div>
         </div>
     </div>

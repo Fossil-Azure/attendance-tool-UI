@@ -2,15 +2,15 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment.prod';
+// import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiCallingService {
 
-  private baseUrl = environment.apiUrl;
-  // private baseUrl = "http://localhost:8080"
+  // private baseUrl = environment.apiUrl;
+  private baseUrl = "http://localhost:8080"
 
   private loginUrl = `${this.baseUrl}/login`;
   private markAttendance = `${this.baseUrl}/addAttendance`;
@@ -42,6 +42,7 @@ export class ApiCallingService {
   private qtrAttendance = `${this.baseUrl}/qtrAttendance`;
   private upcomingLeaves = `${this.baseUrl}/upcomingLeaves`;
   private addUser = `${this.baseUrl}/addUser`;
+  private calendarView = `${this.baseUrl}/calendarView`;
 
   constructor(private http: HttpClient) { }
 
@@ -202,5 +203,9 @@ export class ApiCallingService {
 
   addNewUser(user: any): Observable<any> {
     return this.http.post<any>(this.addUser, user)
+  }
+
+  calendarData(user: any): Observable<any> {
+    return this.http.post<any>(this.calendarView, user)
   }
 }
