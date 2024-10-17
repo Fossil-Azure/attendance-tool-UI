@@ -108,7 +108,9 @@ export class EditAttendanceComponent {
 
   loadDistinctMonths() {
     const observer = {
-      next: (data: string[]) => this.distinctMonths = data,
+      next: (data: string[]) => {
+        this.distinctMonths = data.sort((a, b) => parseInt(b) - parseInt(a));
+      },
       error: (err: any) => console.error('Error fetching distinct months', err),
       complete: () => console.log('Fetching distinct months completed')
     };

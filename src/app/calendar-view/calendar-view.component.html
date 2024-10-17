@@ -18,7 +18,7 @@
 
         <!-- Loop through the daysInMonth array -->
         <div *ngFor="let day of daysInMonth">
-            <div [ngClass]="getAttendanceClass(day.attendance)" class="date-circle">{{ day.displayDate }}</div>
+            <div [ngClass]="getAttendanceClass(day.attendance, day.date)" class="date-circle">{{ day.displayDate }}</div>
         </div>
     </div>
 
@@ -32,6 +32,12 @@
         </div>
         <div class="legend-item">
             <span class="legend-circle leave"></span> Leave
+        </div>
+        <div class="legend-item">
+            <span class="legend-circle public-holiday"></span> Public Holiday
+        </div>
+        <div class="legend-item">
+            <span class="legend-circle pending-approval"></span> Pending Approval
         </div>
     </div>
 </div>

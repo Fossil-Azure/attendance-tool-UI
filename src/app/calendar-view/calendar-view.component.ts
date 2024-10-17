@@ -34,6 +34,9 @@ export class CalendarViewComponent {
     12: 'December'
   };
   attendanceData: any[] = [];
+  approvalData: any[] = [];
+
+  holidays = ['02-October-2024', '31-October-2024', '01-November-2024', '25-December-2024'];
 
   constructor(private api: ApiCallingService, private cdr: ChangeDetectorRef) { }
 
@@ -49,7 +52,9 @@ export class CalendarViewComponent {
       this.selectedMonth = this.currentMonth;
 
       this.generateAttendanceData().then(() => {
-        this.generateCalendar(this.selectedYear, this.selectedMonth);
+        this.getPendingApprovalData().then(() => {
+          this.generateCalendar(this.selectedYear, this.selectedMonth);
+        })
       });
     }
   }
@@ -75,24 +80,48 @@ export class CalendarViewComponent {
       return;
     }
 
+    if (!this.approvalData || !Array.isArray(this.approvalData)) {
+      console.error('Approval data is not available or not an array');
+      return;
+    }
+
     while (day <= endDate) {
       const formattedDate = formatDateForDB(day);
-      const attendanceRecord = this.attendanceData.find(
+
+      // Check if the date is in the approvalData array
+      const approvalRecord = this.approvalData.find(
         (record) => record.date === formattedDate
       );
 
-      days.push({
-        date: day,
-        formattedDate,
-        displayDate: day.getDate(),
-        attendance: attendanceRecord ? attendanceRecord.attendance : ''
-      });
+      // If the date exists in approvalData, set attendance to 'Pending Approval'
+      if (approvalRecord) {
+        days.push({
+          date: day,
+          formattedDate,
+          displayDate: day.getDate(),
+          attendance: 'Pending Approval'
+        });
+      } else {
+        // Otherwise, check the attendance data
+        const attendanceRecord = this.attendanceData.find(
+          (record) => record.date === formattedDate
+        );
+
+        days.push({
+          date: day,
+          formattedDate,
+          displayDate: day.getDate(),
+          attendance: attendanceRecord ? attendanceRecord.attendance : ''
+        });
+      }
 
       day = addDays(day, 1);
     }
+
     this.daysInMonth = days;
     this.cdr.detectChanges();
   }
+
 
   generateAttendanceData(): Promise<void> {
     const payload = {
@@ -115,7 +144,37 @@ export class CalendarViewComponent {
     });
   }
 
-  getAttendanceClass(attendance: string): string {
+  getPendingApprovalData(): Promise<void> {
+    const payload = {
+      raisedBy: this.email,
+      year: this.selectedYear,
+      month: this.selectedMonth
+    };
+    return new Promise((resolve) => {
+      const observer = {
+        next: (data: any[]) => {
+          this.approvalData = data;
+          resolve();
+        },
+        error: (err: any) => {
+          console.error('Error fetching Calendar Data', err);
+          resolve();
+        }
+      };
+      this.api.getPendingApprovalReq(payload).subscribe(observer);
+    });
+  }
+
+  getAttendanceClass(attendance: string, date: Date): string {
+    const isWeekend = (day: Date) => day.getDay() === 0 || day.getDay() === 6;
+    const formattedDate = format(date, 'dd-MMMM-yyyy');
+
+    if ((isWeekend(date)) && !attendance) {
+      return 'weekend';
+    } else if ((this.holidays.includes(formattedDate)) && !attendance) {
+      return 'public-holiday'
+    }
+
     switch (attendance) {
       case 'Work From Office':
       case 'Work From Office - Friday':
@@ -146,7 +205,9 @@ export class CalendarViewComponent {
 
   loadDistinctMonths() {
     const observer = {
-      next: (data: string[]) => this.months = data,
+      next: (data: string[]) => {
+        this.months = data.sort((a, b) => parseInt(b) - parseInt(a));
+      },
       error: (err: any) => console.error('Error fetching distinct months', err),
       complete: () => console.log('Fetching distinct months completed')
     };
@@ -155,13 +216,17 @@ export class CalendarViewComponent {
 
   onYearMonthChange(): void {
     this.generateAttendanceData().then(() => {
-      this.generateCalendar(this.selectedYear, this.selectedMonth);
+      this.getPendingApprovalData().then(() => {
+        this.generateCalendar(this.selectedYear, this.selectedMonth);
+      })
     });
   }
 
   refreshCalendar() {
     this.generateAttendanceData().then(() => {
-      this.generateCalendar(this.selectedYear, this.selectedMonth);
+      this.getPendingApprovalData().then(() => {
+        this.generateCalendar(this.selectedYear, this.selectedMonth);
+      })
     });
   }
 }

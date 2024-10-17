@@ -77,14 +77,23 @@
 
 .legend-container {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     margin-top: 5%;
-    width: 400px;
+    width: 80%;
 }
 
 .legend-item {
     display: flex;
     align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.legend-container .legend-item:nth-child(4),
+.legend-container .legend-item:nth-child(5) {
+    flex: 1 1 40%;
+    justify-content: center;
 }
 
 .legend-circle {
@@ -124,9 +133,17 @@
 }
 
 .leave {
-    background-color: #E57373;
+    background-color: #e86f6f;
 }
 
 .pending-approval {
-    background-color: yellow;
+    background-color: rgb(250, 250, 138);
+}
+
+.weekend {
+    background-color: #bababa;
+}
+
+.public-holiday {
+    background-color: #ffaa88;
 }

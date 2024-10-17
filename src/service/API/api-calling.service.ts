@@ -43,6 +43,7 @@ export class ApiCallingService {
   private upcomingLeaves = `${this.baseUrl}/upcomingLeaves`;
   private addUser = `${this.baseUrl}/addUser`;
   private calendarView = `${this.baseUrl}/calendarView`;
+  private pendingApproval = `${this.baseUrl}/pendingReq`;
 
   constructor(private http: HttpClient) { }
 
@@ -207,5 +208,9 @@ export class ApiCallingService {
 
   calendarData(user: any): Observable<any> {
     return this.http.post<any>(this.calendarView, user)
+  }
+
+  getPendingApprovalReq(approval: any): Observable<any> {
+    return this.http.post<any>(this.pendingApproval, approval)
   }
 }
