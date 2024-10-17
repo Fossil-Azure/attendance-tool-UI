@@ -222,7 +222,8 @@ export class CalendarViewComponent {
     });
   }
 
-  refreshCalendar() {
+  refreshCalendar(selectedUser: string) {
+    this.email = selectedUser
     this.generateAttendanceData().then(() => {
       this.getPendingApprovalData().then(() => {
         this.generateCalendar(this.selectedYear, this.selectedMonth);

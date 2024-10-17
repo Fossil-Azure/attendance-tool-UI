@@ -270,6 +270,7 @@ export class UserDashboardComponent {
   }
 
   async userChange() {
+    await this.refreshCalendarView(this.selectedUser);
     await this.getUserAttendance();
     await this.getUserLeave()
   }
@@ -483,7 +484,7 @@ export class UserDashboardComponent {
       }
     } finally {
       try {
-        await this.refreshCalendarView();
+        await this.refreshCalendarView(this.selectedUser);
         await this.getUserAttendance();
         await this.getUserLeave();
       } catch (error) {
@@ -1006,16 +1007,16 @@ export class UserDashboardComponent {
         }
       }
     } finally {
-      await this.refreshCalendarView();
+      await this.refreshCalendarView(this.selectedUser);
       await this.getUserAttendance()
       await this.getUserLeave();
       this.loader.hide();
     }
   }
 
-  refreshCalendarView() {
+  refreshCalendarView(selectedUser: string) {
     if (this.calendarView) {
-      this.calendarView.refreshCalendar();
+      this.calendarView.refreshCalendar(selectedUser);
     }
   }
 }
