@@ -27,10 +27,10 @@
                     </mat-form-field>
                 </div>
                 <div class="buttons">
-                    <button mat-raised-button color="primary" (click)="openDialog()" style="margin-right: 10px;">Mark
+                    <button mat-raised-button color="primary" (click)="openDialog()">Mark
                         Attendance</button>
-                    <button type="button" class="btn btn-warning" (click)="categoryAttendance('Attendance')">Attendance
-                        History</button>
+                    <!-- <button type="button" class="btn btn-warning" (click)="categoryAttendance('Attendance')">Attendance
+                        History</button> -->
                 </div>
             </div>
             <div class="bottom-div">
@@ -152,9 +152,102 @@
 </div>
 
 <ng-template #dialogTemplate>
+    <span mat-dialog-title class="popUpTitleForAttendance">Attendance Marking</span>
+
+    <mat-dialog-content class="dialogContentForAttendance">
+        <div class="form-row-for-attendance">
+            <div style="flex: 1;">
+                <p-calendar [(ngModel)]="selectedDates" selectionMode="multiple" [placeholder]="'Select Dates'"
+                    [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [style]="{'width':'100%'}"
+                    [styleClass]="'custom-calendar-popup'" (ngModelChange)="onDateChange()">
+                </p-calendar>
+            </div>
+
+            <mat-form-field class="dropdown-full-width" appearance="outline"
+                style="flex: 1; margin-left: 15px; margin-top: 20px;">
+                <mat-label>Select Attendance</mat-label>
+                <mat-select [(ngModel)]="selectedAttendance" [disabled]="!selectedDates || selectedDates.length === 0"
+                    (selectionChange)="onAttendanceChange()">
+                    <ng-container *ngFor="let option of options">
+                        <mat-option [value]="option">{{ option }}</mat-option>
+                    </ng-container>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" appearance="outline"
+                style="flex: 1; margin-left: 15px; margin-top: 15px;">
+                <mat-label>Select Shift</mat-label>
+                <mat-select [(ngModel)]="shift" [disabled]="!selectedDates || selectedDates.length === 0">
+                    <ng-container *ngFor="let option of shiftOptions">
+                        <mat-option [value]="option">{{ option }}</mat-option>
+                    </ng-container>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span><strong>Work From Home Balance -</strong> {{13 - number}} </span>
+            <span><strong>Default Shift - </strong>{{defaultShift}}</span>
+        </div>
+        <hr>
+        <div class="shift-options">
+            <ul>
+                <li><strong>Shift A - </strong> 8:00 AM to 8 PM</li>
+                <li><strong>Shift B - </strong> Shifts starting before 8:00 AM OR ending between 8:00 PM to 10 PM</li>
+                <li><strong>Shift C - </strong> Shifts extending beyond 10:00 PM up to 12 Midnight</li>
+                <li><strong>Shift D - </strong> Shift extending beyond 12 Midnight</li>
+                <li><strong>Shift F - </strong> On Call from Home (beyond 12 Midnight and Weekly offs)</li>
+            </ul>
+        </div>
+
+        <mat-dialog-actions class="dialog-actions">
+            <button mat-raised-button color="primary" [disabled]="!selectedAttendance" (click)="onSave()">Save</button>
+            <button mat-raised-button color="warn" mat-dialog-close>Close</button>
+        </mat-dialog-actions>
+    </mat-dialog-content>
+</ng-template>
+
+<!-- Dialog Template for showing the summary -->
+<ng-template #confirmationPopUp let-data>
+    <span mat-dialog-title class="popUpTitle">Attendance Summary</span>
+
+    <mat-dialog-content>
+        <table style="border: 1px solid black; margin-top: 20px;">
+            <tr style="border: 1px solid black;">
+                <td style="font-weight: bolder; padding: 5px; text-align: center;">Date</td>
+                <td style="font-weight: bolder; padding: 5px; text-align: center;">Attendance</td>
+                <td style="font-weight: bolder; padding: 5px; text-align: center;">Approval Required</td>
+            </tr>
+            <tr *ngFor="let entry of data.summary">
+                <td style="border: 1px solid black; color: 'black'; padding: 5px; text-align: center;">{{entry.date |
+                    date: 'dd MMMM yyyy'}}
+                </td>
+                <td style="border: 1px solid black; padding: 5px; text-align: center;">{{entry.attendance}}</td>
+                <td style="border: 1px solid black; padding: 5px; text-align: center;">{{entry.reason}}</td>
+            </tr>
+        </table>
+        <br>
+        <strong>Please make sure the above values are correct</strong>
+    </mat-dialog-content>
+
+    <mat-dialog-actions style="margin-bottom: 20px;" align="end">
+        <button mat-raised-button *ngIf="!requiresApproval" color="primary"
+            (click)="confirmAttendance()">Confirm</button>
+        <button mat-raised-button *ngIf="requiresApproval" color="primary" (click)="confirmAttendance()">Send for
+            Approval</button>
+        <button mat-raised-button color="warn" class="popupButton" (click)="cancelAttendance()">Cancel</button>
+    </mat-dialog-actions>
+</ng-template>
+
+<!-- <ng-template #dialogTemplate>
     <span mat-dialog-title class="popUpTitle" style="background-color: #5D54A4; color: white;">Attendance Marking</span>
     <mat-dialog-content class="dialogContent">
-        <div class="form-row">
+        <div class="form-row1">
+            <div style="margin-top: 15px;">
+                <p-calendar [(ngModel)]="selectedDates" selectionMode="multiple" [iconDisplay]="'input'" [showIcon]="true"
+                inputId="icondisplay" [style]="{'width':'200px'}" [styleClass]="'custom-calendar-popup'" (ngModelChange)="onDateChange()">
+            </p-calendar>
+            </div>
+
             <mat-form-field class="example-full-width" appearance="outline">
                 <mat-label>Select Date</mat-label>
                 <mat-date-range-input [rangePicker]="picker">
@@ -167,7 +260,7 @@
 
             <mat-form-field class="example-full-width" appearance="outline">
                 <mat-label>Select Attendance</mat-label>
-                <mat-select [(ngModel)]="selectedAttendance" [disabled]="!endDate"
+                <mat-select [(ngModel)]="selectedAttendance" [disabled]="!selectedDates || selectedDates.length === 0"
                     (selectionChange)="onAttendanceChange()">
                     <ng-container *ngFor="let option of options">
                         <mat-option [value]="option">{{ option }}</mat-option>
@@ -177,14 +270,21 @@
 
             <mat-form-field class="example-full-width" appearance="outline">
                 <mat-label>Select Shift</mat-label>
-                <mat-select [(ngModel)]="shift" [disabled]="!endDate">
+                <mat-select [(ngModel)]="shift" [disabled]="!selectedDates || selectedDates.length === 0">
                     <ng-container *ngFor="let option of shiftOptions">
                         <mat-option [value]="option">{{ option }}</mat-option>
                     </ng-container>
                 </mat-select>
             </mat-form-field>
         </div>
+        <div class="blankDiv">
+            <span *ngFor="let date of selectedDates">{{ date | date: 'dd MMM' }}, &nbsp;</span>
+        </div>
         <div class="info-row">
+            <div class="selected-dates">
+                <h4>Selected Dates:</h4>
+                <span *ngFor="let date of selectedDates">{{ date | date: 'longDate' }} &nbsp;</span>
+            </div>
             <p *ngIf="endDate">Selected Date Range: <strong>{{ startDate | date: 'dd MMMM yyyy' }} to {{ endDate | date:
                     'dd MMMM yyyy' }}</strong></p>
             <p *ngIf="selectedAttendance">Selected Option: <strong>{{selectedAttendance}}</strong></p>
@@ -274,7 +374,7 @@
             *ngIf="(approvalMessage || (oldShift != shift && shift != 'Absent') || showDummy || needsManagerApprovalForWFH() || onlyHoliday)"
             mat-raised-button color="primary" (click)="sendForApproval()">Send for Approval</button>
     </mat-dialog-content>
-</ng-template>
+</ng-template> -->
 
 <ng-template #detailedAttendance>
     <div mat-dialog-title class="popUpTitle2">{{ popUpTitle }}</div>

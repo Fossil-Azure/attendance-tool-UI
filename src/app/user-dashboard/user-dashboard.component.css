@@ -482,3 +482,60 @@ th {
     width: 100%;
     height: 90%;
 }
+
+.form-row1 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.blankDiv {
+    height: 10vh;
+    max-height: 10vh;
+    /* overflow-y: scroll; */
+}
+
+.dialogContentForAttendance {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row-for-attendance {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.mat-form-field {
+    width: 100%;
+}
+
+.popUpTitleForAttendance {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #5D54A4;
+    color: white !important;
+}
+
+.dropdown-full-width {
+    width: 30%;
+}
+
+.shift-options {
+    font-size: 16px;
+}
+
+.shift-options ul {
+    padding-left: 20px;
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}

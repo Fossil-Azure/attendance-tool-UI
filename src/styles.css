@@ -9,3 +9,78 @@ body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+/* Ensure the calendar popup size is compact */
+.custom-calendar-popup .p-datepicker {
+    width: 320px !important;
+    /* Make the popup narrower */
+    height: auto !important;
+}
+
+/* Reduce padding and size of the day cells */
+.custom-calendar-popup .p-datepicker table td {
+    padding: 2px !important;
+    /* Reduce padding inside date cells */
+    text-align: center;
+    /* Center-align day numbers */
+    width: 30px !important;
+    /* Adjust the width of the date cells */
+    height: 30px !important;
+    /* Adjust the height of the date cells */
+}
+
+/* Adjust the size of the calendar header (Month/Year selector) */
+.custom-calendar-popup .p-datepicker-header {
+    padding: 5px !important;
+    font-size: 14px !important;
+    /* Smaller font size for month/year */
+}
+
+/* Reduce the font size of day numbers */
+.custom-calendar-popup .p-datepicker table td .p-datepicker-day {
+    font-size: 10px !important;
+    /* Make day numbers smaller */
+    display: inline-block;
+    width: 100%;
+    /* Ensure the day fills the entire cell */
+    height: 100%;
+    /* Ensure the day fills the entire cell */
+    line-height: 30px;
+    /* Ensure numbers are vertically aligned */
+}
+
+/* Adjust the navigation arrows for previous/next month */
+.custom-calendar-popup .p-datepicker-prev,
+.custom-calendar-popup .p-datepicker-next {
+    font-size: 10px !important;
+    /* Reduce the size of navigation arrows */
+}
+
+/* Adjust the font size of the input text */
+.custom-calendar-popup .p-inputtext {
+    font-size: 12px;
+}
+
+/* Match the height of the PrimeNG calendar input field with the mat-form-field */
+.custom-calendar-popup .p-inputtext {
+    height: 56px !important;
+    /* Adjust height to match the other form fields */
+    padding: 0 10px !important;
+    /* Adjust padding to ensure proper spacing */
+    line-height: normal !important;
+    /* Ensure line-height matches other fields */
+    box-sizing: border-box;
+    /* Make sure padding is included in the height */
+}
+
+/* Optional: Adjust the icon size inside the PrimeNG calendar input */
+.custom-calendar-popup .p-inputgroup-addon .pi {
+    font-size: 16px !important;
+    /* Adjust the icon size */
+}
+
+/* Align the calendar input with other form fields (Select Attendance, Shift) */
+.p-calendar {
+    display: inline-flex;
+    align-items: center;
+}

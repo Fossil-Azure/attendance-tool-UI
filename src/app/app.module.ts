@@ -33,6 +33,8 @@ import { RequestStatusComponent } from './request-status/request-status.componen
 import { MatBadgeModule } from '@angular/material/badge';
 import { SuperAdminComponent } from './super-admin/super-admin.component';
 import { CalendarViewComponent } from './calendar-view/calendar-view.component';
+import { CalendarModule } from 'primeng/calendar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const routes: Routes = [
   { path: '', component: LoginPageComponent },
@@ -41,43 +43,51 @@ const routes: Routes = [
   { path: 'rest-password', component: ResetPasswordComponent },
   { path: 'edit-attendance', component: EditAttendanceComponent },
   { path: 'request-status', component: RequestStatusComponent },
-  { path: 'super-admin', component: SuperAdminComponent},
-  { path: 'calendar-view', component: CalendarViewComponent}
+  { path: 'super-admin', component: SuperAdminComponent },
+  { path: 'calendar-view', component: CalendarViewComponent }
 ];
 
-@NgModule({ declarations: [
-        AppComponent,
-        LoginPageComponent,
-        UserDashboardComponent,
-        HeaderComponent,
-        SidenavComponent,
-        LoaderComponent,
-        AdminPanelComponent,
-        ResetPasswordComponent,
-        EditAttendanceComponent,
-        RequestStatusComponent,
-        SuperAdminComponent,
-        CalendarViewComponent
-    ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
-        BrowserAnimationsModule,
-        MatProgressSpinnerModule,
-        MatCardModule,
-        MatRadioModule,
-        FormsModule,
-        MatSliderModule,
-        MatProgressSpinnerModule,
-        ReactiveFormsModule,
-        RouterModule.forRoot(routes),
-        MatIconModule,
-        MatMenuModule,
-        BaseChartDirective,
-        MatDialogModule,
-        MatButtonModule,
-        MatDatepickerModule,
-        MatInputModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatTableModule,
-        MatBadgeModule], providers: [provideCharts(withDefaultRegisterables()), provideHttpClient(withInterceptorsFromDi())] })
+@NgModule({
+  declarations: [
+    AppComponent,
+    LoginPageComponent,
+    UserDashboardComponent,
+    HeaderComponent,
+    SidenavComponent,
+    LoaderComponent,
+    AdminPanelComponent,
+    ResetPasswordComponent,
+    EditAttendanceComponent,
+    RequestStatusComponent,
+    SuperAdminComponent,
+    CalendarViewComponent
+  ],
+  bootstrap: [AppComponent],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    MatProgressSpinnerModule,
+    MatCardModule,
+    MatRadioModule,
+    FormsModule,
+    MatSliderModule,
+    MatProgressSpinnerModule,
+    ReactiveFormsModule,
+    RouterModule.forRoot(routes),
+    MatIconModule,
+    MatMenuModule,
+    BaseChartDirective,
+    MatDialogModule,
+    MatButtonModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatTableModule,
+    MatBadgeModule,
+    CalendarModule,
+    MatSnackBarModule
+  ],
+  providers: [provideCharts(withDefaultRegisterables()), provideHttpClient(withInterceptorsFromDi())]
+})
 export class AppModule { }
