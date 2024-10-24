@@ -49,16 +49,6 @@ td {
     background-color: rgb(255, 255, 255);
 }
 
-.internalTableRow {
-    height: 100%;
-}
-
-.internalTableHead {
-    font-size: 18px;
-    font-weight: bold;
-    color: black;
-}
-
 .internalTableData {
     font-size: 75px;
     font-weight: bold;
@@ -75,33 +65,8 @@ td {
     margin: 2%;
 }
 
-.dialogContent {
-    width: 100%;
-    margin-top: 15px;
-}
-
-.singleCard {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 140px;
-    width: 280px
-}
-
-.info-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 .detailTableFields {
     border-collapse: collapse;
-}
-
-.detailTableHeader {
-    border-collapse: collapse;
-    background-color: #5D54A4;
-    color: white;
 }
 
 .popUpTitle2 {
@@ -132,15 +97,6 @@ td {
     border-collapse: collapse;
 }
 
-.detailTableHeader2 {
-    position: sticky;
-    top: 0;
-    background-color: #5D54A4;
-    color: white;
-    z-index: 1;
-    border-bottom: 1px solid #ddd;
-}
-
 .detailTableFields2 {
     border-bottom: 1px solid #ddd;
     padding: 8px;
@@ -151,7 +107,7 @@ td {
     margin: 16px auto 0;
 }
 
-.dialogContent .form-row {
+/* .dialogContent .form-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -162,14 +118,10 @@ td {
 .dialogContent .example-full-width {
     width: 32%;
     margin-top: 15px;
-}
+} */
 
 .pointer {
     cursor: pointer;
-}
-
-.tdButton {
-    margin-left: 30px;
 }
 
 .main-container {
@@ -188,36 +140,6 @@ td {
     display: flex;
     flex: 1;
     overflow-y: hidden;
-}
-
-.side-nav {
-    flex: 0 0 200px;
-}
-
-.detailTableHeader2 {
-    cursor: pointer;
-    user-select: none;
-}
-
-.detailTableHeader2 span {
-    font-size: 0.8em;
-    margin-left: 5px;
-}
-
-.center-bottom-alert {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    width: auto;
-    max-width: 80%;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.alert {
-    margin-bottom: 0;
 }
 
 .popUpContent {
@@ -248,24 +170,6 @@ td {
     background: rgb(163, 163, 163);
 }
 
-.table-container {
-    width: 100%;
-}
-
-.updateButton {
-    margin-left: auto;
-    margin-top: -15px;
-}
-
-.dropdowns {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    height: 10%;
-    margin-bottom: -15px;
-}
-
 .dropdown {
     margin-left: 25px;
 }
@@ -293,7 +197,6 @@ td {
 .allowanceTable td,
 th {
     font-size: 20px;
-    /* padding: 10px; */
 }
 
 .popupTableHeader {
@@ -301,22 +204,6 @@ th {
     background-color: #5D54A4;
     color: white;
     padding: 15px;
-}
-
-.approvalMessage {
-    color: red;
-}
-
-.center-bottom-alert {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    width: auto;
-    max-width: 80%;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* PROGRESS BAR */
@@ -439,24 +326,6 @@ th {
 
 /* PROGRESS BAR END */
 
-.red-text {
-    color: red;
-}
-
-.error-message {
-    color: red;
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-.container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 100%;
-    height: 92%;
-}
-
 .calendar-wrapper {
     flex: 1;
     width: 100%;
@@ -481,19 +350,6 @@ th {
     display: flex;
     width: 100%;
     height: 90%;
-}
-
-.form-row1 {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: space-between;
-}
-
-.blankDiv {
-    height: 10vh;
-    max-height: 10vh;
-    /* overflow-y: scroll; */
 }
 
 .dialogContentForAttendance {
