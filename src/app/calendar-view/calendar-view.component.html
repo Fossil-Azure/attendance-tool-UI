@@ -18,7 +18,11 @@
 
         <!-- Loop through the daysInMonth array -->
         <div *ngFor="let day of daysInMonth">
-            <div [ngClass]="getAttendanceClass(day.attendance, day.date)" class="date-circle">{{ day.displayDate }}</div>
+            <div [ngClass]="[getAttendanceClass(day.attendance, day.date), shouldShowPointer(day.attendance, day.date) ? 'pointer' : '']"
+                class="date-circle"
+                (click)="['', 'weekend', 'public-holiday'].includes(getAttendanceClass(day.attendance, day.date)) ? attendanceMarking(day.date) : null">
+                {{ day.displayDate }}
+            </div>
         </div>
     </div>
 

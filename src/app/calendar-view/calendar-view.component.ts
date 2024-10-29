@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, format } from 'date-fns';
 import moment from 'moment-timezone';
 import { ApiCallingService } from 'src/service/API/api-calling.service';
+import { AttendanceService } from 'src/service/Shared/attendance.service';
 
 @Component({
   selector: 'app-calendar-view',
@@ -38,7 +40,7 @@ export class CalendarViewComponent {
 
   holidays = ['02-October-2024', '31-October-2024', '01-November-2024', '25-December-2024'];
 
-  constructor(private api: ApiCallingService, private cdr: ChangeDetectorRef) { }
+  constructor(private api: ApiCallingService, private cdr: ChangeDetectorRef, private dialog: MatDialog, private attendanceService: AttendanceService) { }
 
   async ngOnInit() {
     const userDataString = sessionStorage.getItem('user');
@@ -230,4 +232,14 @@ export class CalendarViewComponent {
       })
     });
   }
+
+  attendanceMarking(date: any) {
+    this.attendanceService.triggerPopup(date);
+  }
+
+  shouldShowPointer(attendance: string, date: Date): boolean {
+    const attendanceClass = this.getAttendanceClass(attendance, date);
+    return ['', 'weekend', 'public-holiday'].includes(attendanceClass);
+  }
+
 }

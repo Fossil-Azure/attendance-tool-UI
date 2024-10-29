@@ -3,7 +3,6 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { LoaderService } from 'src/service/Loader/loader.service';
 import moment from 'moment-timezone';
 import { Router } from '@angular/router';
-import { SharedService } from 'src/service/EventEmitter/shared.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ThemePalette, provideNativeDateAdapter } from '@angular/material/core';
 import { ApiCallingService } from 'src/service/API/api-calling.service';
@@ -11,6 +10,7 @@ import { MatSort } from '@angular/material/sort';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { CalendarViewComponent } from '../calendar-view/calendar-view.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AttendanceService } from 'src/service/Shared/attendance.service';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -78,6 +78,9 @@ export class UserDashboardComponent {
   @ViewChild(CalendarViewComponent)
   calendarView!: CalendarViewComponent;
 
+  @ViewChild('calendarViewAttendance')
+  calendarViewAttendance!: TemplateRef<any>;
+
   displayedColumns: string[] = ['date', 'attendance'];
 
   time!: string;
@@ -138,10 +141,14 @@ export class UserDashboardComponent {
   newShift!: any;
   requiresApproval = false;
   attendanceSummary!: { date: string; attendance: string; reason: string; }[];
+  popUpDate: any;
 
-  constructor(private loader: LoaderService, private router: Router, private sharedService: SharedService,
-    private dialog: MatDialog, private api: ApiCallingService, private snackBar: MatSnackBar) {
-
+  constructor(private loader: LoaderService, private router: Router,
+    private dialog: MatDialog, private api: ApiCallingService, private snackBar: MatSnackBar, private attendanceService: AttendanceService) {
+    this.attendanceService.openPopup$.subscribe((data) => {
+      this.popUpDate = data;  // Save the received data
+      this.openAttendancePopup();
+    });
   }
 
   async ngOnInit() {
@@ -471,78 +478,86 @@ export class UserDashboardComponent {
     });
   }
 
+  onSavePopUp() {
+    this.selectedDates = [];
+    this.selectedDates.push(this.popUpDate)
+    this.onSave();
+  }
+
 
   onSave(): void {
     const publicHolidays = ['2024-10-02', '2024-10-31', '2024-11-01', '2024-12-25'];
     const summary: { date: string, attendance: string, reason: string }[] = [];
     let wfhNumber = this.wfhCount;
-    this.requiresApproval = false
+    this.requiresApproval = false;
 
     for (const date of this.selectedDates) {
       const dayOfWeek = new Date(date).getDay(); // Get day of the week (0: Sunday, 1: Monday, 2: Tuesday, ..., 6: Saturday)
       const formattedDate = moment(date).format('YYYY-MM-DD'); // Format the date for holiday comparison
       const uiDateFormat = moment(date).format('DD-MMMM-YYYY');
 
-      let approvalReason = '';
+      const approvalReasons: string[] = []; // Using an array to collect multiple reasons
       let attendanceType = this.selectedAttendance;
-      let requiresApproval = false
+      let requiresApproval = false;
 
-      // Rule 1: If it's Tuesday and WFH is selected, approval is needed, increment WFH
+      // Rule 1: If it's Tuesday and WFH is selected, approval is needed
       if (dayOfWeek === 2 && this.selectedAttendance === 'Work From Home') {
-        // wfhNumber++;
         requiresApproval = true;
         this.requiresApproval = true;
-        approvalReason = 'WFH on Tuesday';
+        approvalReasons.push('WFH on Tuesday');
       }
 
-      // Rule 2: If it's a weekend approval is needed
-      if ((dayOfWeek === 0 || dayOfWeek === 6)) {
+      // Rule 2: If it's a weekend, approval is needed
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
         requiresApproval = true;
         this.requiresApproval = true;
-        approvalReason = 'Weekend';
+        approvalReasons.push('Weekend');
       }
 
       // Rule 3: If it's a public holiday, approval is needed
       if (publicHolidays.includes(formattedDate)) {
         requiresApproval = true;
         this.requiresApproval = true;
-        approvalReason = 'Public Holiday';
+        approvalReasons.push('Public Holiday');
       }
 
       // Rule 4: If it's a shift change, approval is needed
-      if ((this.shift != this.defaultShift) && this.selectedAttendance != "Leave") {
+      if ((this.shift !== this.defaultShift) && this.selectedAttendance !== "Leave") {
         requiresApproval = true;
         this.requiresApproval = true;
-        approvalReason = 'Shift Change'
+        approvalReasons.push('Shift Change');
 
         // Increment WFH
-        if (this.selectedAttendance == 'Work From Home' && dayOfWeek !== 5 && !publicHolidays.includes(formattedDate)) {
+        if (this.selectedAttendance === 'Work From Home' && dayOfWeek !== 5 && !publicHolidays.includes(formattedDate)) {
           wfhNumber++;
         }
       }
 
       // Rule 5: Increment WFH count only if no other approval condition applies and WFH is selected
-      if (this.selectedAttendance === 'Work From Home' && !requiresApproval && dayOfWeek !== 5
-        && !(dayOfWeek === 0 || dayOfWeek === 6) && !publicHolidays.includes(formattedDate)) {
+      if (this.selectedAttendance === 'Work From Home' && !requiresApproval && dayOfWeek !== 5 &&
+        !(dayOfWeek === 0 || dayOfWeek === 6) && !publicHolidays.includes(formattedDate)) {
         if (wfhNumber >= 13) {
           wfhNumber++;
           requiresApproval = true;
           this.requiresApproval = true;
-          approvalReason = 'Extra WFH';
+          approvalReasons.push('Extra WFH');
         } else {
           wfhNumber++;
         }
       }
 
-      // Rule 1: If it's Friday, add the suffix -Friday
-      if (dayOfWeek === 5 && this.selectedAttendance != 'Leave') {
+      // Rule 1: If it's Friday, add the suffix - Friday
+      if (dayOfWeek === 5 && this.selectedAttendance !== 'Leave') {
         attendanceType += ' - Friday';
       }
 
       // Rule 2: If it's a weekend or a public holiday, add the suffix - Others
-      if (((dayOfWeek === 0 || dayOfWeek === 6) || publicHolidays.includes(formattedDate)) && this.selectedAttendance != 'Leave') {
+      if (((dayOfWeek === 0 || dayOfWeek === 6) || publicHolidays.includes(formattedDate)) && this.selectedAttendance !== 'Leave') {
         attendanceType += ' - Others';
       }
+
+      // Merge multiple reasons into a single string
+      const approvalReason = approvalReasons.join(', ');
 
       summary.push({
         date: uiDateFormat,
@@ -721,6 +736,17 @@ export class UserDashboardComponent {
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
       panelClass: [panelClass] // Use the custom styles
+    });
+  }
+
+  openAttendancePopup(): void {
+    console.log("HERE")
+    this.selectedAttendance = '';
+    this.shift = this.defaultShift;
+    const dialogRef = this.dialog.open(this.calendarViewAttendance);
+    dialogRef.afterOpened().subscribe(() => {
+      this.selectedAttendance = ''; // Reset selectedAttendance
+      this.shift = this.defaultShift; // Reset shift to defaultShift
     });
   }
 

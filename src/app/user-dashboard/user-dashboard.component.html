@@ -261,3 +261,57 @@
         <button mat-raised-button color="warn" mat-dialog-close class="popupButton2">Close</button>
     </div>
 </ng-template>
+
+<ng-template #calendarViewAttendance>
+    <span mat-dialog-title class="popUpTitleForAttendance">Attendance Marking</span>
+
+    <mat-dialog-content class="dialogContentForAttendance">
+        <div class="form-row-for-attendance">
+
+            <mat-form-field class="dropdown-full-width" appearance="outline"
+                style="flex: 1; margin-left: 15px; margin-top: 20px;">
+                <mat-label>Selected Dates</mat-label>
+                <input matInput disabled [value]="popUpDate | date: 'dd MMMM yyyy'">
+            </mat-form-field>
+
+            <mat-form-field class="dropdown-full-width" appearance="outline"
+                style="flex: 1; margin-left: 15px; margin-top: 20px;">
+                <mat-label>Select Attendance</mat-label>
+                <mat-select [(ngModel)]="selectedAttendance" (selectionChange)="onAttendanceChange()">
+                    <ng-container *ngFor="let option of options">
+                        <mat-option [value]="option">{{ option }}</mat-option>
+                    </ng-container>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" appearance="outline"
+                style="flex: 1; margin-left: 15px; margin-top: 15px;">
+                <mat-label>Select Shift</mat-label>
+                <mat-select [(ngModel)]="shift" [disabled]="!selectedAttendance">
+                    <ng-container *ngFor="let option of shiftOptions">
+                        <mat-option [value]="option">{{ option }}</mat-option>
+                    </ng-container>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span><strong>Work From Home Balance -</strong> {{13 - number}} </span>
+            <span><strong>Default Shift - </strong>{{defaultShift}}</span>
+        </div>
+        <hr>
+        <div class="shift-options">
+            <ul>
+                <li><strong>Shift A - </strong> 8:00 AM to 8 PM</li>
+                <li><strong>Shift B - </strong> Shifts starting before 8:00 AM OR ending between 8:00 PM to 10 PM</li>
+                <li><strong>Shift C - </strong> Shifts extending beyond 10:00 PM up to 12 Midnight</li>
+                <li><strong>Shift D - </strong> Shift extending beyond 12 Midnight</li>
+                <li><strong>Shift F - </strong> On Call from Home (beyond 12 Midnight and Weekly offs)</li>
+            </ul>
+        </div>
+
+        <mat-dialog-actions class="dialog-actions">
+            <button mat-raised-button color="primary" [disabled]="!selectedAttendance" (click)="onSavePopUp()">Save</button>
+            <button mat-raised-button color="warn" mat-dialog-close>Close</button>
+        </mat-dialog-actions>
+    </mat-dialog-content>
+</ng-template>

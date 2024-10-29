@@ -147,3 +147,7 @@
 .public-holiday {
     background-color: #ffaa88;
 }
+
+.pointer {
+    cursor: pointer;
+}
