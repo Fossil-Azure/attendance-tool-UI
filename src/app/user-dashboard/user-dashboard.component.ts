@@ -30,7 +30,7 @@ export class UserDashboardComponent {
   days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   dialogRef1!: MatDialogRef<any>;
   dialogRef2!: MatDialogRef<any>;
-  dialogRef!: MatDialogRef<any>;
+  private dialogRef: MatDialogRef<any> | null = null;
   detailedAttendancePopup!: MatDialogRef<any>;
   username: any;
   team: any;
@@ -579,8 +579,9 @@ export class UserDashboardComponent {
   async confirmAttendance() {
     this.loader.show();
     try {
-      this.dialogRef2.close();
-      this.dialogRef1.close();
+      this.dialogRef?.close();
+      this.dialogRef1?.close();
+      this.dialogRef2?.close();
       let allowance = 0;
       let foodAllowance = 0;
 
@@ -740,13 +741,27 @@ export class UserDashboardComponent {
   }
 
   openAttendancePopup(): void {
-    console.log("HERE")
+    // Close the existing dialog if open
+    if (this.dialogRef) {
+      this.dialogRef.close();
+    }
+
+    // Reset data before opening a new dialog
     this.selectedAttendance = '';
     this.shift = this.defaultShift;
-    const dialogRef = this.dialog.open(this.calendarViewAttendance);
-    dialogRef.afterOpened().subscribe(() => {
-      this.selectedAttendance = ''; // Reset selectedAttendance
-      this.shift = this.defaultShift; // Reset shift to defaultShift
+
+    // Open a new dialog and store the reference
+    this.dialogRef = this.dialog.open(this.calendarViewAttendance);
+
+    // Additional reset after opening
+    this.dialogRef.afterOpened().subscribe(() => {
+      this.selectedAttendance = '';
+      this.shift = this.defaultShift;
+    });
+
+    // Set dialogRef to null on close
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.dialogRef = null;
     });
   }
 
