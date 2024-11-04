@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, format } from 'date-fns';
+import { startOfMonth, endOfMonth, addDays, format } from 'date-fns';
 import moment from 'moment-timezone';
 import { ApiCallingService } from 'src/service/API/api-calling.service';
 import { AttendanceService } from 'src/service/Shared/attendance.service';
@@ -71,21 +71,18 @@ export class CalendarViewComponent {
   }
 
   generateCalendar(year: number, month: number): void {
-    const startDate = startOfWeek(startOfMonth(new Date(year, month - 1)), { weekStartsOn: 0 });
-    const endDate = endOfWeek(endOfMonth(new Date(year, month - 1)), { weekStartsOn: 0 });
+    const startDate = startOfMonth(new Date(year, month - 1));
+    const endDate = endOfMonth(new Date(year, month - 1));
     const days = [];
+
+    // Calculate the leading empty days for alignment
+    const leadingEmptyDays = startDate.getDay(); // 0 for Sunday, 1 for Monday, etc.
+    for (let i = 0; i < leadingEmptyDays; i++) {
+      days.push({ empty: true });
+    }
+
     let day = startDate;
     const formatDateForDB = (date: Date) => format(date, 'dd-MMMM-yyyy');
-
-    if (!this.attendanceData || !Array.isArray(this.attendanceData)) {
-      console.error('Attendance data is not available or not an array');
-      return;
-    }
-
-    if (!this.approvalData || !Array.isArray(this.approvalData)) {
-      console.error('Approval data is not available or not an array');
-      return;
-    }
 
     while (day <= endDate) {
       const formattedDate = formatDateForDB(day);
@@ -123,7 +120,6 @@ export class CalendarViewComponent {
     this.daysInMonth = days;
     this.cdr.detectChanges();
   }
-
 
   generateAttendanceData(): Promise<void> {
     const payload = {

@@ -681,7 +681,7 @@ export class UserDashboardComponent {
       this.showNotification('Attendance recorded successfully!', 'success');
     } catch (error) {
       console.error('Error saving attendance for date:', element.date, 'Error:', error);
-      this.showNotification('Error recording attendance!', 'error');
+      this.showNotification('Attendance has already been recorded. To make edits, please use the pencil icon on the left side menu.', 'error');
     }
   }
 
@@ -733,7 +733,7 @@ export class UserDashboardComponent {
     const panelClass = type === 'success' ? 'snackbar-success' : 'snackbar-error';
 
     this.snackBar.open(message, 'Close', {
-      duration: 3000, // 3 seconds
+      duration: 5000, // 5 seconds
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
       panelClass: [panelClass] // Use the custom styles

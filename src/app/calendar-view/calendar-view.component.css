@@ -151,3 +151,8 @@
 .pointer {
     cursor: pointer;
 }
+
+.date-circle.empty {
+    background-color: transparent;
+    border: none;
+}
