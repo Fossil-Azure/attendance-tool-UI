@@ -196,11 +196,6 @@
     cursor: pointer;
 }
 
-.sectionHeader {
-    font-size: 20px;
-    font-weight: bold;
-}
-
 .center-align {
     text-align: center;
 }
@@ -212,15 +207,8 @@
     padding: 15px;
 }
 
-.header-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
 .sectionHeader {
-    font-size: 1.5em;
+    font-size: 1.3em;
     font-weight: bold;
 }
 
@@ -274,4 +262,16 @@
 
 .scrollable-content::-webkit-scrollbar-thumb:hover {
     background: rgb(163, 163, 163);
+}
+
+.header-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.button-container {
+    display: flex;
+    gap: 10px;
 }

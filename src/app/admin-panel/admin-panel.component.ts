@@ -72,7 +72,10 @@ export class AdminPanelComponent {
   userDetailsPopup!: TemplateRef<any>;
 
   @ViewChild('downloadAttendanceReport')
-  downloadReportPopup!: TemplateRef<any>;
+  downloadAttendanceReportPopup!: TemplateRef<any>;
+
+  @ViewChild('downloadShiftReport')
+  downloadShiftReportPopup!: TemplateRef<any>;
 
   @ViewChild('usersReport')
   userReportPopup!: TemplateRef<any>;
@@ -252,13 +255,23 @@ export class AdminPanelComponent {
     });
   }
 
-  downloadReportPopUp() {
+  attendanceReportPopUp() {
     this.getDistinctMonths();
-    this.selectedRadio = "1";
     this.selectedYear = this.currentYear.toString();
     this.selectedQuarter = "Q" + this.currentQuarter;
     this.selectedMonth = this.currentMonth.toString();
-    this.dialogRef1 = this.dialog.open(this.downloadReportPopup, {
+    this.dialogRef1 = this.dialog.open(this.downloadAttendanceReportPopup, {
+      disableClose: true,
+      width: '520px'
+    });
+  }
+
+  shiftAllowanceReportPopUp() {
+    this.getDistinctMonths();
+    this.selectedYear = this.currentYear.toString();
+    this.selectedQuarter = "Q" + this.currentQuarter;
+    this.selectedMonth = this.currentMonth.toString();
+    this.dialogRef1 = this.dialog.open(this.downloadShiftReportPopup, {
       disableClose: true,
       width: '520px'
     });
@@ -275,37 +288,6 @@ export class AdminPanelComponent {
     this.api.distinctMonths().subscribe(observer);
   }
 
-  updateDaysInMonth(): void {
-    this.daysInMonth = [];
-    const date = new Date(this.selectedYear, this.selectedMonth, 0);
-    const days = date.getDate();
-
-    for (let i = 1; i <= days; i++) {
-      this.daysInMonth.push(i);
-    }
-    this.generateExcel();
-  }
-
-  onYearMonthChange(): void {
-    this.updateDaysInMonth();
-  }
-
-  generateExcel(): void {
-    const year = this.selectedYear;
-    const month = this.selectedMonth;
-    this.loader.show()
-    this.api.downloadExcel(year, month, this.emailId).subscribe({
-      next: (blob) => {
-        this.saveFile(blob, `Attendance_${year}_${month}.xlsx`)
-        this.loader.hide();
-      },
-      error: (error) => {
-        console.error('Download failed:', error)
-        this.loader.hide();
-      }
-    });
-  }
-
   private saveFile(blob: Blob, fileName: string): void {
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
@@ -314,9 +296,34 @@ export class AdminPanelComponent {
     window.URL.revokeObjectURL(link.href);
   }
 
-  downloadReport() {
-    this.updateDaysInMonth();
+  generateReport(name: any) {
     this.dialogRef1.close();
+    const year = this.selectedYear;
+    const month = this.selectedMonth;
+    this.loader.show()
+    if (name == 'Shift') {
+      this.api.downloadExcel(year, month, this.emailId).subscribe({
+        next: (blob) => {
+          this.saveFile(blob, `Attendance_${year}_${month}.xlsx`)
+          this.loader.hide();
+        },
+        error: (error) => {
+          console.error('Download failed:', error)
+          this.loader.hide();
+        }
+      });
+    } else if (name == 'Attendance') {
+      this.api.downloadAttendanceExcel(year, month, this.emailId).subscribe({
+        next: (blob) => {
+          this.saveFile(blob, `Attendance_${year}_${month}.xlsx`)
+          this.loader.hide();
+        },
+        error: (error) => {
+          console.error('Download failed:', error)
+          this.loader.hide();
+        }
+      });
+    }
   }
 
   openUsersList(type: any) {

@@ -701,7 +701,7 @@ export class UserDashboardComponent {
       type: element.reason,
       prevAttendance: "",
       prevShift: this.oldShift,
-      newAttendance: element.label,
+      newAttendance: element.attendance,
       newShift: this.shift
     };
 

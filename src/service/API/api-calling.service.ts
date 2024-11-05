@@ -36,6 +36,7 @@ export class ApiCallingService {
   private checkAttendance = `${this.baseUrl}/checkAttendance`;
   private userAllowance = `${this.baseUrl}/userAllowance`;
   private downloadExcelSheet = `${this.baseUrl}/download/excel`;
+  private downloadAttendanceSheet = `${this.baseUrl}/download/attendanceExcel`;
   private usersLeaves = `${this.baseUrl}/getLeaves`;
   private updateLeaves = `${this.baseUrl}/updateLeaves`;
   private todaysAttendance = `${this.baseUrl}/todayAttendance`;
@@ -180,6 +181,10 @@ export class ApiCallingService {
 
   downloadExcel(year: number, month: number, user: string): Observable<Blob> {
     return this.http.get(`${this.downloadExcelSheet}?year=${year}&month=${month}&user=${user}`, { responseType: 'blob' });
+  }
+
+  downloadAttendanceExcel(year: number, month: number, user: string): Observable<Blob> {
+    return this.http.get(`${this.downloadAttendanceSheet}?year=${year}&month=${month}&user=${user}`, { responseType: 'blob' });
   }
 
   userLeaves(email: string): Observable<number> {

@@ -6,8 +6,15 @@
         <div class="content">
             <div class="header-section">
                 <span class="sectionHeader">Attendance Data for {{time | date: 'dd MMMM yyyy'}}</span>
-                <button class="matButton" mat-raised-button color="primary"
-                    (click)="downloadReportPopUp()"><mat-icon>get_app</mat-icon>Download Report</button>
+
+                <div class="button-container">
+                    <button class="matButton" mat-raised-button color="primary"
+                        (click)="shiftAllowanceReportPopUp()"><mat-icon>get_app</mat-icon>Shift Allowance
+                        Report</button>
+
+                    <button class="matButton" mat-raised-button color="primary"
+                        (click)="attendanceReportPopUp()"><mat-icon>get_app</mat-icon>Attendance Report</button>
+                </div>
             </div>
 
             <div class="todaysSection">
@@ -17,7 +24,7 @@
                 </div>
                 <div class="sectionItem">
                     <span class="sectionText">Attendance Not Marked</span><span (click)="openUsersList('Not Marked')"
-                    class="sectionCount">{{detailedArray.length -
+                        class="sectionCount">{{detailedArray.length -
                         todaysAttendanceData.length}}</span>
                 </div>
                 <div class="sectionItem">
@@ -69,6 +76,39 @@
     </div>
 </div>
 
+<ng-template #downloadShiftReport>
+    <div mat-dialog-title class="popUpTitle2" style="background-color: #5D54A4; color: white; margin-bottom: 20px;">
+        Download Shift Allowance Report</div>
+    <div mat-dialog-content>
+        <div mat-dialog-content>
+            <div class="form-container">
+                <div class="form-field">
+                    <mat-form-field>
+                        <mat-label>Year</mat-label>
+                        <mat-select [(ngModel)]="selectedYear">
+                            <mat-option *ngFor="let year of distinctYears" [value]="year">{{year}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="form-field">
+                    <mat-form-field>
+                        <mat-label>Month</mat-label>
+                        <mat-select [(ngModel)]="selectedMonth">
+                            <mat-option *ngFor="let month of distinctMonths"
+                                [value]="month">{{monthNames[month]}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div mat-dialog-actions class="dialogActions">
+        <button mat-raised-button color="warn" mat-dialog-close class="popupButton2">Close</button>
+        <button mat-raised-button color="primary" (click)="generateReport('Shift')"
+            class="popupButton2">Download</button>
+    </div>
+</ng-template>
+
 <ng-template #downloadAttendanceReport>
     <div mat-dialog-title class="popUpTitle2" style="background-color: #5D54A4; color: white; margin-bottom: 20px;">
         Download Attendance Report</div>
@@ -97,7 +137,8 @@
     </div>
     <div mat-dialog-actions class="dialogActions">
         <button mat-raised-button color="warn" mat-dialog-close class="popupButton2">Close</button>
-        <button mat-raised-button color="primary" (click)="downloadReport()" class="popupButton2">Download</button>
+        <button mat-raised-button color="primary" (click)="generateReport('Attendance')"
+            class="popupButton2">Download</button>
     </div>
 </ng-template>
 
