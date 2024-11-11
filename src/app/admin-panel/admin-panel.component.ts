@@ -304,7 +304,7 @@ export class AdminPanelComponent {
     if (name == 'Shift') {
       this.api.downloadExcel(year, month, this.emailId).subscribe({
         next: (blob) => {
-          this.saveFile(blob, `Attendance_${year}_${month}.xlsx`)
+          this.saveFile(blob, `Shift_Allowance_${year}_${month}.xlsx`)
           this.loader.hide();
         },
         error: (error) => {

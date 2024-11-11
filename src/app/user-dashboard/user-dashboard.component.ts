@@ -488,7 +488,7 @@ export class UserDashboardComponent {
   onSave(): void {
     const publicHolidays = ['2024-10-02', '2024-10-31', '2024-11-01', '2024-12-25'];
     const summary: { date: string, attendance: string, reason: string }[] = [];
-    let wfhNumber = this.wfhCount;
+    let wfhNumber = this.number;
     this.requiresApproval = false;
 
     for (const date of this.selectedDates) {
@@ -504,6 +504,7 @@ export class UserDashboardComponent {
       if (dayOfWeek === 2 && this.selectedAttendance === 'Work From Home') {
         requiresApproval = true;
         this.requiresApproval = true;
+        wfhNumber++;
         approvalReasons.push('WFH on Tuesday');
       }
 
