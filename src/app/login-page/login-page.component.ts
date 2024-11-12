@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { map, Observable, startWith } from 'rxjs';
 import { ApiCallingService } from 'src/service/API/api-calling.service';
 import { LoaderService } from 'src/service/Loader/loader.service';
 
@@ -13,29 +14,46 @@ import { LoaderService } from 'src/service/Loader/loader.service';
 })
 export class LoginPageComponent {
   loginForm: FormGroup;
-  showPassword = false;
   loginError = false;
   resetSuccess = false;
   errorMessage!: string;
+  isPasswordHidden = true;
+  usersList!: Observable<string[]>;
+  emailControl = this.fb.control('', [
+    Validators.required,
+    Validators.pattern(/^[\w-\\.]+@fossil\.com$/)
+  ]);
 
   @ViewChild('forgotPasswordPopUp')
   userReportPopup!: TemplateRef<any>;
 
   dialogRef1!: MatDialogRef<any>;
 
-  constructor(private loader: LoaderService, private api: ApiCallingService, private router: Router, private dialog: MatDialog) {
-    this.loginForm = new FormGroup({
-      email: new FormControl('', [
-        Validators.required,
-        Validators.email,
-        // eslint-disable-next-line no-useless-escape
-        Validators.pattern(/^[\w-\.]+@fossil.com$/)
-      ]),
-      password: new FormControl('', [Validators.required])
+  constructor(private loader: LoaderService, private api: ApiCallingService, private router: Router, private dialog: MatDialog, private fb: FormBuilder) {
+    this.loginForm = this.fb.group({
+      email: this.emailControl,
+      password: ['', Validators.required]
     });
   }
 
   ngOnInit() {
+    this.loader.show();
+
+    this.api.getAllUsers().subscribe({
+      next: (data) => {
+        const emailIds = data.map((user: any) => user.emailId);
+        this.usersList = this.emailControl.valueChanges.pipe(
+          startWith(''),
+          map(value => (value && value.length > 0) ? this._filterEmails(value, emailIds) : [])
+        );
+        this.loader.hide()
+      },
+      error: (error) => {
+        console.error('Error fetching users:', error)
+        this.loader.hide()
+      }
+    });
+
     const auth = sessionStorage.getItem('auth');
     const reset = sessionStorage.getItem('resetFlag');
     if (auth === 'Authorized') {
@@ -51,6 +69,11 @@ export class LoginPageComponent {
         sessionStorage.removeItem('auth')
       }, 3000);
     }
+  }
+
+  private _filterEmails(value: string | null, emailIds: string[]): string[] {
+    const filterValue = (value ?? '').toLowerCase(); // Use non-null assertion or fallback to empty string
+    return emailIds.filter(email => email.toLowerCase().includes(filterValue));
   }
 
   onSubmit() {
@@ -104,8 +127,12 @@ export class LoginPageComponent {
     }
   }
 
-  togglePasswordVisibility() {
-    this.showPassword = !this.showPassword;
+  get email() {
+    return this.loginForm.get('email');
+  }
+
+  get password() {
+    return this.loginForm.get('password');
   }
 
   forgotPassword() {
@@ -113,5 +140,9 @@ export class LoginPageComponent {
       disableClose: true,
       width: '500px'
     });
+  }
+
+  togglePasswordVisibility() {
+    this.isPasswordHidden = !this.isPasswordHidden;
   }
 }

@@ -5,30 +5,55 @@
             <form class="login" (ngSubmit)="onSubmit()" [formGroup]="loginForm">
                 <img src="../assets/download.png" class="fossilLogo" alt="Fossil Global">
 
-                <div class="login__field">
-                    <input type="email" class="login__input" formControlName="email" placeholder="User name / Email">
-                    <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['required']"
-                        class="error">
-                        Email is required
-                    </div>
-                    <div *ngIf="loginForm.get('email')?.errors?.['pattern']" class="error">
-                        Must be a valid Fossil.com email
-                    </div>
-                </div>
+                <!-- Email Field with Validation Messages -->
+                <mat-form-field class="login__input" appearance="outline">
+                    <mat-label>Fossil Email Id</mat-label>
+                    <input type="email" matInput formControlName="email" [matAutocomplete]="auto" />
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let email of usersList | async" [value]="email">
+                            {{ email }}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="email?.hasError('required')">Email is required</mat-error>
+                    <mat-error *ngIf="email?.hasError('pattern')">Must be a valid fossil.com email</mat-error>
+                </mat-form-field>
 
-                <div class="login__field">
-                    <input [type]="showPassword ? 'text' : 'password'" class="login__input" formControlName="password"
-                        placeholder="Password">
-                    <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['required']"
-                        class="error">
-                        Password is required
-                    </div>
-                </div>
+                <!-- Password Field with Visibility Toggle and Validation Messages -->
+                <mat-form-field class="login__input" appearance="outline">
+                    <mat-label>Enter your password</mat-label>
+                    <input matInput [type]="isPasswordHidden ? 'password' : 'text'" formControlName="password" />
+                    <button type="button" mat-icon-button matSuffix (click)="togglePasswordVisibility()"
+                        [attr.aria-label]="isPasswordHidden ? 'Show password' : 'Hide password'">
+                        <ng-container *ngIf="isPasswordHidden">
+                            <!-- Eye SVG (Password Hidden) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M17.94 17.94A10.45 10.45 0 0112 20c-7 0-11-8-11-8a14.33 14.33 0 014-4"></path>
+                                <path d="M22 12a14.94 14.94 0 01-3.44 4.24"></path>
+                                <path d="M9.17 9.17a3 3 0 014.24 4.24"></path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                        </ng-container>
+                        <ng-container *ngIf="!isPasswordHidden">
+                            <!-- Eye-Off SVG (Password Visible) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M1 12S5 4 12 4s11 8 11 8-4 8-11 8S1 12 1 12z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </ng-container>
+                    </button>
+                    <mat-error *ngIf="password?.hasError('required')">Password is required</mat-error>
+                </mat-form-field>
 
+                <!-- Forgot Password Link -->
                 <div class="login__field">
                     <span class="forgot_password" (click)="forgotPassword()">Forgot Password?</span>
                 </div>
 
+                <!-- Submit Button -->
                 <button type="submit" class="button login__submit" [disabled]="!loginForm.valid">
                     <span class="button__text">Log In</span>
                 </button>
@@ -56,7 +81,9 @@
         Forgot Password</div>
     <div mat-dialog-content class="popUpContent">
         <span>
-            To reset your password, please submit a request via the <a href="https://docs.google.com/forms/d/1ARyFGxwRkfENNj-xgm5MvSnCBwiDMmw7fpvKcjY8Tsc" target="_blank">Google Form</a>
+            To reset your password, please submit a request via the <a
+                href="https://docs.google.com/forms/d/1ARyFGxwRkfENNj-xgm5MvSnCBwiDMmw7fpvKcjY8Tsc"
+                target="_blank">Google Form</a>
             <br><br>
             Or contact the <strong>Commercial Tools</strong> team for assistance.
         </span>

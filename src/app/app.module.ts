@@ -15,7 +15,6 @@ import { UserDashboardComponent } from './user-dashboard/user-dashboard.componen
 import { HeaderComponent } from './header/header.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { LoaderComponent } from './loader/loader.component';
-import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -35,6 +34,8 @@ import { SuperAdminComponent } from './super-admin/super-admin.component';
 import { CalendarViewComponent } from './calendar-view/calendar-view.component';
 import { CalendarModule } from 'primeng/calendar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatIconModule } from '@angular/material/icon';
 
 const routes: Routes = [
   { path: '', component: LoginPageComponent },
@@ -74,7 +75,6 @@ const routes: Routes = [
     MatProgressSpinnerModule,
     ReactiveFormsModule,
     RouterModule.forRoot(routes),
-    MatIconModule,
     MatMenuModule,
     BaseChartDirective,
     MatDialogModule,
@@ -86,7 +86,9 @@ const routes: Routes = [
     MatTableModule,
     MatBadgeModule,
     CalendarModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatAutocompleteModule,
+    MatIconModule
   ],
   providers: [provideCharts(withDefaultRegisterables()), provideHttpClient(withInterceptorsFromDi())]
 })

@@ -85,8 +85,8 @@
 }
 
 .login__field {
-    padding: 10px 0px;
     position: relative;
+    margin-top: -10px;
 }
 
 .login__icon {
@@ -97,11 +97,10 @@
 
 .login__input {
     border: none;
-    border-bottom: 2px solid #D1D1D4;
     background: none;
-    padding: 10px;
-    padding-left: 24px;
-    font-weight: 700;
+    padding-top: 5px;
+    /* padding-left: 24px;
+    margin-left: -15px; */
     width: 75%;
     transition: .2s;
 }
@@ -145,7 +144,7 @@
 
 .fossilLogo {
     margin-left: 20%;
-    margin-bottom: 5%;
+    margin-bottom: 3%;
     width: 180px;
     height: 60px;
     mix-blend-mode: multiply;
