@@ -143,7 +143,8 @@ export class ApiCallingService {
       raisedTo: data.raisedTo,
       status: data.status,
       type: data.type,
-      year: data.year
+      year: data.year,
+      permanent: data.permanent
     }, { headers, responseType: 'text' as 'json' });
   }
 
@@ -167,7 +168,8 @@ export class ApiCallingService {
       raisedTo: data.raisedTo,
       status: data.status,
       type: data.type,
-      year: data.year
+      year: data.year,
+      permanent: data.permanent
     }, { headers, responseType: 'text' as 'json' });
   }
 

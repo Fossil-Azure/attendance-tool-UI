@@ -142,6 +142,7 @@ export class UserDashboardComponent {
   requiresApproval = false;
   attendanceSummary!: { date: string; attendance: string; reason: string; }[];
   popUpDate: any;
+  isPermanent: any;
 
   constructor(private loader: LoaderService, private router: Router,
     private dialog: MatDialog, private api: ApiCallingService, private snackBar: MatSnackBar, private attendanceService: AttendanceService) {
@@ -173,6 +174,7 @@ export class UserDashboardComponent {
         this.shift = userData.shift;
         this.managerId = userData.managerId;
         this.oldShift = userData.shift;
+        this.isPermanent = userData.permanent;
 
         try {
           await this.getUserAttendance();
@@ -586,45 +588,50 @@ export class UserDashboardComponent {
       let allowance = 0;
       let foodAllowance = 0;
 
-      if (this.selectedAttendance == 'Leave') {
-        allowance = 0;
-        foodAllowance = 0;
-      } else {
-        if (this.selectedAttendance == "Work From Home") {
-          if (this.shift == "Shift A") {
-            allowance = 0;
-            foodAllowance = 0;
-          } else if (this.shift == "Shift B") {
-            allowance = 150;
-            foodAllowance = 0;
-          } else if (this.shift == "Shift C") {
-            allowance = 250;
-            foodAllowance = 0;
-          } else if (this.shift == "Shift D") {
-            allowance = 350;
-            foodAllowance = 0;
-          } else if (this.shift == "Shift F") {
-            allowance = 250;
-            foodAllowance = 0;
-          }
+      if (this.isPermanent) {
+        if (this.selectedAttendance == 'Leave') {
+          allowance = 0;
+          foodAllowance = 0;
         } else {
-          if (this.shift == "Shift A") {
-            allowance = 0;
-            foodAllowance = 75;
-          } else if (this.shift == "Shift B") {
-            allowance = 150;
-            foodAllowance = 100;
-          } else if (this.shift == "Shift C") {
-            allowance = 250;
-            foodAllowance = 100;
-          } else if (this.shift == "Shift D") {
-            allowance = 350;
-            foodAllowance = 100;
-          } else if (this.shift == "Shift F") {
-            allowance = 250;
-            foodAllowance = 0;
+          if (this.selectedAttendance == "Work From Home") {
+            if (this.shift == "Shift A") {
+              allowance = 0;
+              foodAllowance = 0;
+            } else if (this.shift == "Shift B") {
+              allowance = 150;
+              foodAllowance = 0;
+            } else if (this.shift == "Shift C") {
+              allowance = 250;
+              foodAllowance = 0;
+            } else if (this.shift == "Shift D") {
+              allowance = 350;
+              foodAllowance = 0;
+            } else if (this.shift == "Shift F") {
+              allowance = 250;
+              foodAllowance = 0;
+            }
+          } else {
+            if (this.shift == "Shift A") {
+              allowance = 0;
+              foodAllowance = 75;
+            } else if (this.shift == "Shift B") {
+              allowance = 150;
+              foodAllowance = 100;
+            } else if (this.shift == "Shift C") {
+              allowance = 250;
+              foodAllowance = 100;
+            } else if (this.shift == "Shift D") {
+              allowance = 350;
+              foodAllowance = 100;
+            } else if (this.shift == "Shift F") {
+              allowance = 250;
+              foodAllowance = 0;
+            }
           }
         }
+      } else {
+        allowance = 0;
+        foodAllowance = 0;
       }
 
       // Iterate through attendanceSummary sequentially
@@ -703,7 +710,8 @@ export class UserDashboardComponent {
       prevAttendance: "",
       prevShift: this.oldShift,
       newAttendance: element.attendance,
-      newShift: this.shift
+      newShift: this.shift,
+      permanent: this.isPermanent
     };
 
     try {

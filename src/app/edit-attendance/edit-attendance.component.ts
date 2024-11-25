@@ -60,6 +60,7 @@ export class EditAttendanceComponent {
   approvalSuccess!: boolean;
   approvalError!: boolean;
   dialogRef: any;
+  isPermanent: any;
 
   constructor(private api: ApiCallingService, private loader: LoaderService, private dialog: MatDialog) {
   }
@@ -79,6 +80,7 @@ export class EditAttendanceComponent {
       this.email = userData.emailId;
       this.managerId = userData.managerId
       this.team = userData.team;
+      this.isPermanent = userData.permanent;
       this.openDetailedAttendance();
     }
   }
@@ -241,7 +243,8 @@ export class EditAttendanceComponent {
       prevAttendance: this.oldPopUpAttendance,
       prevShift: this.oldPopUpShift,
       newAttendance: this.popUpAttendance,
-      newShift: this.popUpShift
+      newShift: this.popUpShift,
+      permanent: this.isPermanent
     };
 
     if (type == "No Changes") {

@@ -35,6 +35,7 @@ export class RequestStatusComponent {
   showAllRaised: boolean = false;
   filteredList: any[] = [];
   filteredByList: any[] = [];
+  isPermanent: any;
 
   constructor(private loader: LoaderService, private api: ApiCallingService,
     private http: HttpClient, private dialog: MatDialog, private router: Router) { }
@@ -46,6 +47,7 @@ export class RequestStatusComponent {
       const userData = JSON.parse(userDataString);
       this.emailId = userData.emailId;
       this.admin = userData.admin;
+      this.isPermanent = userData.permanent;
     }
     this.getApprovalList(this.emailId).subscribe(
       (response: ApprovalListResponse) => {
