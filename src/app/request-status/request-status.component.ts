@@ -46,8 +46,14 @@ export class RequestStatusComponent {
     if (userDataString) {
       const userData = JSON.parse(userDataString);
       this.emailId = userData.emailId;
-      this.admin = userData.admin;
-      this.isPermanent = userData.permanent;
+      this.api.searchUserByEmail(this.emailId).subscribe({
+        next: response => {
+          this.isPermanent = response[0].permanent
+          this.admin = response[0].admin;
+        },
+        error: error => console.error('Error fetching user:', error),
+        complete: () => console.log('User fetch completed.')
+      });
     }
     this.getApprovalList(this.emailId).subscribe(
       (response: ApprovalListResponse) => {

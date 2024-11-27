@@ -220,4 +220,9 @@ export class ApiCallingService {
   getPendingApprovalReq(approval: any): Observable<any> {
     return this.http.post<any>(this.pendingApproval, approval)
   }
+
+  searchUserByEmail(email: string): Observable<any> {
+    const url = `${this.baseUrl}/searchByEmail/${email}`;
+    return this.http.get<any>(url);
+  }
 }

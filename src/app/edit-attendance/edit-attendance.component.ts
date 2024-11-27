@@ -80,7 +80,13 @@ export class EditAttendanceComponent {
       this.email = userData.emailId;
       this.managerId = userData.managerId
       this.team = userData.team;
-      this.isPermanent = userData.permanent;
+      this.api.searchUserByEmail(this.email).subscribe({
+        next: response => {
+          this.isPermanent = response[0].permanent
+        },
+        error: error => console.error('Error fetching user:', error),
+        complete: () => console.log('User fetch completed.')
+      });
       this.openDetailedAttendance();
     }
   }

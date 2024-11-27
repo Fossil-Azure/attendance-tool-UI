@@ -174,7 +174,13 @@ export class UserDashboardComponent {
         this.shift = userData.shift;
         this.managerId = userData.managerId;
         this.oldShift = userData.shift;
-        this.isPermanent = userData.permanent;
+        this.api.searchUserByEmail(this.email).subscribe({
+          next: response => {
+            this.isPermanent = response[0].permanent
+          },
+          error: error => console.error('Error fetching user:', error),
+          complete: () => console.log('User fetch completed.')
+        });
 
         try {
           await this.getUserAttendance();
