@@ -153,7 +153,7 @@
             <div style="flex: 1;">
                 <p-calendar [(ngModel)]="selectedDates" selectionMode="multiple" [placeholder]="'Select Dates'"
                     [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [style]="{'width':'100%'}"
-                    [styleClass]="'custom-calendar-popup'" (ngModelChange)="onDateChange()">
+                    [styleClass]="'custom-calendar-popup'" [maxDate]="today" (ngModelChange)="onDateChange()">
                 </p-calendar>
             </div>
 
@@ -310,7 +310,8 @@
         </div>
 
         <mat-dialog-actions class="dialog-actions">
-            <button mat-raised-button color="primary" [disabled]="!selectedAttendance" (click)="onSavePopUp()">Save</button>
+            <button mat-raised-button color="primary" [disabled]="!selectedAttendance"
+                (click)="onSavePopUp()">Save</button>
             <button mat-raised-button color="warn" mat-dialog-close>Close</button>
         </mat-dialog-actions>
     </mat-dialog-content>

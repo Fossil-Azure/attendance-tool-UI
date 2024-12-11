@@ -136,6 +136,7 @@ export class UserDashboardComponent {
   onlyHoliday: boolean = false;
 
   selectedDates: Date[] = [];
+  today: Date = new Date();
 
   wfhCount!: any;
   newShift!: any;
