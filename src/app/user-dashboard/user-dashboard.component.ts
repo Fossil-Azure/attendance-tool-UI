@@ -145,13 +145,23 @@ export class UserDashboardComponent {
   popUpDate: any;
   isPermanent: any;
   filteredOptions: string[] = [...this.options]; // Dynamically filtered options
+  minDate: Date = new Date(2024, 10, 1); // 1 Nov 2024
+  maxDate: Date = new Date();
 
   constructor(private loader: LoaderService, private router: Router,
     private dialog: MatDialog, private api: ApiCallingService, private snackBar: MatSnackBar, private attendanceService: AttendanceService) {
+    this.calculateMaxDate();
     this.attendanceService.openPopup$.subscribe((data) => {
       this.popUpDate = data;  // Save the received data
       this.openAttendancePopup();
     });
+  }
+
+  calculateMaxDate(): void {
+    const now = new Date();
+    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 2, 0); // Last day of the next month
+    this.maxDate = nextMonth;
+    console.log('Max Date:', this.maxDate); // Debugging log
   }
 
   async ngOnInit() {
