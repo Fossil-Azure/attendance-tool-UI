@@ -145,23 +145,34 @@ export class UserDashboardComponent {
   popUpDate: any;
   isPermanent: any;
   filteredOptions: string[] = [...this.options]; // Dynamically filtered options
-  minDate: Date = new Date(2024, 10, 1); // 1 Nov 2024
+  minDate: Date = new Date();
   maxDate: Date = new Date();
 
   constructor(private loader: LoaderService, private router: Router,
     private dialog: MatDialog, private api: ApiCallingService, private snackBar: MatSnackBar, private attendanceService: AttendanceService) {
-    this.calculateMaxDate();
+    this.calculateDateLimits();
     this.attendanceService.openPopup$.subscribe((data) => {
       this.popUpDate = data;  // Save the received data
       this.openAttendancePopup();
     });
   }
 
-  calculateMaxDate(): void {
-    const now = new Date();
-    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 2, 0); // Last day of the next month
-    this.maxDate = nextMonth;
-    console.log('Max Date:', this.maxDate); // Debugging log
+  calculateDateLimits(): void {
+    // Calculate minDate (start of last month)
+    const minDate = new Date(this.today);
+    minDate.setMonth(minDate.getMonth() - 1); // Move to last month
+    minDate.setDate(1); // Set to the first day of the month
+    this.minDate = minDate;
+
+    // Calculate maxDate (end of next month)
+    const maxDate = new Date(this.today);
+    maxDate.setMonth(maxDate.getMonth() + 2); // Move to the month after next
+    maxDate.setDate(0); // Set to the last day of the previous month
+    maxDate.setHours(23, 59, 59, 999); // End of day
+    this.maxDate = maxDate;
+
+    console.log('Calculated minDate:', this.minDate);
+    console.log('Calculated maxDate:', this.maxDate);
   }
 
   async ngOnInit() {
