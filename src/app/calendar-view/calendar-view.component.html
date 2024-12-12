@@ -21,9 +21,10 @@
             <div *ngIf="!day.empty"
                 [ngClass]="[getAttendanceClass(day.attendance, day.date), shouldShowPointer(day.attendance, day.date) ? 'pointer' : '']"
                 class="date-circle"
-                (click)="['', 'weekend', 'public-holiday'].includes(getAttendanceClass(day.attendance, day.date)) ? attendanceMarking(day.date) : null">
+                (click)="!isFutureDate(day.date) && ['weekend', 'public-holiday', ''].includes(getAttendanceClass(day.attendance, day.date)) ? attendanceMarking(day.date) : null">
                 {{ day.displayDate }}
             </div>
+
             <!-- <div *ngIf="day.empty" class="date-circle empty"></div> -->
         </div>
     </div>

@@ -61,6 +61,14 @@ export class CalendarViewComponent {
     }
   }
 
+  isFutureDate(date: Date): boolean {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to start of the day for comparison
+    const targetDate = new Date(date);
+    targetDate.setHours(0, 0, 0, 0); // Reset time for the target date
+    return targetDate > today;
+  }
+
   getCurrentYearAndMonth(): Promise<void> {
     return new Promise((resolve) => {
       this.now = moment.tz('Asia/Kolkata');
