@@ -153,7 +153,7 @@
             <div style="flex: 1;">
                 <p-calendar [(ngModel)]="selectedDates" selectionMode="multiple" [placeholder]="'Select Dates'"
                     [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [style]="{'width':'100%'}"
-                    [styleClass]="'custom-calendar-popup'" [maxDate]="today" (ngModelChange)="onDateChange()">
+                    [styleClass]="'custom-calendar-popup'" (ngModelChange)="onDateChange()">
                 </p-calendar>
             </div>
 
@@ -162,7 +162,7 @@
                 <mat-label>Select Attendance</mat-label>
                 <mat-select [(ngModel)]="selectedAttendance" [disabled]="!selectedDates || selectedDates.length === 0"
                     (selectionChange)="onAttendanceChange()">
-                    <ng-container *ngFor="let option of options">
+                    <ng-container *ngFor="let option of filteredOptions">
                         <mat-option [value]="option">{{ option }}</mat-option>
                     </ng-container>
                 </mat-select>

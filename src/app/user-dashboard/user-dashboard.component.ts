@@ -144,6 +144,7 @@ export class UserDashboardComponent {
   attendanceSummary!: { date: string; attendance: string; reason: string; }[];
   popUpDate: any;
   isPermanent: any;
+  filteredOptions: string[] = [...this.options]; // Dynamically filtered options
 
   constructor(private loader: LoaderService, private router: Router,
     private dialog: MatDialog, private api: ApiCallingService, private snackBar: MatSnackBar, private attendanceService: AttendanceService) {
@@ -476,10 +477,17 @@ export class UserDashboardComponent {
   }
 
   onDateChange(): void {
+    const hasFutureDate = this.selectedDates.some(date => date > this.today);
     // If selectedDates is null or undefined, initialize it as an empty array
     if (!this.selectedDates) {
       this.selectedDates = [];
     }
+
+    if (this.selectedAttendance && !this.filteredOptions.includes(this.selectedAttendance)) {
+      this.selectedAttendance = null;
+    }
+
+    this.filteredOptions = hasFutureDate ? ['Leave'] : [...this.options];
 
     // Sort the selectedDates in ascending order
     this.selectedDates.sort((a: Date, b: Date) => {
