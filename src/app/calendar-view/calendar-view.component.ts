@@ -38,7 +38,7 @@ export class CalendarViewComponent {
   attendanceData: any[] = [];
   approvalData: any[] = [];
 
-  holidays = ['02-October-2024', '31-October-2024', '01-November-2024', '25-December-2024'];
+  holidays = ['02-October-2024', '31-October-2024', '01-November-2024', '25-December-2024', '01-January-2025', '14-January-2025', '14-March-2025', '31-March-2025', '01-May-2025', '15-August-2025', '27-August-2025', '02-October-2025', '20-October-2025', '21-October-2025', '25-December-2025'];
 
   constructor(private api: ApiCallingService, private cdr: ChangeDetectorRef, private dialog: MatDialog, private attendanceService: AttendanceService) { }
 
