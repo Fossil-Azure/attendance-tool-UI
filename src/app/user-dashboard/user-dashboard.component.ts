@@ -533,93 +533,133 @@ export class UserDashboardComponent {
     this.onSave();
   }
 
+  getUniqueYearsAndQuarters(): { years: string[]; quarters: string[] } {
+    const uniqueYears = new Set<string>();
+    const uniqueQuarters = new Set<string>();
+
+    this.selectedDates.forEach(date => {
+      const year = date.getFullYear().toString();;
+      const quarter = `Q${Math.floor(date.getMonth() / 3) + 1}`; // Quarter with Q prefix
+
+      uniqueYears.add(year);
+      uniqueQuarters.add(quarter);
+    });
+
+    return {
+      years: Array.from(uniqueYears).sort(), // Sorted years
+      quarters: Array.from(uniqueQuarters).sort() // Sorted quarters (Q1, Q2, ...)
+    };
+  }
+
 
   onSave(): void {
-    const publicHolidays = ['2024-10-02', '2024-10-31', '2024-11-01', '2024-12-25'];
+    const publicHolidays = ['2024-10-02', '2024-10-31', '2024-11-01', '2024-12-25', '2025-01-01', '2025-01-14',
+      '2025-03-14', '2025-03-31', '2025-05-01', '2025-08-15', '2025-08-27', '2025-10-02', '2025-10-20', '2025-10-21', '2025-12-25'];
     const summary: { date: string, attendance: string, reason: string }[] = [];
-    let wfhNumber = this.number;
-    this.requiresApproval = false;
-
-    for (const date of this.selectedDates) {
-      const dayOfWeek = new Date(date).getDay(); // Get day of the week (0: Sunday, 1: Monday, 2: Tuesday, ..., 6: Saturday)
-      const formattedDate = moment(date).format('YYYY-MM-DD'); // Format the date for holiday comparison
-      const uiDateFormat = moment(date).format('DD-MMMM-YYYY');
-
-      const approvalReasons: string[] = []; // Using an array to collect multiple reasons
-      let attendanceType = this.selectedAttendance;
-      let requiresApproval = false;
-
-      // Rule 1: If it's Tuesday and WFH is selected, approval is needed
-      if (dayOfWeek === 2 && this.selectedAttendance === 'Work From Home') {
-        requiresApproval = true;
-        this.requiresApproval = true;
-        wfhNumber++;
-        approvalReasons.push('WFH on Tuesday');
-      }
-
-      // Rule 2: If it's a weekend, approval is needed
-      if (dayOfWeek === 0 || dayOfWeek === 6) {
-        requiresApproval = true;
-        this.requiresApproval = true;
-        approvalReasons.push('Weekend');
-      }
-
-      // Rule 3: If it's a public holiday, approval is needed
-      if (publicHolidays.includes(formattedDate)) {
-        requiresApproval = true;
-        this.requiresApproval = true;
-        approvalReasons.push('Public Holiday');
-      }
-
-      // Rule 4: If it's a shift change, approval is needed
-      if ((this.shift !== this.defaultShift) && this.selectedAttendance !== "Leave") {
-        requiresApproval = true;
-        this.requiresApproval = true;
-        approvalReasons.push('Shift Change');
-
-        // Increment WFH
-        if (this.selectedAttendance === 'Work From Home' && dayOfWeek !== 5 && !publicHolidays.includes(formattedDate)) {
-          wfhNumber++;
-        }
-      }
-
-      // Rule 5: Increment WFH count only if no other approval condition applies and WFH is selected
-      if (this.selectedAttendance === 'Work From Home' && !requiresApproval && dayOfWeek !== 5 &&
-        !(dayOfWeek === 0 || dayOfWeek === 6) && !publicHolidays.includes(formattedDate)) {
-        if (wfhNumber >= 13) {
-          wfhNumber++;
-          requiresApproval = true;
-          this.requiresApproval = true;
-          approvalReasons.push('Extra WFH');
-        } else {
-          wfhNumber++;
-        }
-      }
-
-      // Rule 1: If it's Friday, add the suffix - Friday
-      if (dayOfWeek === 5 && this.selectedAttendance !== 'Leave') {
-        attendanceType += ' - Friday';
-      }
-
-      // Rule 2: If it's a weekend or a public holiday, add the suffix - Others
-      if (((dayOfWeek === 0 || dayOfWeek === 6) || publicHolidays.includes(formattedDate)) && this.selectedAttendance !== 'Leave') {
-        attendanceType += ' - Others';
-      }
-
-      // Merge multiple reasons into a single string
-      const approvalReason = approvalReasons.join(', ');
-
-      summary.push({
-        date: uiDateFormat,
-        attendance: attendanceType,
-        reason: approvalReason
+    const result = this.getUniqueYearsAndQuarters();
+    if (result.years.length > 1 || result.quarters.length > 1) {
+      const message = 'Please mark attendance for one quarter at a time';
+      this.snackBar.open(message, 'Close', {
+        duration: 5000, // 5 seconds
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
       });
-    }
+    } else {
+      let wfhNumber = 0;
+      this.loader.show();
+      this.api.getUserAttendance(this.selectedUser, result.years[0], result.quarters[0]).subscribe({
+        next: (response) => {
+          wfhNumber = response.wfh;
+          this.requiresApproval = false;
+          console.log(wfhNumber)
 
-    this.attendanceSummary = summary;
-    this.dialogRef2 = this.dialog.open(this.confirmationPopUp, {
-      data: { summary: summary }
-    });
+          for (const date of this.selectedDates) {
+            const dayOfWeek = new Date(date).getDay(); // Get day of the week (0: Sunday, 1: Monday, 2: Tuesday, ..., 6: Saturday)
+            const formattedDate = moment(date).format('YYYY-MM-DD'); // Format the date for holiday comparison
+            const uiDateFormat = moment(date).format('DD-MMMM-YYYY');
+
+            const approvalReasons: string[] = []; // Using an array to collect multiple reasons
+            let attendanceType = this.selectedAttendance;
+            let requiresApproval = false;
+
+            // Rule 1: If it's Tuesday and WFH is selected, approval is needed
+            if (dayOfWeek === 2 && this.selectedAttendance === 'Work From Home') {
+              requiresApproval = true;
+              this.requiresApproval = true;
+              wfhNumber++;
+              approvalReasons.push('WFH on Tuesday');
+            }
+
+            // Rule 2: If it's a weekend, approval is needed
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+              requiresApproval = true;
+              this.requiresApproval = true;
+              approvalReasons.push('Weekend');
+            }
+
+            // Rule 3: If it's a public holiday, approval is needed
+            if (publicHolidays.includes(formattedDate)) {
+              requiresApproval = true;
+              this.requiresApproval = true;
+              approvalReasons.push('Public Holiday');
+            }
+
+            // Rule 4: If it's a shift change, approval is needed
+            if ((this.shift !== this.defaultShift) && this.selectedAttendance !== "Leave") {
+              requiresApproval = true;
+              this.requiresApproval = true;
+              approvalReasons.push('Shift Change');
+
+              // Increment WFH
+              if (this.selectedAttendance === 'Work From Home' && dayOfWeek !== 5 && !publicHolidays.includes(formattedDate)) {
+                wfhNumber++;
+              }
+            }
+
+            // Rule 5: Increment WFH count only if no other approval condition applies and WFH is selected
+            if (this.selectedAttendance === 'Work From Home' && !requiresApproval && dayOfWeek !== 5 &&
+              !(dayOfWeek === 0 || dayOfWeek === 6) && !publicHolidays.includes(formattedDate)) {
+              if (wfhNumber >= 13) {
+                wfhNumber++;
+                requiresApproval = true;
+                this.requiresApproval = true;
+                approvalReasons.push('Extra WFH');
+              } else {
+                wfhNumber++;
+              }
+            }
+
+            // Rule 1: If it's Friday, add the suffix - Friday
+            if (dayOfWeek === 5 && this.selectedAttendance !== 'Leave') {
+              attendanceType += ' - Friday';
+            }
+
+            // Rule 2: If it's a weekend or a public holiday, add the suffix - Others
+            if (((dayOfWeek === 0 || dayOfWeek === 6) || publicHolidays.includes(formattedDate)) && this.selectedAttendance !== 'Leave') {
+              attendanceType += ' - Others';
+            }
+
+            // Merge multiple reasons into a single string
+            const approvalReason = approvalReasons.join(', ');
+
+            summary.push({
+              date: uiDateFormat,
+              attendance: attendanceType,
+              reason: approvalReason
+            });
+          }
+
+          this.attendanceSummary = summary;
+          this.dialogRef2 = this.dialog.open(this.confirmationPopUp, {
+            data: { summary: summary }
+          });
+          this.loader.hide()
+        }, error: (error) => {
+          console.log(error)
+          this.loader.hide();
+        }
+      })
+    }
   }
 
   cancelAttendance() {
