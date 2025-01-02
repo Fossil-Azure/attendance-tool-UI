@@ -1,5 +1,9 @@
 <div class="parentContainer">
     <div class="dropdown-container">
+        <label for="month-select">Year:</label>
+        <select id="month-select" [(ngModel)]="selectedYear" (change)="onYearMonthChange()">
+            <option *ngFor="let year of years" [value]="year">{{year}}</option>
+        </select>
         <label for="month-select">Month:</label>
         <select id="month-select" [(ngModel)]="selectedMonth" (change)="onYearMonthChange()">
             <option *ngFor="let month of months" [value]="month">{{monthNames[month]}}</option>
