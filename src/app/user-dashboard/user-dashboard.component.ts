@@ -131,6 +131,7 @@ export class UserDashboardComponent {
     { date: '2024-12-25', name: 'Christmas' },
     { date: '2025-01-01', name: 'New Year' },
     { date: '2025-01-14', name: 'Makara Sankranti' },
+    { date: '2025-03-14', name: 'Employee Appreciation Day' },
     { date: '2025-03-14', name: 'Holi' },
     { date: '2025-03-31', name: 'Kutub - A - Ramzan' },
     { date: '2025-05-01', name: 'May Day' },
