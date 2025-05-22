@@ -29,8 +29,6 @@
                 <div class="buttons">
                     <button mat-raised-button color="primary" (click)="openDialog()">Mark
                         Attendance</button>
-                    <!-- <button type="button" class="btn btn-warning" (click)="categoryAttendance('Attendance')">Attendance
-                        History</button> -->
                 </div>
             </div>
             <div class="bottom-div">
@@ -43,59 +41,20 @@
                             <td>
                                 <div class="card">
                                     <div class="header">
-                                        <span>Work From Home</span>
+                                        <span>Work From Home in {{selectedQuarter}} {{selectedYear}}</span>
                                     </div>
                                     <div class="footer">
-                                        <div (click)="categoryAttendance('Work From Home')" class="progress pointer"
-                                            [ngClass]="{'over-50': cappedPercentage > 50}"
-                                            [class]="getProgressBarClass()">
-                                            <span class="progress-left">
-                                                <span class="progress-bar"
-                                                    [ngStyle]="{'transform': leftRotation}"></span>
-                                            </span>
-                                            <span class="progress-right">
-                                                <span class="progress-bar"
-                                                    [ngStyle]="{'transform': rightRotation}"></span>
-                                            </span>
-                                            <div class="progress-value">
-                                                <div class="number">{{ number }}</div>
-                                                <div class="max-number">{{ maxNumber }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card">
-                                    <div class="header pointer" (click)="categoryAttendance('Work From Office')">
-                                        <span>Work From Office</span>
-                                    </div>
-                                    <div class="footer">
-                                        <span class="internalTableData">{{ attendanceData.wfo }}</span>
+                                        <span class="internalTableData">{{ attendanceData.wfh + attendanceData.wfhFriday }}</span>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <div class="card">
                                     <div class="header">
-                                        <span>Leave Balance</span>
+                                        <span>Work From Office in {{selectedQuarter}} {{selectedYear}}</span>
                                     </div>
                                     <div class="footer">
-                                        <div (click)="categoryAttendance('Leave')" class="progress pointer"
-                                            [ngClass]="{'over-50': cappedPercentage > 50}"
-                                            [class]="getProgressBarClassForLeaves()">
-                                            <span class="progress-left">
-                                                <span class="progress-bar"
-                                                    [ngStyle]="{'transform': 'rotate(180deg)'}"></span>
-                                            </span>
-                                            <span class="progress-right">
-                                                <span class="progress-bar"
-                                                    [ngStyle]="{'transform': 'rotate(180deg)'}"></span>
-                                            </span>
-                                            <div class="progress-value">
-                                                <div class="number">{{ leaves }}</div>
-                                            </div>
-                                        </div>
+                                        <span class="internalTableData">{{ attendanceData.wfo + attendanceData.wfoFriday }}</span>
                                     </div>
                                 </div>
                             </td>
@@ -103,29 +62,18 @@
                         <tr>
                             <td>
                                 <div class="card">
-                                    <div class="header pointer" (click)="categoryAttendance('Work From Home - Friday')">
-                                        <span>WFH (Fridays/ Others)</span>
+                                    <div class="header">
+                                        <span>Leaves Taken in {{selectedQuarter}} {{selectedYear}}</span>
                                     </div>
                                     <div class="footer">
-                                        <span class="internalTableData">{{ attendanceData.wfhFriday }}</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="card">
-                                    <div class="header pointer"
-                                        (click)="categoryAttendance('Work From Office - Friday')">
-                                        <span>WFO (Fridays/ Others)</span>
-                                    </div>
-                                    <div class="footer">
-                                        <span class="internalTableData">{{ attendanceData.wfoFriday }}</span>
+                                        <span class="internalTableData">{{ attendanceData.leaves }}</span>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <div class="card">
                                     <div class="header">
-                                        <span>Shift Allowance</span>
+                                        <span>Shift Allowance for {{selectedQuarter}} {{selectedYear}}</span>
                                     </div>
                                     <div class="footer">
                                         <table class="allowanceTable">
@@ -180,7 +128,6 @@
             </mat-form-field>
         </div>
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span><strong>Work From Home Balance -</strong> {{13 - number}} </span>
             <span><strong>Default Shift - </strong>{{defaultShift}}</span>
         </div>
         <hr>
@@ -296,7 +243,6 @@
             </mat-form-field>
         </div>
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span><strong>Work From Home Balance -</strong> {{13 - number}} </span>
             <span><strong>Default Shift - </strong>{{defaultShift}}</span>
         </div>
         <hr>
