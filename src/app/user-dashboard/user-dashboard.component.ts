@@ -525,123 +525,95 @@ export class UserDashboardComponent {
             wfhNumber = response.wfh;
             this.requiresApproval = false;
 
-            const targetDate = moment('24-March-2025', 'DD-MMMM-YYYY');
+            const targetDate = moment('01-June-2025', 'DD-MMMM-YYYY');
+            const targetDate2 = moment('24-March-2025', 'DD-MMMM-YYYY');
+
+            const isShiftChange = (): boolean =>
+              this.shift !== this.defaultShift && this.selectedAttendance !== 'Leave';
+
+            const isWFH = (): boolean =>
+              this.selectedAttendance === 'Work From Home';
 
             for (const date of this.selectedDates) {
-              const momentDate = moment(date); // Convert selected date to moment object
-              const dayOfWeek = momentDate.isoWeekday(); // 1 (Monday) - 7 (Sunday)
-              const formattedDate = momentDate.format('YYYY-MM-DD'); // Format for comparison
+              const momentDate = moment(date);
+              const dayOfWeek = momentDate.isoWeekday(); // 1 (Mon) to 7 (Sun)
+              const formattedDate = momentDate.format('YYYY-MM-DD');
               const uiDateFormat = momentDate.format('DD-MMMM-YYYY');
 
               const approvalReasons: string[] = [];
               let attendanceType = this.selectedAttendance;
               let requiresApproval = false;
 
+              const isWeekend = dayOfWeek === 6 || dayOfWeek === 7;
+              const isPublicHoliday = publicHolidays.includes(formattedDate);
+
+              const checkAndAddApproval = (condition: boolean, reason: string) => {
+                if (condition) {
+                  requiresApproval = true;
+                  approvalReasons.push(reason);
+                }
+              };
+
               if (momentDate.isSameOrAfter(targetDate, 'day')) {
-                if (
-                  (dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 4) &&
-                  this.selectedAttendance === 'Work From Home'
-                ) {
-                  requiresApproval = true;
-                  this.requiresApproval = true;
-                  approvalReasons.push('WFH on Mon/Wed/Thu');
-                }
-
-                // Rule: If it's a shift change, approval is needed
-                if (
-                  this.shift !== this.defaultShift &&
-                  this.selectedAttendance !== 'Leave'
-                ) {
-                  requiresApproval = true;
-                  this.requiresApproval = true;
-                  approvalReasons.push('Shift Change');
-                }
+                checkAndAddApproval(
+                  isWFH() && [1, 2, 3, 4].includes(dayOfWeek),
+                  'WFH on Mon/Tue/Wed/Thu'
+                );
+                checkAndAddApproval(isShiftChange(), 'Shift Change');
+              } else if (momentDate.isSameOrAfter(targetDate2, 'day')) {
+                checkAndAddApproval(
+                  isWFH() && [1, 3, 4].includes(dayOfWeek),
+                  'WFH on Mon/Wed/Thu'
+                );
+                checkAndAddApproval(isShiftChange(), 'Shift Change');
               } else {
-                // Rule: If it's Tuesday and WFH is selected, approval is needed
-                if (
-                  dayOfWeek === 2 &&
-                  this.selectedAttendance === 'Work From Home'
-                ) {
-                  requiresApproval = true;
-                  this.requiresApproval = true;
-                  wfhNumber++;
-                  approvalReasons.push('WFH on Tuesday');
-                }
+                checkAndAddApproval(
+                  isWFH() && dayOfWeek === 2,
+                  'WFH on Tuesday'
+                );
 
-                // Rule: If it's a shift change, approval is needed
-                if (
-                  this.shift !== this.defaultShift &&
-                  this.selectedAttendance !== 'Leave'
-                ) {
-                  requiresApproval = true;
-                  this.requiresApproval = true;
-                  approvalReasons.push('Shift Change');
+                if (isShiftChange()) {
+                  checkAndAddApproval(true, 'Shift Change');
 
-                  // Increment WFH
-                  if (
-                    this.selectedAttendance === 'Work From Home' &&
-                    dayOfWeek !== 5 &&
-                    !publicHolidays.includes(formattedDate)
-                  ) {
+                  // Increment WFH if applicable
+                  if (isWFH() && dayOfWeek !== 5 && !isPublicHoliday) {
                     wfhNumber++;
                   }
                 }
 
-                // Rule: Increment WFH count only if no other approval condition applies and WFH is selected
+                // WFH Limit Enforcement
                 if (
-                  this.selectedAttendance === 'Work From Home' &&
+                  isWFH() &&
                   !requiresApproval &&
                   dayOfWeek !== 5 &&
-                  !(dayOfWeek === 6 || dayOfWeek === 7) &&
-                  !publicHolidays.includes(formattedDate)
+                  !isWeekend &&
+                  !isPublicHoliday
                 ) {
                   if (wfhNumber >= 13) {
-                    wfhNumber++;
-                    requiresApproval = true;
-                    this.requiresApproval = true;
-                    approvalReasons.push('Extra WFH');
-                  } else {
-                    wfhNumber++;
+                    checkAndAddApproval(true, 'Extra WFH');
                   }
+                  wfhNumber++;
                 }
               }
 
-              // Rule: If it's a weekend, approval is needed
-              if (dayOfWeek === 6 || dayOfWeek === 7) {
-                requiresApproval = true;
-                this.requiresApproval = true;
-                approvalReasons.push('Weekend');
-              }
+              checkAndAddApproval(isWeekend, 'Weekend');
+              checkAndAddApproval(isPublicHoliday, 'Public Holiday');
 
-              // Rule: If it's a public holiday, approval is needed
-              if (publicHolidays.includes(formattedDate)) {
-                requiresApproval = true;
-                this.requiresApproval = true;
-                approvalReasons.push('Public Holiday');
-              }
-
-              // Rule: If it's Friday, add the suffix - Friday
+              // Add suffixes
               if (dayOfWeek === 5 && this.selectedAttendance !== 'Leave') {
                 attendanceType += ' - Friday';
-              }
-
-              // Rule: If it's a weekend or a public holiday, add the suffix - Others
-              if (
-                (dayOfWeek === 6 ||
-                  dayOfWeek === 7 ||
-                  publicHolidays.includes(formattedDate)) &&
-                this.selectedAttendance !== 'Leave'
-              ) {
+              } else if ((isWeekend || isPublicHoliday) && this.selectedAttendance !== 'Leave') {
                 attendanceType += ' - Others';
               }
 
-              // Merge multiple reasons into a single string
-              const approvalReason = approvalReasons.join(', ');
+              if (requiresApproval) {
+                this.requiresApproval = true;
+              }
 
               summary.push({
                 date: uiDateFormat,
                 attendance: attendanceType,
-                reason: approvalReason,
+                reason: approvalReasons.join(', '),
               });
             }
 
