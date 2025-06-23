@@ -54,8 +54,7 @@
                         <thead>
                             <tr>
                                 <th class="detailTableHeader2">Name</th>
-                                <th class="detailTableHeader2 center-align">WFH Consumed</th>
-                                <th class="detailTableHeader2 center-align">WFH Balance</th>
+                                <th class="detailTableHeader2 center-align">WFH</th>
                                 <th class="detailTableHeader2 center-align">WFO</th>
                                 <th class="detailTableHeader2">Upcoming Leaves</th>
                             </tr>
@@ -64,7 +63,6 @@
                             <tr *ngFor="let item of mergedArray">
                                 <td class="detailTableFields2">{{item.reporteeName}}</td>
                                 <td class="detailTableFields2 center-align">{{item.wfh}}</td>
-                                <td class="detailTableFields2 center-align">{{13 - item.wfh}}</td>
                                 <td class="detailTableFields2 center-align">{{item.wfo + item.wfoFriday}}</td>
                                 <td class="detailTableFields2">{{item.upcomingLeaveDates}}</td>
                             </tr>
