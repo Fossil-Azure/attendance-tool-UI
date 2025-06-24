@@ -1,0 +1,82 @@
+<h2 mat-dialog-title>{{ isEdit ? "Edit User" : "Add New User" }}</h2>
+
+<form [formGroup]="userForm" (ngSubmit)="save()" style="padding: 16px">
+  <div class="dialog-form">
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Email ID</mat-label>
+      <input matInput formControlName="emailId" />
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" />
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>SAP ID</mat-label>
+      <input matInput formControlName="sapId" />
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Region</mat-label>
+      <mat-select formControlName="region">
+        <mat-option value="APAC">APAC</mat-option>
+        <mat-option value="EMEA">EMEA</mat-option>
+        <mat-option value="INTL">INTL</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Manager Name</mat-label>
+      <input matInput formControlName="managerName" />
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Manager Email ID</mat-label>
+      <input matInput formControlName="managerId" />
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Work Location</mat-label>
+      <mat-select formControlName="workLocation">
+        <mat-option value="WFH">WFH</mat-option>
+        <mat-option value="WFO">WFO</mat-option>
+        <mat-option value="Both">Both</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Shift</mat-label>
+      <mat-select formControlName="shift">
+        <mat-option value="Shift A">Shift A</mat-option>
+        <mat-option value="Shift B">Shift B</mat-option>
+        <mat-option value="Shift C">Shift C</mat-option>
+        <mat-option value="Shift D">Shift D</mat-option>
+        <mat-option value="Shift F">Shift F</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Team</mat-label>
+      <input matInput formControlName="team" />
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Leave Balance</mat-label>
+      <input matInput type="number" formControlName="leave" />
+    </mat-form-field>
+  </div>
+
+  <div class="checkbox-group">
+    <mat-checkbox formControlName="admin">Manager?</mat-checkbox>
+    <mat-checkbox formControlName="permanent">Permanent Employee?</mat-checkbox>
+    <mat-checkbox formControlName="superAdmin">Super Admin</mat-checkbox>
+  </div>
+
+  <div class="actions">
+    <button mat-button type="button" (click)="cancel()">Cancel</button>
+    <button mat-flat-button color="primary" type="submit">
+      {{ isEdit ? "Update" : "Add" }}
+    </button>
+  </div>
+</form>

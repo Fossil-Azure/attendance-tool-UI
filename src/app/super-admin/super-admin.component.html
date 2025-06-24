@@ -1,147 +1,83 @@
 <div class="main-container">
-    <app-loader></app-loader>
-    <app-header></app-header>
-    <div class="content-wrapper">
-        <app-sidenav></app-sidenav>
-        <div class="content">
-            <div *ngIf="added" class="alert alert-success center-bottom-alert" role="alert">
-                User added Successfully
-            </div>
-            <div *ngIf="error" class="alert alert-danger center-bottom-alert" role="alert">
-                Something went wrong
-            </div>
-            <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form">
-
-                <div class="form-container">
-                    <!-- Column 1 -->
-                    <div class="form-column">
-                        <!-- Email ID -->
-                        <mat-form-field appearance="outline">
-                            <mat-label>Email ID</mat-label>
-                            <input matInput formControlName="emailId" type="email">
-                            <mat-error *ngIf="userForm.get('emailId')?.errors?.['required']">Email is
-                                required.</mat-error>
-                            <mat-error *ngIf="userForm.get('emailId')?.errors?.['email']">Enter a valid
-                                email.</mat-error>
-                        </mat-form-field>
-
-                        <!-- SAP ID (Optional) -->
-                        <mat-form-field appearance="outline">
-                            <mat-label>SAP ID</mat-label>
-                            <input matInput formControlName="sapId">
-                        </mat-form-field>
-
-                        <!-- Region Dropdown -->
-                        <mat-form-field appearance="outline">
-                            <mat-label>Region</mat-label>
-                            <mat-select formControlName="region">
-                                <mat-option *ngFor="let region of regions" [value]="region">{{ region }}</mat-option>
-                            </mat-select>
-                            <mat-error *ngIf="userForm.get('region')?.errors?.['required']">Region is
-                                required.</mat-error>
-                        </mat-form-field>
-
-                        <!-- Manager Name -->
-                        <mat-form-field appearance="outline">
-                            <mat-label>Manager's Name</mat-label>
-                            <input matInput formControlName="managerName">
-                            <mat-error *ngIf="userForm.get('managerName')?.errors?.['required']">Manager name is
-                                required.</mat-error>
-                        </mat-form-field>
-
-                        <!-- Password -->
-                        <mat-form-field appearance="outline">
-                            <mat-label>Password</mat-label>
-                            <input matInput formControlName="password" type="password">
-                            <mat-error *ngIf="userForm.get('password')?.errors?.['required']">Password is
-                                required.</mat-error>
-                        </mat-form-field>
-
-                        <!-- Shift Dropdown -->
-                        <mat-form-field appearance="outline">
-                            <mat-label>Shift</mat-label>
-                            <mat-select formControlName="shift">
-                                <mat-option *ngFor="let shift of shifts" [value]="shift">{{ shift }}</mat-option>
-                            </mat-select>
-                            <mat-error *ngIf="userForm.get('shift')?.errors?.['required']">Shift is
-                                required.</mat-error>
-                        </mat-form-field>
-
-                        <!-- Admin Checkbox -->
-                        <mat-form-field appearance="outline">
-                            <mat-label>Admin</mat-label>
-                            <mat-select formControlName="admin" [value]="false">
-                                <mat-option [value]="true">True</mat-option>
-                                <mat-option [value]="false">False</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-
-                    <!-- Column 2 -->
-                    <div class="form-column">
-                        <!-- Name -->
-                        <mat-form-field appearance="outline">
-                            <mat-label>Name</mat-label>
-                            <input matInput formControlName="name">
-                            <mat-error *ngIf="userForm.get('name')?.errors?.['required']">Name is required.</mat-error>
-                        </mat-form-field>
-
-                        <!-- Employee ID (Optional) -->
-                        <mat-form-field appearance="outline">
-                            <mat-label>Employee ID</mat-label>
-                            <input matInput formControlName="empId">
-                        </mat-form-field>
-
-                        <!-- Work Location Dropdown -->
-                        <mat-form-field appearance="outline">
-                            <mat-label>Work Location</mat-label>
-                            <mat-select formControlName="workLocation">
-                                <mat-option *ngFor="let location of workLocations" [value]="location">{{ location
-                                    }}</mat-option>
-                            </mat-select>
-                            <mat-error *ngIf="userForm.get('workLocation')?.errors?.['required']">Work location is
-                                required.</mat-error>
-                        </mat-form-field>
-
-                        <!-- Manager Email ID -->
-                        <mat-form-field appearance="outline">
-                            <mat-label>Manager's Email ID</mat-label>
-                            <input matInput formControlName="managerId" type="email">
-                            <mat-error *ngIf="userForm.get('managerId')?.errors?.['required']">Manager Email is
-                                required.</mat-error>
-                            <mat-error *ngIf="userForm.get('managerId')?.errors?.['email']">Enter a valid
-                                email.</mat-error>
-                        </mat-form-field>
-
-                        <!-- Team -->
-                        <mat-form-field appearance="outline">
-                            <mat-label>Team</mat-label>
-                            <input matInput formControlName="team" value="Digital GBS">
-                        </mat-form-field>
-
-                        <!-- Leave Balance -->
-                        <mat-form-field appearance="outline">
-                            <mat-label>Leave Balance</mat-label>
-                            <input matInput formControlName="leave" type="number" step="1.00">
-                            <mat-error *ngIf="userForm.get('leave')?.errors?.['required']">Leave balance is
-                                required.</mat-error>
-                            <mat-error *ngIf="userForm.get('leave')?.errors?.['min']">Leave balance cannot be
-                                negative.</mat-error>
-                        </mat-form-field>
-
-                        <!-- Super Admin Dropdown -->
-                        <mat-form-field appearance="outline">
-                            <mat-label>Super Admin</mat-label>
-                            <mat-select formControlName="superAdmin" [value]="false">
-                                <mat-option [value]="true">True</mat-option>
-                                <mat-option [value]="false">False</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                </div>
-                <!-- Submit Button -->
-                <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">Submit</button>
-            </form>
+  <app-loader></app-loader>
+  <app-header></app-header>
+  <div class="content-wrapper">
+    <app-sidenav></app-sidenav>
+    <div class="content">
+      <div style="display: flex; justify-content: space-between;">
+        <div class="toolbar">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="openAddUserDialog()"
+          >
+            Add New User
+          </button>
         </div>
+
+        <div class="search-bar">
+          <mat-form-field appearance="outline">
+            <mat-label>Search</mat-label>
+            <input
+              matInput
+              (keyup)="applyFilter($event)"
+              placeholder="Search users"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <mat-table
+          [dataSource]="users"
+          class="mat-elevation-z8"
+          matSort
+          #sort="matSort"
+        >
+          <ng-container matColumnDef="emailId">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>
+              Email
+            </mat-header-cell>
+            <mat-cell *matCellDef="let user"> {{ user.emailId }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>
+              Name
+            </mat-header-cell>
+            <mat-cell *matCellDef="let user"> {{ user.name }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="role">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>
+              Default Shift
+            </mat-header-cell>
+            <mat-cell *matCellDef="let user"> {{ user.shift }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+            <mat-cell *matCellDef="let user">
+              <button mat-icon-button (click)="openEditUserDialog(user)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button (click)="resetPassword(user.emailId)">
+                <mat-icon>lock_reset</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="deleteUser(user.emailId)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: columns"></mat-row>
+        </mat-table>
+      </div>
     </div>
+  </div>
 </div>

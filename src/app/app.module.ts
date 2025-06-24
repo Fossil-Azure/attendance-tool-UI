@@ -16,8 +16,15 @@ import { HeaderComponent } from './header/header.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { LoaderComponent } from './loader/loader.component';
 import { MatMenuModule } from '@angular/material/menu';
-import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  BaseChartDirective,
+  provideCharts,
+  withDefaultRegisterables,
+} from 'ng2-charts';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -36,6 +43,9 @@ import { CalendarModule } from 'primeng/calendar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSortModule } from '@angular/material/sort';
+import { UserFormDialogComponent } from './user-form-dialog/user-form-dialog.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 const routes: Routes = [
   { path: '', component: LoginPageComponent },
@@ -45,7 +55,8 @@ const routes: Routes = [
   { path: 'edit-attendance', component: EditAttendanceComponent },
   { path: 'request-status', component: RequestStatusComponent },
   { path: 'super-admin', component: SuperAdminComponent },
-  { path: 'calendar-view', component: CalendarViewComponent }
+  { path: 'calendar-view', component: CalendarViewComponent },
+  { path: 'super-admin', component: SuperAdminComponent },
 ];
 
 @NgModule({
@@ -61,7 +72,9 @@ const routes: Routes = [
     EditAttendanceComponent,
     RequestStatusComponent,
     SuperAdminComponent,
-    CalendarViewComponent
+    CalendarViewComponent,
+    SuperAdminComponent,
+    UserFormDialogComponent
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -88,8 +101,13 @@ const routes: Routes = [
     CalendarModule,
     MatSnackBarModule,
     MatAutocompleteModule,
-    MatIconModule
+    MatIconModule,
+    MatSortModule,
+    MatCheckboxModule
   ],
-  providers: [provideCharts(withDefaultRegisterables()), provideHttpClient(withInterceptorsFromDi())]
+  providers: [
+    provideCharts(withDefaultRegisterables()),
+    provideHttpClient(withInterceptorsFromDi()),
+  ],
 })
-export class AppModule { }
+export class AppModule {}

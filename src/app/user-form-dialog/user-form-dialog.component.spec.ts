@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SuperAdminComponent } from './super-admin.component';
+import { UserFormDialogComponent } from './user-form-dialog.component';
 
-describe('SuperAdminComponent', () => {
-  let component: SuperAdminComponent;
-  let fixture: ComponentFixture<SuperAdminComponent>;
+describe('UserFormDialogComponent', () => {
+  let component: UserFormDialogComponent;
+  let fixture: ComponentFixture<UserFormDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SuperAdminComponent]
+      imports: [UserFormDialogComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SuperAdminComponent);
+    fixture = TestBed.createComponent(UserFormDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
