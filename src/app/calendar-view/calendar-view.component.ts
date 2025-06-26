@@ -118,7 +118,8 @@ export class CalendarViewComponent {
           date: day,
           formattedDate,
           displayDate: day.getDate(),
-          attendance: attendanceRecord ? attendanceRecord.attendance : ''
+          attendance: attendanceRecord ? attendanceRecord.attendance : '',
+          wfa: attendanceRecord ? attendanceRecord.wfhAnywhere : false
         });
       }
 
@@ -171,7 +172,7 @@ export class CalendarViewComponent {
     });
   }
 
-  getAttendanceClass(attendance: string, date: Date): string {
+  getAttendanceClass(attendance: string, date: Date, wfa: boolean): string {
     const isWeekend = (day: Date) => day.getDay() === 0 || day.getDay() === 6;
     const formattedDate = format(date, 'dd-MMMM-yyyy');
 
@@ -179,6 +180,8 @@ export class CalendarViewComponent {
       return 'weekend';
     } else if ((this.holidays.includes(formattedDate)) && !attendance) {
       return 'public-holiday'
+    } else if (wfa) {
+      return 'wfh-anywhere';
     }
 
     switch (attendance) {
@@ -242,7 +245,7 @@ export class CalendarViewComponent {
   }
 
   shouldShowPointer(attendance: string, date: Date): boolean {
-    const attendanceClass = this.getAttendanceClass(attendance, date);
+    const attendanceClass = this.getAttendanceClass(attendance, date, false);
     return ['', 'weekend', 'public-holiday'].includes(attendanceClass);
   }
 

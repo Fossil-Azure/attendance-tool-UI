@@ -2,14 +2,14 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment.prod';
+// import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiCallingService {
-  private baseUrl = environment.apiUrl;
-  // private baseUrl = 'http://localhost:8080';
+  // private baseUrl = environment.apiUrl;
+  private baseUrl = 'http://localhost:8080';
 
   private loginUrl = `${this.baseUrl}/login`;
   private markAttendance = `${this.baseUrl}/addAttendance`;
@@ -75,7 +75,9 @@ export class ApiCallingService {
     luo: string,
     shift: string,
     allowance: number,
-    foodAllowance: number
+    foodAllowance: number,
+    isWfhAnywhere: boolean,
+    halfDayFullDay: string
   ): Observable<any> {
     return this.http.post(this.markAttendance, {
       id: Id + date,
@@ -90,6 +92,8 @@ export class ApiCallingService {
       foodAllowance: foodAllowance,
       lastUpdatedBy: lub,
       lastUpdatedOn: luo,
+      isWfhAnywhere: isWfhAnywhere,
+      halfDayOrFullDay: halfDayFullDay,
     });
   }
 
@@ -265,6 +269,7 @@ export class ApiCallingService {
         type: data.type,
         year: data.year,
         permanent: data.permanent,
+        halfDayFullDay: data.halfDayFullDay,
       },
       { headers, responseType: 'text' as 'json' }
     );
@@ -294,6 +299,8 @@ export class ApiCallingService {
         type: data.type,
         year: data.year,
         permanent: data.permanent,
+        wfhAnywhere: data.isWfhAnywhere,
+        halfDayFullDay: data.halfDayFullDay
       },
       { headers, responseType: 'text' as 'json' }
     );
@@ -337,8 +344,8 @@ export class ApiCallingService {
     return this.http.post<number>(this.usersLeaves, { emailId: email });
   }
 
-  updateUserLeave(email: string): Observable<number> {
-    return this.http.post<number>(this.updateLeaves, { emailId: email });
+  updateUserLeave(email: string, halfDayFullDay: string, flag: string): Observable<number> {
+    return this.http.post<number>(`${this.updateLeaves}?halfDayOrFullDay=${halfDayFullDay}&flag=${flag}`, { emailId: email });
   }
 
   getTodaysAttendance(emailIds: string[], date: string): Observable<any> {

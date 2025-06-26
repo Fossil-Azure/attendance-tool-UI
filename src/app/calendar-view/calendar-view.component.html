@@ -23,9 +23,9 @@
         <!-- Loop through the daysInMonth array -->
         <div *ngFor="let day of daysInMonth">
             <div *ngIf="!day.empty"
-                [ngClass]="[getAttendanceClass(day.attendance, day.date), shouldShowPointer(day.attendance, day.date) ? 'pointer' : '']"
+                [ngClass]="[getAttendanceClass(day.attendance, day.date, day.wfa), shouldShowPointer(day.attendance, day.date) ? 'pointer' : '']"
                 class="date-circle"
-                (click)="!isFutureDate(day.date) && ['weekend', 'public-holiday', ''].includes(getAttendanceClass(day.attendance, day.date)) ? attendanceMarking(day.date) : null">
+                (click)="!isFutureDate(day.date) && ['weekend', 'public-holiday', ''].includes(getAttendanceClass(day.attendance, day.date, day.wfa)) ? attendanceMarking(day.date) : null">
                 {{ day.displayDate }}
             </div>
 
@@ -49,6 +49,9 @@
         </div>
         <div class="legend-item">
             <span class="legend-circle pending-approval"></span> Pending Approval
+        </div>
+        <div class="legend-item">
+            <span class="legend-circle wfh-anywhere"></span> Work from Anywhere
         </div>
     </div>
 </div>

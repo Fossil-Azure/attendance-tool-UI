@@ -9,26 +9,31 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Year</mat-label>
                         <mat-select [(ngModel)]="selectedYear" (selectionChange)="getUserAttendance()">
-                            <mat-option *ngFor="let year of distinctYears" [value]="year">{{year}}</mat-option>
+                            <mat-option *ngFor="let year of distinctYears" [value]="year">{{
+                                year
+                                }}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field class="dropdown" appearance="outline">
                         <mat-label>Quarter</mat-label>
                         <mat-select [(ngModel)]="selectedQuarter" (selectionChange)="userChange()">
-                            <mat-option *ngFor="let qtr of distinctQuarters" [value]="qtr">{{qtr}}</mat-option>
+                            <mat-option *ngFor="let qtr of distinctQuarters" [value]="qtr">{{
+                                qtr
+                                }}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field *ngIf="admin" class="dropdown" appearance="outline">
                         <mat-label>Users</mat-label>
                         <mat-select [(ngModel)]="selectedUser" (selectionChange)="userChange()">
-                            <mat-option *ngFor="let user of subOrdinates"
-                                [value]="user.emailId">{{user.name}}</mat-option>
+                            <mat-option *ngFor="let user of subOrdinates" [value]="user.emailId">{{ user.name
+                                }}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
                 <div class="buttons">
-                    <button mat-raised-button color="primary" (click)="openDialog()">Mark
-                        Attendance</button>
+                    <button mat-raised-button color="primary" (click)="openDialog()">
+                        Mark Attendance
+                    </button>
                 </div>
             </div>
             <div class="bottom-div">
@@ -41,20 +46,26 @@
                             <td>
                                 <div class="card">
                                     <div class="header">
-                                        <span>Work From Home in {{selectedQuarter}} {{selectedYear}}</span>
+                                        <span>Work From Home in {{ selectedQuarter }}
+                                            {{ selectedYear }}</span>
                                     </div>
                                     <div class="footer">
-                                        <span class="internalTableData">{{ attendanceData.wfh + attendanceData.wfhFriday }}</span>
+                                        <span class="internalTableData">{{
+                                            attendanceData.wfh + attendanceData.wfhFriday
+                                            }}</span>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <div class="card">
                                     <div class="header">
-                                        <span>Work From Office in {{selectedQuarter}} {{selectedYear}}</span>
+                                        <span>Work From Office in {{ selectedQuarter }}
+                                            {{ selectedYear }}</span>
                                     </div>
                                     <div class="footer">
-                                        <span class="internalTableData">{{ attendanceData.wfo + attendanceData.wfoFriday }}</span>
+                                        <span class="internalTableData">{{
+                                            attendanceData.wfo + attendanceData.wfoFriday
+                                            }}</span>
                                     </div>
                                 </div>
                             </td>
@@ -63,22 +74,28 @@
                             <td>
                                 <div class="card">
                                     <div class="header">
-                                        <span>Leaves Taken in {{selectedQuarter}} {{selectedYear}}</span>
+                                        <span>Leaves Taken in {{ selectedQuarter }}
+                                            {{ selectedYear }}</span>
                                     </div>
                                     <div class="footer">
-                                        <span class="internalTableData">{{ attendanceData.leaves }}</span>
+                                        <span class="internalTableData">{{
+                                            attendanceData.leaves
+                                            }}</span>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <div class="card">
                                     <div class="header">
-                                        <span>Shift Allowance for {{selectedQuarter}} {{selectedYear}}</span>
+                                        <span>Shift Allowance for {{ selectedQuarter }}
+                                            {{ selectedYear }}</span>
                                     </div>
                                     <div class="footer">
                                         <table class="allowanceTable">
                                             <tr *ngFor="let month of filteredMonths">
-                                                <th style="text-align: left;">{{ month }} {{selectedYear}}</th>
+                                                <th style="text-align: left">
+                                                    {{ month }} {{ selectedYear }}
+                                                </th>
                                                 <td>{{ allowanceData[month] || 0 }}</td>
                                             </tr>
                                         </table>
@@ -98,18 +115,19 @@
 
     <mat-dialog-content class="dialogContentForAttendance">
         <div class="form-row-for-attendance">
-            <div style="flex: 1;">
+            <div style="flex: 1">
                 <p-calendar [(ngModel)]="selectedDates" selectionMode="multiple" [placeholder]="'Select Dates'"
-                    [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [style]="{'width':'100%'}"
+                    [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [style]="{ width: '100%' }"
                     [styleClass]="'custom-calendar-popup'" [minDate]="minDate" [maxDate]="maxDate"
                     (ngModelChange)="onDateChange()">
                 </p-calendar>
             </div>
 
             <mat-form-field class="dropdown-full-width" appearance="outline"
-                style="flex: 1; margin-left: 15px; margin-top: 20px;">
+                style="flex: 1; margin-left: 15px; margin-top: 20px">
                 <mat-label>Select Attendance</mat-label>
-                <mat-select [(ngModel)]="selectedAttendance" [disabled]="!selectedDates || selectedDates.length === 0"
+                <mat-select [(ngModel)]="selectedAttendance"
+                    [disabled]="optForWFA || !selectedDates || selectedDates.length === 0"
                     (selectionChange)="onAttendanceChange()">
                     <ng-container *ngFor="let option of filteredOptions">
                         <mat-option [value]="option">{{ option }}</mat-option>
@@ -118,7 +136,7 @@
             </mat-form-field>
 
             <mat-form-field class="example-full-width" appearance="outline"
-                style="flex: 1; margin-left: 15px; margin-top: 15px;">
+                style="flex: 1; margin-left: 15px; margin-top: 15px">
                 <mat-label>Select Shift</mat-label>
                 <mat-select [(ngModel)]="shift" [disabled]="!selectedDates || selectedDates.length === 0">
                     <ng-container *ngFor="let option of shiftOptions">
@@ -127,22 +145,51 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span><strong>Default Shift - </strong>{{defaultShift}}</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0px">
+            <span><strong>Default Shift - </strong>{{ defaultShift }}</span>
+            <mat-checkbox #wfaCheckbox [ngModel]="optForWFA" (ngModelChange)="onWfaToggleChange($event, wfaCheckbox)"
+                [disabled]="!selectedDates || selectedDates.length === 0">
+                Opt for WFA
+            </mat-checkbox>
+            <span><strong>Work From Anywhere Balance - </strong>{{ wfhAnyWhere }}</span>
         </div>
-        <hr>
+
+        <div
+            style="display: flex; justify-content: space-evenly; align-items: center; margin-bottom: 0px; margin-top: 0px">
+
+            <mat-form-field appearance="outline" *ngIf="optForWFA">
+                <mat-label>Select Type</mat-label>
+                <mat-select [(ngModel)]="halfDayFullDay" required>
+                    <mat-option *ngFor="let option of halfDayOptions" [value]="option">{{
+                        option
+                        }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
         <div class="shift-options">
             <ul>
                 <li><strong>Shift A - </strong> 8:00 AM to 8 PM</li>
-                <li><strong>Shift B - </strong> Shifts starting before 8:00 AM OR ending between 8:00 PM to 10 PM</li>
-                <li><strong>Shift C - </strong> Shifts extending beyond 10:00 PM up to 12 Midnight</li>
+                <li>
+                    <strong>Shift B - </strong> Shifts starting before 8:00 AM OR ending
+                    between 8:00 PM to 10 PM
+                </li>
+                <li>
+                    <strong>Shift C - </strong> Shifts extending beyond 10:00 PM up to 12
+                    Midnight
+                </li>
                 <li><strong>Shift D - </strong> Shift extending beyond 12 Midnight</li>
-                <li><strong>Shift F - </strong> On Call from Home (beyond 12 Midnight and Weekly offs)</li>
+                <li>
+                    <strong>Shift F - </strong> On Call from Home (beyond 12 Midnight and
+                    Weekly offs)
+                </li>
             </ul>
         </div>
 
         <mat-dialog-actions class="dialog-actions">
-            <button mat-raised-button color="primary" [disabled]="!selectedAttendance" (click)="onSave()">Save</button>
+            <button mat-raised-button color="primary" [disabled]="!selectedAttendance || (optForWFA && !halfDayFullDay)"
+                (click)="onSave()">
+                Save
+            </button>
             <button mat-raised-button color="warn" mat-dialog-close>Close</button>
         </mat-dialog-actions>
     </mat-dialog-content>
@@ -153,30 +200,49 @@
     <span mat-dialog-title class="popUpTitle">Attendance Summary</span>
 
     <mat-dialog-content>
-        <table style="border: 1px solid black; margin-top: 20px;">
-            <tr style="border: 1px solid black;">
-                <td style="font-weight: bolder; padding: 5px; text-align: center;">Date</td>
-                <td style="font-weight: bolder; padding: 5px; text-align: center;">Attendance</td>
-                <td style="font-weight: bolder; padding: 5px; text-align: center;">Approval Required</td>
+        <table style="border: 1px solid black; margin-top: 20px">
+            <tr style="border: 1px solid black">
+                <td style="font-weight: bolder; padding: 5px; text-align: center">
+                    Date
+                </td>
+                <td style="font-weight: bolder; padding: 5px; text-align: center">
+                    Attendance
+                </td>
+                <td style="font-weight: bolder; padding: 5px; text-align: center">
+                    Approval Required
+                </td>
             </tr>
             <tr *ngFor="let entry of data.summary">
-                <td style="border: 1px solid black; color: 'black'; padding: 5px; text-align: center;">{{entry.date |
-                    date: 'dd MMMM yyyy'}}
+                <td style="
+            border: 1px solid black;
+            color: 'black';
+            padding: 5px;
+            text-align: center;
+          ">
+                    {{ entry.date | date : "dd MMMM yyyy" }}
                 </td>
-                <td style="border: 1px solid black; padding: 5px; text-align: center;">{{entry.attendance}}</td>
-                <td style="border: 1px solid black; padding: 5px; text-align: center;">{{entry.reason}}</td>
+                <td style="border: 1px solid black; padding: 5px; text-align: center">
+                    {{ entry.attendance }}
+                </td>
+                <td style="border: 1px solid black; padding: 5px; text-align: center">
+                    {{ entry.reason }}
+                </td>
             </tr>
         </table>
-        <br>
+        <br />
         <strong>Please make sure the above values are correct</strong>
     </mat-dialog-content>
 
-    <mat-dialog-actions style="margin-bottom: 20px;" align="end">
-        <button mat-raised-button *ngIf="!requiresApproval" color="primary"
-            (click)="confirmAttendance()">Confirm</button>
-        <button mat-raised-button *ngIf="requiresApproval" color="primary" (click)="confirmAttendance()">Send for
-            Approval</button>
-        <button mat-raised-button color="warn" class="popupButton" (click)="cancelAttendance()">Cancel</button>
+    <mat-dialog-actions style="margin-bottom: 20px" align="end">
+        <button mat-raised-button *ngIf="!requiresApproval" color="primary" (click)="confirmAttendance()">
+            Confirm
+        </button>
+        <button mat-raised-button *ngIf="requiresApproval" color="primary" (click)="confirmAttendance()">
+            Send for Approval
+        </button>
+        <button mat-raised-button color="warn" class="popupButton" (click)="cancelAttendance()">
+            Cancel
+        </button>
     </mat-dialog-actions>
 </ng-template>
 
@@ -187,7 +253,8 @@
             <table class="table-container">
                 <thead>
                     <tr>
-                        <td class="popupTableHeader" (click)="sortData()">Date
+                        <td class="popupTableHeader" (click)="sortData()">
+                            Date
                             <span *ngIf="sortAscending">&#9650;</span>
                             <span *ngIf="!sortAscending">&#9660;</span>
                         </td>
@@ -197,7 +264,9 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of detailedArray">
-                        <td class="detailTableFields2">{{ item.date | date: 'EEE, dd MMM yyyy' }} </td>
+                        <td class="detailTableFields2">
+                            {{ item.date | date : "EEE, dd MMM yyyy" }}
+                        </td>
                         <td class="detailTableFields2">{{ item.attendance }}</td>
                         <td class="detailTableFields2">{{ item.shift }}</td>
                     </tr>
@@ -206,7 +275,9 @@
         </div>
     </div>
     <div mat-dialog-actions>
-        <button mat-raised-button color="warn" mat-dialog-close class="popupButton2">Close</button>
+        <button mat-raised-button color="warn" mat-dialog-close class="popupButton2">
+            Close
+        </button>
     </div>
 </ng-template>
 
@@ -215,15 +286,14 @@
 
     <mat-dialog-content class="dialogContentForAttendance">
         <div class="form-row-for-attendance">
-
             <mat-form-field class="dropdown-full-width" appearance="outline"
-                style="flex: 1; margin-left: 15px; margin-top: 20px;">
+                style="flex: 1; margin-left: 15px; margin-top: 20px">
                 <mat-label>Selected Dates</mat-label>
-                <input matInput disabled [value]="popUpDate | date: 'dd MMMM yyyy'">
+                <input matInput disabled [value]="popUpDate | date : 'dd MMMM yyyy'" />
             </mat-form-field>
 
             <mat-form-field class="dropdown-full-width" appearance="outline"
-                style="flex: 1; margin-left: 15px; margin-top: 20px;">
+                style="flex: 1; margin-left: 15px; margin-top: 20px">
                 <mat-label>Select Attendance</mat-label>
                 <mat-select [(ngModel)]="selectedAttendance" (selectionChange)="onAttendanceChange()">
                     <ng-container *ngFor="let option of options">
@@ -233,7 +303,7 @@
             </mat-form-field>
 
             <mat-form-field class="example-full-width" appearance="outline"
-                style="flex: 1; margin-left: 15px; margin-top: 15px;">
+                style="flex: 1; margin-left: 15px; margin-top: 15px">
                 <mat-label>Select Shift</mat-label>
                 <mat-select [(ngModel)]="shift" [disabled]="!selectedAttendance">
                     <ng-container *ngFor="let option of shiftOptions">
@@ -242,23 +312,34 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span><strong>Default Shift - </strong>{{defaultShift}}</span>
+        <div style="display: flex; justify-content: space-between; align-items: center">
+            <span><strong>Default Shift - </strong>{{ defaultShift }}</span>
         </div>
-        <hr>
+        <hr />
+        <span style="color: rgb(0, 89, 255);"><strong>** If you want to opt for WORK FROM ANYWHERE then please mark the attendance using Mark Attendance button on the top right corner.</strong></span>
         <div class="shift-options">
             <ul>
                 <li><strong>Shift A - </strong> 8:00 AM to 8 PM</li>
-                <li><strong>Shift B - </strong> Shifts starting before 8:00 AM OR ending between 8:00 PM to 10 PM</li>
-                <li><strong>Shift C - </strong> Shifts extending beyond 10:00 PM up to 12 Midnight</li>
+                <li>
+                    <strong>Shift B - </strong> Shifts starting before 8:00 AM OR ending
+                    between 8:00 PM to 10 PM
+                </li>
+                <li>
+                    <strong>Shift C - </strong> Shifts extending beyond 10:00 PM up to 12
+                    Midnight
+                </li>
                 <li><strong>Shift D - </strong> Shift extending beyond 12 Midnight</li>
-                <li><strong>Shift F - </strong> On Call from Home (beyond 12 Midnight and Weekly offs)</li>
+                <li>
+                    <strong>Shift F - </strong> On Call from Home (beyond 12 Midnight and
+                    Weekly offs)
+                </li>
             </ul>
         </div>
 
         <mat-dialog-actions class="dialog-actions">
-            <button mat-raised-button color="primary" [disabled]="!selectedAttendance"
-                (click)="onSavePopUp()">Save</button>
+            <button mat-raised-button color="primary" [disabled]="!selectedAttendance" (click)="onSavePopUp()">
+                Save
+            </button>
             <button mat-raised-button color="warn" mat-dialog-close>Close</button>
         </mat-dialog-actions>
     </mat-dialog-content>

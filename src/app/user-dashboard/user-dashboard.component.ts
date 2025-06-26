@@ -11,6 +11,7 @@ import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { CalendarViewComponent } from '../calendar-view/calendar-view.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AttendanceService } from 'src/service/Shared/attendance.service';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -50,6 +51,7 @@ export class UserDashboardComponent {
     holidays: 0,
     wfhFriday: 0,
     wfoFriday: 0,
+    wfhAnyWhere: 0,
   };
   detailedArray: any[] = [];
   popUpTitle: any;
@@ -165,6 +167,10 @@ export class UserDashboardComponent {
   filteredOptions: string[] = [...this.options]; // Dynamically filtered options
   minDate: Date = new Date();
   maxDate: Date = new Date();
+  wfhAnyWhere = 0;
+  optForWFA: boolean = false;
+  halfDayFullDay: string | null = null;
+  halfDayOptions: string[] = ['Half Day', 'Full Day'];
 
   constructor(
     private loader: LoaderService,
@@ -219,6 +225,7 @@ export class UserDashboardComponent {
         this.api.searchUserByEmail(this.email).subscribe({
           next: (response) => {
             this.isPermanent = response[0].permanent;
+            this.wfhAnyWhere = response[0].wfhAnyWhere;
           },
           error: (error) => console.error('Error fetching user:', error),
           complete: () => console.log('User fetch completed.'),
@@ -291,7 +298,7 @@ export class UserDashboardComponent {
           next: (response) => {
             if (response) {
               this.attendanceData = response;
-              console.log(this.attendanceData)
+              console.log(this.attendanceData);
               this.number = response.wfh;
               this.remaining = 13 - this.number;
               this.api
@@ -447,8 +454,12 @@ export class UserDashboardComponent {
   }
 
   onDateChange(): void {
-    if (!this.selectedDates) {
+    this.optForWFA = false;
+    this.selectedAttendance = '';
+    if (!this.selectedDates || this.selectedDates.length === 0) {
+      this.optForWFA = false;
       this.selectedDates = [];
+      this.selectedAttendance = null;
     }
 
     if (
@@ -488,6 +499,11 @@ export class UserDashboardComponent {
   }
 
   onSave(): void {
+    if (this.optForWFA && !this.halfDayFullDay) {
+      alert('Please select Half Day or Full Day for WFA.');
+      return;
+    }
+
     const publicHolidays = [
       '2025-01-01',
       '2025-01-14',
@@ -512,7 +528,8 @@ export class UserDashboardComponent {
         verticalPosition: 'bottom',
       });
     } else {
-      let wfhNumber = 0;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      let wfhNumber;
       this.loader.show();
       this.api
         .getUserAttendance(
@@ -529,7 +546,8 @@ export class UserDashboardComponent {
             const targetDate2 = moment('24-March-2025', 'DD-MMMM-YYYY');
 
             const isShiftChange = (): boolean =>
-              this.shift !== this.defaultShift && this.selectedAttendance !== 'Leave';
+              this.shift !== this.defaultShift &&
+              this.selectedAttendance !== 'Leave';
 
             const isWFH = (): boolean =>
               this.selectedAttendance === 'Work From Home';
@@ -547,14 +565,20 @@ export class UserDashboardComponent {
               const isWeekend = dayOfWeek === 6 || dayOfWeek === 7;
               const isPublicHoliday = publicHolidays.includes(formattedDate);
 
-              const checkAndAddApproval = (condition: boolean, reason: string) => {
+              const checkAndAddApproval = (
+                condition: boolean,
+                reason: string
+              ) => {
                 if (condition) {
                   requiresApproval = true;
                   approvalReasons.push(reason);
                 }
               };
 
-              if (momentDate.isSameOrAfter(targetDate, 'day')) {
+              if (this.optForWFA) {
+                checkAndAddApproval(true, 'Work From Anywhere - Opted');
+                attendanceType = 'Work From Home';
+              } else if (momentDate.isSameOrAfter(targetDate, 'day')) {
                 checkAndAddApproval(
                   isWFH() && [1, 2, 3, 4].includes(dayOfWeek),
                   'WFH on Mon/Tue/Wed/Thu'
@@ -580,20 +604,6 @@ export class UserDashboardComponent {
                     wfhNumber++;
                   }
                 }
-
-                // WFH Limit Enforcement
-                if (
-                  isWFH() &&
-                  !requiresApproval &&
-                  dayOfWeek !== 5 &&
-                  !isWeekend &&
-                  !isPublicHoliday
-                ) {
-                  if (wfhNumber >= 13) {
-                    checkAndAddApproval(true, 'Extra WFH');
-                  }
-                  wfhNumber++;
-                }
               }
 
               checkAndAddApproval(isWeekend, 'Weekend');
@@ -602,7 +612,10 @@ export class UserDashboardComponent {
               // Add suffixes
               if (dayOfWeek === 5 && this.selectedAttendance !== 'Leave') {
                 attendanceType += ' - Friday';
-              } else if ((isWeekend || isPublicHoliday) && this.selectedAttendance !== 'Leave') {
+              } else if (
+                (isWeekend || isPublicHoliday) &&
+                this.selectedAttendance !== 'Leave'
+              ) {
                 attendanceType += ' - Others';
               }
 
@@ -693,10 +706,16 @@ export class UserDashboardComponent {
       // Iterate through attendanceSummary sequentially
       for (const element of this.attendanceSummary) {
         // Handle specific attendance conditions
-        if (element.attendance == 'Work From Home - Others') {
-          element.attendance = 'Work From Home - Friday';
-        } else if (element.attendance == 'Work From Office - Others') {
-          element.attendance = 'Work From Office - Friday';
+        if (
+          element.attendance == 'Work From Home - Others' ||
+          element.attendance == 'Work From Home - Friday'
+        ) {
+          element.attendance = 'Work From Home';
+        } else if (
+          element.attendance == 'Work From Office - Others' ||
+          element.attendance == 'Work From Office - Friday'
+        ) {
+          element.attendance = 'Work From Office';
         }
 
         // Extract date details
@@ -739,6 +758,11 @@ export class UserDashboardComponent {
   ) {
     try {
       // Wait for each API call sequentially
+
+      if(this.halfDayFullDay == null) {
+        this.halfDayFullDay = 'Full Day';
+      }
+      
       await this.api
         .attendance(
           this.email,
@@ -752,7 +776,9 @@ export class UserDashboardComponent {
           time.toString(),
           this.shift,
           allowance,
-          foodAllowance
+          foodAllowance,
+          this.optForWFA,
+          this.halfDayFullDay
         )
         .toPromise();
 
@@ -780,10 +806,6 @@ export class UserDashboardComponent {
           foodAllowance
         )
         .toPromise();
-
-      if (element.attendance == 'Leave') {
-        await this.api.updateUserLeave(this.email).toPromise();
-      }
 
       this.showNotification('Attendance recorded successfully!', 'success');
     } catch (error) {
@@ -824,6 +846,7 @@ export class UserDashboardComponent {
       newAttendance: element.attendance,
       newShift: this.shift,
       permanent: this.isPermanent,
+      halfDayFullDay: this.halfDayFullDay,
     };
 
     try {
@@ -875,27 +898,49 @@ export class UserDashboardComponent {
   }
 
   openAttendancePopup(): void {
-    // Close the existing dialog if open
     if (this.dialogRef) {
       this.dialogRef.close();
     }
-
-    // Reset data before opening a new dialog
     this.selectedAttendance = '';
     this.shift = this.defaultShift;
 
-    // Open a new dialog and store the reference
     this.dialogRef = this.dialog.open(this.calendarViewAttendance);
 
-    // Additional reset after opening
     this.dialogRef.afterOpened().subscribe(() => {
       this.selectedAttendance = '';
       this.shift = this.defaultShift;
     });
 
-    // Set dialogRef to null on close
     this.dialogRef.afterClosed().subscribe(() => {
       this.dialogRef = null;
     });
+  }
+
+  onWfaToggleChange(checked: boolean, checkbox: MatCheckbox): void {
+    const selectedCount = this.selectedDates?.length || 0;
+
+    if (checked) {
+      if (selectedCount > this.wfhAnyWhere) {
+        this.snackBar.open(
+          `You can only select up to ${this.wfhAnyWhere} WFA days.`,
+          'Close',
+          {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+          }
+        );
+
+        this.optForWFA = false;
+        checkbox.checked = false;
+        return;
+      }
+
+      this.optForWFA = true;
+      this.selectedAttendance = 'Work From Home';
+    } else {
+      this.optForWFA = false;
+      this.selectedAttendance = '';
+    }
   }
 }

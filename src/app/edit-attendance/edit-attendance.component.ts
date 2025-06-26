@@ -61,6 +61,9 @@ export class EditAttendanceComponent {
   approvalError!: boolean;
   dialogRef: any;
   isPermanent: any;
+  selectedAttendanceToEdit: any;
+  isWfa: boolean = false;
+  halfDayFullDay: string = 'Full Day';
 
   constructor(private api: ApiCallingService, private loader: LoaderService, private dialog: MatDialog) {
   }
@@ -179,6 +182,7 @@ export class EditAttendanceComponent {
   }
 
   openDialog(item: any): void {
+    this.selectedAttendanceToEdit = item;
     this.textComment = "";
     this.popUpDate = this.parseDateString(item.date);
 
@@ -186,9 +190,21 @@ export class EditAttendanceComponent {
     this.popUpAttendance = item.attendance;
     this.oldPopUpAttendance = this.popUpAttendance;
 
+    if (item.wfhAnywhere) {
+      this.isWfa = true;
+    } else {
+      this.isWfa = false;
+    }
+
+    if( item.halfDayOrFullDay === 'Half Day') {
+      this.halfDayFullDay = 'Half Day';
+    } else {
+      this.halfDayFullDay = 'Full Day';
+    }
+
     this.popUpShift = item.shift;
     this.oldPopUpShift = this.popUpShift;
-    if (week === 'Friday') {
+    if (week === 'Friday' && !this.isWfa) {
       this.options = ['Work From Home - Friday', 'Work From Office - Friday', 'Leave'];
     } else {
       this.options = ['Work From Office', 'Work From Home', 'Leave'];
@@ -218,8 +234,10 @@ export class EditAttendanceComponent {
 
   sendForApproval() {
     let type;
-    if ((this.oldPopUpAttendance == this.popUpAttendance) && (this.oldPopUpShift == this.popUpShift)) {
+    if ((this.oldPopUpAttendance == this.popUpAttendance) && (this.oldPopUpShift == this.popUpShift) && !this.isWfa) {
       type = "No Changes";
+    } else if (this.isWfa) {
+      type = "WFA Change";
     } else if ((this.oldPopUpAttendance != this.popUpAttendance) && (this.oldPopUpShift == this.popUpShift)) {
       type = "Attendance Change";
     } else if ((this.oldPopUpAttendance == this.popUpAttendance) && (this.oldPopUpShift != this.popUpShift)) {
@@ -243,17 +261,18 @@ export class EditAttendanceComponent {
       raisedBy: this.email,
       name: this.username,
       raisedTo: this.managerId,
-      comments: this.textComment,
+      comments: type,
       status: "Pending",
       type: type,
       prevAttendance: this.oldPopUpAttendance,
       prevShift: this.oldPopUpShift,
       newAttendance: this.popUpAttendance,
       newShift: this.popUpShift,
-      permanent: this.isPermanent
+      permanent: this.isPermanent,
+      halfDayFullDay: this.halfDayFullDay,
     };
 
-    if (type == "No Changes") {
+    if (type == "No Changes" && !this.isWfa) {
       /* empty */
     } else {
       this.loader.show();

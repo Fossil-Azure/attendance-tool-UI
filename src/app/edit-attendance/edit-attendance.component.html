@@ -91,6 +91,11 @@
                     </ng-container>
                 </mat-select>
             </mat-form-field>
+
+            <span *ngIf="isWfa" style="color: rgb(0, 89, 255);"><strong>This attendance is Work From Anywhere. Editing
+                    this attendance will convert it
+                    to regular attendance, and your WFA balance will be adjusted accordingly.</strong></span>
+            <br>
         </div>
 
         <div class="shift-options">
@@ -104,7 +109,8 @@
         </div>
     </div>
     <div mat-dialog-actions class="dialog-actions">
-        <button [disabled]="!popUpAttendance || !popUpShift" mat-raised-button color="primary" style="margin: 10px;" (click)="sendForApproval()">Send for
+        <button [disabled]="!popUpAttendance || !popUpShift" mat-raised-button color="primary" style="margin: 10px;"
+            (click)="sendForApproval()">Send for
             Approval</button>
         <button mat-raised-button color="warn" mat-dialog-close>Close</button>
     </div>

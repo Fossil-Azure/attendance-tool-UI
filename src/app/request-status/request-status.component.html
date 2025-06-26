@@ -138,9 +138,9 @@
                     <strong>Status:</strong>
                     <span>{{ approvalList.status }}</span>
                 </div>
-                <div class="approval-list-item">
-                    <strong>Work From Home Consumed:</strong>
-                    <span style="color: orangered; font-weight: bold;">{{ userQtrReport?.wfh || 0 }}</span>
+                <div *ngIf="approvalList.comments == 'Work From Anywhere - Opted'" class="approval-list-item">
+                    <strong>WFA Type:</strong>
+                    <span>{{ approvalList.comments }} - {{approvalList.halfDayFullDay}}</span>
                 </div>
             </div>
         </div>

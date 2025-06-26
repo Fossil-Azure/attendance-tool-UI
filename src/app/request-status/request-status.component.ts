@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { concatMap, finalize, from, Observable } from 'rxjs';
+import { catchError, concatMap, finalize, from, Observable, of } from 'rxjs';
 import { ApiCallingService } from 'src/service/API/api-calling.service';
 import { LoaderService } from 'src/service/Loader/loader.service';
 import { environment } from 'src/environments/environment.prod';
@@ -16,7 +16,7 @@ interface ApprovalListResponse {
 @Component({
   selector: 'app-request-status',
   templateUrl: './request-status.component.html',
-  styleUrl: './request-status.component.css'
+  styleUrl: './request-status.component.css',
 })
 export class RequestStatusComponent {
   emailId: any;
@@ -37,8 +37,13 @@ export class RequestStatusComponent {
   filteredByList: any[] = [];
   isPermanent: any;
 
-  constructor(private loader: LoaderService, private api: ApiCallingService,
-    private http: HttpClient, private dialog: MatDialog, private router: Router) { }
+  constructor(
+    private loader: LoaderService,
+    private api: ApiCallingService,
+    private http: HttpClient,
+    private dialog: MatDialog,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loader.show();
@@ -47,25 +52,29 @@ export class RequestStatusComponent {
       const userData = JSON.parse(userDataString);
       this.emailId = userData.emailId;
       this.api.searchUserByEmail(this.emailId).subscribe({
-        next: response => {
-          this.isPermanent = response[0].permanent
+        next: (response) => {
+          this.isPermanent = response[0].permanent;
           this.admin = response[0].admin;
         },
-        error: error => console.error('Error fetching user:', error),
-        complete: () => console.log('User fetch completed.')
+        error: (error) => console.error('Error fetching user:', error),
+        complete: () => console.log('User fetch completed.'),
       });
     }
     this.getApprovalList(this.emailId).subscribe(
       (response: ApprovalListResponse) => {
         this.raisedByList = response.raisedByList;
         this.raisedToList = response.raisedToList;
-        this.filteredList = this.raisedToList.filter(item => item.status === 'Pending');
-        this.filteredByList = this.raisedByList.filter(item => item.status === 'Pending');
+        this.filteredList = this.raisedToList.filter(
+          (item) => item.status === 'Pending'
+        );
+        this.filteredByList = this.raisedByList.filter(
+          (item) => item.status === 'Pending'
+        );
         this.sortRaisedToAndByList();
         this.loader.hide();
       },
       (error) => {
-        console.error("Error fetching approval list:", error);
+        console.error('Error fetching approval list:', error);
         this.loader.hide();
       }
     );
@@ -81,85 +90,96 @@ export class RequestStatusComponent {
   }
 
   approve(item: any) {
-    item.status = "Approved";
+    let flag: string;
+    item.status = 'Approved';
+    if (item.type === 'Work From Anywhere - Opted') {
+      item.isWfhAnywhere = true;
+      flag = 'reduce';
+    } else if (item.type === 'WFA Change') {
+      flag = 'add';
+    } else {
+      item.isWfhAnywhere = false;
+    }
+    console.log('Approving item:', item);
     this.dialogRef.close();
     this.loader.show();
     this.api.updateAttendanceApproval(item).subscribe({
       next: () => {
-        if (item.type == "Leave") {
-          this.api.updateUserLeave(item.raisedBy).subscribe({
-            next: () => {
-              console.log("Leaves Updated");
-            }, error: (error) => {
-              console.error("Something went wrong: ", error);
-            }
-          })
+        if (
+          item.type === 'Work From Anywhere - Opted' ||
+          item.type === 'WFA Change'
+        ) {
+          this.api
+            .updateUserLeave(item.raisedBy, item.halfDayFullDay, flag)
+            .subscribe({
+              next: () => {
+                // Optionally handle success here
+                this.loader.hide();
+              },
+              error: (error) => {
+                console.error('Error updating user leave:', error);
+                this.loader.hide();
+              },
+              complete: () => {
+                this.refreshPage();
+                this.loader.hide();
+              },
+            });
+        } else {
+          this.refreshPage();
+          this.loader.hide();
         }
-        this.refreshPage();
       },
       error: (error) => {
-        console.error("Error during API call:", error);
+        console.error('Error during API call:', error);
         this.loader.hide();
-      }
-    })
+      },
+    });
   }
 
   reject(item: any) {
-    item.status = "Rejected";
+    item.status = 'Rejected';
     this.dialogRef.close();
     this.loader.show();
     this.api.updateAttendanceApproval(item).subscribe({
       next: () => {
-        this.loader.hide()
+        this.loader.hide();
         this.refreshPage();
       },
       error: (error) => {
-        console.error("Error during API call:", error);
+        console.error('Error during API call:', error);
         this.loader.hide();
-      }
-    })
+      },
+    });
   }
 
   revoke(item: any) {
-    item.status = "Delete";
+    item.status = 'Delete';
     this.dialogRef.close();
     this.loader.show();
     this.api.updateAttendanceApproval(item).subscribe({
       next: () => {
-        this.loader.hide()
+        this.loader.hide();
         const currentUrl = this.router.url;
-        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-          this.router.navigate([currentUrl]);
-        });
+        this.router
+          .navigateByUrl('/', { skipLocationChange: true })
+          .then(() => {
+            this.router.navigate([currentUrl]);
+          });
       },
       error: (error) => {
-        console.error("Error during API call:", error);
+        console.error('Error during API call:', error);
         this.loader.hide();
-      }
-    })
+      },
+    });
   }
 
   openReqDetails(item: any) {
-    this.loader.show();
-    const emailIds: any[] = [];
-    emailIds.push(item.raisedBy);
-
-    this.api.getQtrAttendance(emailIds, item.year, item.quarter).subscribe({
-      next: (response) => {
-        console.log('User Quarter Report:', response);
-        this.userQtrReport = response[0];
-        this.loader.hide();
-
-        this.approvalList = item;
-        this.dialogRef = this.dialog.open(this.reqDetailsPopup, {
-          panelClass: 'custom-dialog-container',
-          disableClose: true,
-          width: '800px'
-        });
-      },
-      error: () => {
-        this.loader.hide();
-      }
+    this.approvalList = item;
+    this.dialogRef = this.dialog.open(this.reqDetailsPopup, {
+      panelClass: 'custom-dialog-container',
+      disableClose: true,
+      width: '800px',
     });
   }
 
@@ -174,7 +194,7 @@ export class RequestStatusComponent {
     if (event.target.checked) {
       this.selectedItems.push(item);
     } else {
-      this.selectedItems = this.selectedItems.filter(i => i !== item);
+      this.selectedItems = this.selectedItems.filter((i) => i !== item);
     }
   }
 
@@ -187,18 +207,24 @@ export class RequestStatusComponent {
     from(this.selectedItems)
       .pipe(
         concatMap((element) => {
-          element.status = "Approved";
+          element.status = 'Approved';
+          let flag: string;
+          if (element.type === 'Work From Anywhere - Opted') {
+            element.isWfhAnywhere = true;
+            flag = 'reduce';
+          } else if (element.type === 'WFA Change') {
+            flag = 'add';
+          } else {
+            element.isWfhAnywhere = false;
+          }
+
           return this.api.updateAttendanceApproval(element).pipe(
-            concatMap(() => {
-              if (element.type === "Leave") {
-                return this.api.updateUserLeave(element.raisedBy).pipe(
-                  finalize(() => {
-                    console.log("Leaves Updated");
-                  })
-                );
-              } else {
-                return from([null]);
-              }
+            concatMap(() =>
+              this.api.updateUserLeave(element.raisedBy, element.halfDayFullDay, flag)
+            ),
+            catchError((err) => {
+              console.error('Error while processing element:', element, err);
+              return of(null);
             })
           );
         }),
@@ -209,9 +235,9 @@ export class RequestStatusComponent {
       )
       .subscribe({
         error: (error) => {
-          console.error("Error during API call:", error);
+          console.error('Error during API pipeline:', error);
           this.loader.hide();
-        }
+        },
       });
   }
 
@@ -220,7 +246,7 @@ export class RequestStatusComponent {
     from(this.selectedItems)
       .pipe(
         concatMap((element) => {
-          element.status = "Rejected";
+          element.status = 'Rejected';
           return this.api.updateAttendanceApproval(element).pipe();
         }),
         finalize(() => {
@@ -230,9 +256,9 @@ export class RequestStatusComponent {
       )
       .subscribe({
         error: (error) => {
-          console.error("Error during API call:", error);
+          console.error('Error during API call:', error);
           this.loader.hide();
-        }
+        },
       });
   }
 
@@ -266,7 +292,9 @@ export class RequestStatusComponent {
     if (this.showAll) {
       this.filteredList = this.raisedToList;
     } else {
-      this.filteredList = this.raisedToList.filter(item => item.status === 'Pending');
+      this.filteredList = this.raisedToList.filter(
+        (item) => item.status === 'Pending'
+      );
     }
   }
 
@@ -275,12 +303,14 @@ export class RequestStatusComponent {
     if (this.showAllRaised) {
       this.filteredByList = this.raisedByList;
     } else {
-      this.filteredByList = this.raisedByList.filter(item => item.status === 'Pending');
+      this.filteredByList = this.raisedByList.filter(
+        (item) => item.status === 'Pending'
+      );
     }
   }
 
   isAllSelected(): boolean {
-    return this.filteredList.every(item => this.isSelected(item));
+    return this.filteredList.every((item) => this.isSelected(item));
   }
 
   isIndeterminate(): boolean {
@@ -291,14 +321,14 @@ export class RequestStatusComponent {
   toggleSelectAll(event: any): void {
     const isChecked = event.target.checked;
     if (isChecked) {
-      this.filteredList.forEach(item => {
+      this.filteredList.forEach((item) => {
         if (item.status === 'Pending' && !this.isSelected(item)) {
           this.selectedItems.push(item);
         }
       });
     } else {
-      this.filteredList.forEach(item => {
-        this.selectedItems = this.selectedItems.filter(i => i !== item);
+      this.filteredList.forEach((item) => {
+        this.selectedItems = this.selectedItems.filter((i) => i !== item);
       });
     }
   }
