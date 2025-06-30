@@ -171,6 +171,16 @@ export class UserDashboardComponent {
   optForWFA: boolean = false;
   halfDayFullDay: string | null = null;
   halfDayOptions: string[] = ['Half Day', 'Full Day'];
+  exceptionList = [
+    'hc@fossil.com',
+    'prajput@fossil.com',
+    'bpatil@fossil.com',
+    'dn1@fossil.com',
+    'dkv@fossil.com',
+    'nrout@fossil.com',
+    'pshroff1@fossil.com',
+    'srajasekaran1@fossil.com',
+  ];
 
   constructor(
     private loader: LoaderService,
@@ -623,11 +633,23 @@ export class UserDashboardComponent {
                 this.requiresApproval = true;
               }
 
+              if (
+                this.exceptionList.includes(this.selectedUser) &&
+                approvalReasons.length === 1 &&
+                approvalReasons[0] === 'WFH on Mon/Tue/Wed/Thu'
+              ) {
+                approvalReasons.length = 0; // Clear reasons
+                this.requiresApproval = false;
+              }
+
               summary.push({
                 date: uiDateFormat,
                 attendance: attendanceType,
                 reason: approvalReasons.join(', '),
               });
+
+              console.log(summary);
+              console.log(requiresApproval);
             }
 
             this.attendanceSummary = summary;
@@ -736,6 +758,8 @@ export class UserDashboardComponent {
             allowance,
             foodAllowance
           );
+        } else if (element.reason === 'WFH on Mon/Tue/Wed/Thu') {
+          console.log('WFH on Mon/Tue/Wed/Thu');
         } else {
           await this.sendForApproval(element, year, quarter, month);
         }
@@ -759,10 +783,10 @@ export class UserDashboardComponent {
     try {
       // Wait for each API call sequentially
 
-      if(this.halfDayFullDay == null) {
+      if (this.halfDayFullDay == null) {
         this.halfDayFullDay = 'Full Day';
       }
-      
+
       await this.api
         .attendance(
           this.email,
