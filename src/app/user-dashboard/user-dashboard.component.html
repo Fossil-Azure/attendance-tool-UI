@@ -213,12 +213,7 @@
                 </td>
             </tr>
             <tr *ngFor="let entry of data.summary">
-                <td style="
-            border: 1px solid black;
-            color: 'black';
-            padding: 5px;
-            text-align: center;
-          ">
+                <td style="border: 1px solid black; color: 'black'; padding: 5px; text-align: center;">
                     {{ entry.date | date : "dd MMMM yyyy" }}
                 </td>
                 <td style="border: 1px solid black; padding: 5px; text-align: center">
@@ -316,7 +311,8 @@
             <span><strong>Default Shift - </strong>{{ defaultShift }}</span>
         </div>
         <hr />
-        <span style="color: rgb(0, 89, 255);"><strong>** If you want to opt for WORK FROM ANYWHERE then please mark the attendance using Mark Attendance button on the top right corner.</strong></span>
+        <span style="color: rgb(0, 89, 255);"><strong>** If you want to opt for WORK FROM ANYWHERE then please mark the
+                attendance using Mark Attendance button on the top right corner.</strong></span>
         <div class="shift-options">
             <ul>
                 <li><strong>Shift A - </strong> 8:00 AM to 8 PM</li>

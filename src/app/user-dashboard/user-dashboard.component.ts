@@ -308,7 +308,6 @@ export class UserDashboardComponent {
           next: (response) => {
             if (response) {
               this.attendanceData = response;
-              console.log(this.attendanceData);
               this.number = response.wfh;
               this.remaining = 13 - this.number;
               this.api
@@ -564,9 +563,28 @@ export class UserDashboardComponent {
 
             for (const date of this.selectedDates) {
               const momentDate = moment(date);
+              const today = moment().startOf('day');
               const dayOfWeek = momentDate.isoWeekday(); // 1 (Mon) to 7 (Sun)
               const formattedDate = momentDate.format('YYYY-MM-DD');
               const uiDateFormat = momentDate.format('DD-MMMM-YYYY');
+
+              // Disallow marking non-leave attendance for future dates
+              if (
+                momentDate.isAfter(today) &&
+                this.selectedAttendance !== 'Leave'
+              ) {
+                this.snackBar.open(
+                  `Cannot mark attendance for future dates unless it is Leave.`,
+                  'Close',
+                  {
+                    duration: 3000,
+                    horizontalPosition: 'center',
+                    verticalPosition: 'bottom',
+                  }
+                );
+                this.loader.hide();
+                return;
+              }
 
               const approvalReasons: string[] = [];
               let attendanceType = this.selectedAttendance;
@@ -758,8 +776,6 @@ export class UserDashboardComponent {
             allowance,
             foodAllowance
           );
-        } else if (element.reason === 'WFH on Mon/Tue/Wed/Thu') {
-          console.log('WFH on Mon/Tue/Wed/Thu');
         } else {
           await this.sendForApproval(element, year, quarter, month);
         }
@@ -853,6 +869,7 @@ export class UserDashboardComponent {
     quarter: number,
     month: number
   ) {
+    console.log('Sending for approval for date:', element.date);
     const approvalList = {
       id: this.email + element.date,
       date: element.date,
