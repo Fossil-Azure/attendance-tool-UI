@@ -47,12 +47,12 @@ export class UserFormDialogComponent {
   save() {
     if (this.userForm.invalid) return;
 
-    const formData = this.userForm.getRawValue(); // getRawValue to include disabled emailId
-    formData.emailId = formData.emailId.toLowerCase(); // Ensure email is in lowercase
+    const formData = this.userForm.getRawValue();
+    formData.emailId = formData.emailId.toLowerCase();
     formData.admin = formData.admin || false;
     formData.superAdmin = formData.superAdmin || false;
     formData.permanent = formData.permanent || false;
-    formData.leave = formData.leave || 0; // Default leave to 0 if not set
+    formData.leave = formData.leave || 0;
     formData.id = formData.emailId;
     formData.empId = '';
 

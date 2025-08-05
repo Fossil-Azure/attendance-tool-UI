@@ -9,7 +9,7 @@ import { AttendanceService } from 'src/service/Shared/attendance.service';
 @Component({
   selector: 'app-calendar-view',
   templateUrl: './calendar-view.component.html',
-  styleUrl: './calendar-view.component.css'
+  styleUrl: './calendar-view.component.css',
 })
 export class CalendarViewComponent {
   currentYear!: number;
@@ -33,14 +33,37 @@ export class CalendarViewComponent {
     9: 'September',
     10: 'October',
     11: 'November',
-    12: 'December'
+    12: 'December',
   };
   attendanceData: any[] = [];
   approvalData: any[] = [];
 
-  holidays = ['02-October-2024', '31-October-2024', '01-November-2024', '25-December-2024', '01-January-2025', '14-January-2025', '07-March-2025', '14-March-2025', '31-March-2025', '01-May-2025', '15-August-2025', '27-August-2025', '02-October-2025', '20-October-2025', '21-October-2025', '25-December-2025'];
+  holidays = [
+    '02-October-2024',
+    '31-October-2024',
+    '01-November-2024',
+    '25-December-2024',
+    '01-January-2025',
+    '14-January-2025',
+    '07-March-2025',
+    '14-March-2025',
+    '31-March-2025',
+    '01-May-2025',
+    '08-August-2025',
+    '15-August-2025',
+    '27-August-2025',
+    '02-October-2025',
+    '20-October-2025',
+    '21-October-2025',
+    '25-December-2025',
+  ];
 
-  constructor(private api: ApiCallingService, private cdr: ChangeDetectorRef, private dialog: MatDialog, private attendanceService: AttendanceService) { }
+  constructor(
+    private api: ApiCallingService,
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog,
+    private attendanceService: AttendanceService
+  ) {}
 
   async ngOnInit() {
     const userDataString = sessionStorage.getItem('user');
@@ -56,7 +79,7 @@ export class CalendarViewComponent {
       this.generateAttendanceData().then(() => {
         this.getPendingApprovalData().then(() => {
           this.generateCalendar(this.selectedYear, this.selectedMonth);
-        })
+        });
       });
     }
   }
@@ -106,7 +129,7 @@ export class CalendarViewComponent {
           date: day,
           formattedDate,
           displayDate: day.getDate(),
-          attendance: 'Pending Approval'
+          attendance: 'Pending Approval',
         });
       } else {
         // Otherwise, check the attendance data
@@ -119,7 +142,7 @@ export class CalendarViewComponent {
           formattedDate,
           displayDate: day.getDate(),
           attendance: attendanceRecord ? attendanceRecord.attendance : '',
-          wfa: attendanceRecord ? attendanceRecord.wfhAnywhere : false
+          wfa: attendanceRecord ? attendanceRecord.wfhAnywhere : false,
         });
       }
 
@@ -134,7 +157,7 @@ export class CalendarViewComponent {
     const payload = {
       emailId: this.email,
       year: this.selectedYear,
-      month: this.selectedMonth
+      month: this.selectedMonth,
     };
     return new Promise((resolve) => {
       const observer = {
@@ -145,7 +168,7 @@ export class CalendarViewComponent {
         error: (err: any) => {
           console.error('Error fetching Calendar Data', err);
           resolve(); // Resolve even if there's an error
-        }
+        },
       };
       this.api.calendarData(payload).subscribe(observer);
     });
@@ -155,7 +178,7 @@ export class CalendarViewComponent {
     const payload = {
       raisedBy: this.email,
       year: this.selectedYear,
-      month: this.selectedMonth
+      month: this.selectedMonth,
     };
     return new Promise((resolve) => {
       const observer = {
@@ -166,7 +189,7 @@ export class CalendarViewComponent {
         error: (err: any) => {
           console.error('Error fetching Calendar Data', err);
           resolve();
-        }
+        },
       };
       this.api.getPendingApprovalReq(payload).subscribe(observer);
     });
@@ -176,10 +199,10 @@ export class CalendarViewComponent {
     const isWeekend = (day: Date) => day.getDay() === 0 || day.getDay() === 6;
     const formattedDate = format(date, 'dd-MMMM-yyyy');
 
-    if ((isWeekend(date)) && !attendance) {
+    if (isWeekend(date) && !attendance) {
       return 'weekend';
-    } else if ((this.holidays.includes(formattedDate)) && !attendance) {
-      return 'public-holiday'
+    } else if (this.holidays.includes(formattedDate) && !attendance) {
+      return 'public-holiday';
     } else if (wfa) {
       return 'wfh-anywhere';
     }
@@ -203,9 +226,10 @@ export class CalendarViewComponent {
   loadDistinctYears(): Promise<void> {
     return new Promise((resolve) => {
       const observer = {
-        next: (data: string[]) => this.years = data,
-        error: (err: any) => console.error('Error fetching distinct years', err),
-        complete: () => console.log('Fetching distinct years completed')
+        next: (data: string[]) => (this.years = data),
+        error: (err: any) =>
+          console.error('Error fetching distinct years', err),
+        complete: () => console.log('Fetching distinct years completed'),
       };
       this.api.distinctYear().subscribe(observer);
       resolve();
@@ -218,7 +242,7 @@ export class CalendarViewComponent {
         this.months = data.sort((a, b) => parseInt(b) - parseInt(a));
       },
       error: (err: any) => console.error('Error fetching distinct months', err),
-      complete: () => console.log('Fetching distinct months completed')
+      complete: () => console.log('Fetching distinct months completed'),
     };
     this.api.distinctMonths().subscribe(observer);
   }
@@ -227,16 +251,16 @@ export class CalendarViewComponent {
     this.generateAttendanceData().then(() => {
       this.getPendingApprovalData().then(() => {
         this.generateCalendar(this.selectedYear, this.selectedMonth);
-      })
+      });
     });
   }
 
   refreshCalendar(selectedUser: string) {
-    this.email = selectedUser
+    this.email = selectedUser;
     this.generateAttendanceData().then(() => {
       this.getPendingApprovalData().then(() => {
         this.generateCalendar(this.selectedYear, this.selectedMonth);
-      })
+      });
     });
   }
 
@@ -248,5 +272,4 @@ export class CalendarViewComponent {
     const attendanceClass = this.getAttendanceClass(attendance, date, false);
     return ['', 'weekend', 'public-holiday'].includes(attendanceClass);
   }
-
 }

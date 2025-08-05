@@ -143,6 +143,7 @@ export class UserDashboardComponent {
     { date: '2025-03-14', name: 'Holi' },
     { date: '2025-03-31', name: 'Kutub - A - Ramzan' },
     { date: '2025-05-01', name: 'May Day' },
+    { date: '2025-08-08', name: 'GBS Office Closure' },
     { date: '2025-08-15', name: 'Independence Day' },
     { date: '2025-08-27', name: 'Ganesh Chathurthi' },
     { date: '2025-10-02', name: 'Gandhi Jayanti / Dasara' },
@@ -180,6 +181,11 @@ export class UserDashboardComponent {
     'nrout@fossil.com',
     'pshroff1@fossil.com',
     'srajasekaran1@fossil.com',
+    'pgs@fossil.com',
+    'sthotapalli@fossil.com',
+    'msakmal@fossil.com',
+    'vdivakarv@fossil.com',
+    'kmshaik@fossil.com'
   ];
 
   constructor(
@@ -520,6 +526,7 @@ export class UserDashboardComponent {
       '2025-03-14',
       '2025-03-31',
       '2025-05-01',
+      '2025-08-08',
       '2025-08-15',
       '2025-08-27',
       '2025-10-02',
