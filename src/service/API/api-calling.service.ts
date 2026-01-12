@@ -46,6 +46,7 @@ export class ApiCallingService {
   private pendingApproval = `${this.baseUrl}/pendingReq`;
   private updateUser = `${this.baseUrl}/api/super-admin/updateUser`;
   private deletedUserBaseUrl = `${this.baseUrl}/api/super-admin/deleteUser`;
+  private requestApprovalList = `${this.baseUrl}/requestApproval`;
 
   constructor(private http: HttpClient) {}
 
@@ -401,5 +402,9 @@ export class ApiCallingService {
   resetUserPassword(emailId: string, newPassword: string): Observable<any> {
     const url = `${this.baseUrl}/api/super-admin/resetPassword/${emailId}`;
     return this.http.put<any>(url, { password: newPassword });
+  }
+
+  requestApproval(payload2: { raisedBy: string; raisedTo: string; }): Observable<any> {
+    return this.http.post<any>(this.requestApprovalList, payload2);
   }
 }

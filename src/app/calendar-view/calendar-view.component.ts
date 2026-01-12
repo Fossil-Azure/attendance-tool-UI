@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { startOfMonth, endOfMonth, addDays, format } from 'date-fns';
 import moment from 'moment-timezone';
 import { ApiCallingService } from 'src/service/API/api-calling.service';
@@ -12,14 +11,14 @@ import { AttendanceService } from 'src/service/Shared/attendance.service';
   styleUrl: './calendar-view.component.css',
 })
 export class CalendarViewComponent {
-  currentYear!: number;
-  currentMonth!: number;
+  currentYear!: string;
+  currentMonth!: string;
   daysInMonth: any[] = [];
   years: string[] = [];
   months: string[] = [];
   email!: string;
-  selectedYear!: number;
-  selectedMonth!: number;
+  selectedYear!: string;
+  selectedMonth!: string;
   now!: moment.Moment;
   monthNames: { [key: string]: string } = {
     1: 'January',
@@ -39,31 +38,28 @@ export class CalendarViewComponent {
   approvalData: any[] = [];
 
   holidays = [
-    '02-October-2024',
-    '31-October-2024',
-    '01-November-2024',
-    '25-December-2024',
-    '01-January-2025',
-    '14-January-2025',
-    '07-March-2025',
-    '14-March-2025',
-    '31-March-2025',
-    '01-May-2025',
-    '08-August-2025',
-    '15-August-2025',
-    '27-August-2025',
     '02-October-2025',
     '20-October-2025',
     '21-October-2025',
     '25-December-2025',
+    '01-January-2026',
+    '15-January-2026',
+    '26-January-2026',
+    '19-March-2026',
+    '01-May-2026',
+    '28-May-2026',
+    '14-September-2026',
+    '02-October-2026',
+    '21-October-2026',
+    '09-November-2026',
+    '25-December-2026',
   ];
 
   constructor(
     private api: ApiCallingService,
     private cdr: ChangeDetectorRef,
-    private dialog: MatDialog,
     private attendanceService: AttendanceService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     const userDataString = sessionStorage.getItem('user');
@@ -86,28 +82,28 @@ export class CalendarViewComponent {
 
   isFutureDate(date: Date): boolean {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Reset time to start of the day for comparison
+    today.setHours(0, 0, 0, 0);
     const targetDate = new Date(date);
-    targetDate.setHours(0, 0, 0, 0); // Reset time for the target date
+    targetDate.setHours(0, 0, 0, 0);
+    console.log('Comparing dates:', targetDate, '>', today, '=', targetDate > today);
     return targetDate > today;
   }
 
   getCurrentYearAndMonth(): Promise<void> {
     return new Promise((resolve) => {
       this.now = moment.tz('Asia/Kolkata');
-      this.currentYear = this.now.year();
-      this.currentMonth = this.now.month() + 1;
+      this.currentYear = this.now.format('YYYY');
+      this.currentMonth = this.now.format('MM');
       resolve();
     });
   }
 
-  generateCalendar(year: number, month: number): void {
-    const startDate = startOfMonth(new Date(year, month - 1));
-    const endDate = endOfMonth(new Date(year, month - 1));
+  generateCalendar(year: string, month: string): void {
+    const startDate = startOfMonth(new Date(parseInt(year), parseInt(month) - 1));
+    const endDate = endOfMonth(new Date(parseInt(year), parseInt(month) - 1));
     const days = [];
 
-    // Calculate the leading empty days for alignment
-    const leadingEmptyDays = startDate.getDay(); // 0 for Sunday, 1 for Monday, etc.
+    const leadingEmptyDays = startDate.getDay();
     for (let i = 0; i < leadingEmptyDays; i++) {
       days.push({ empty: true });
     }
@@ -118,12 +114,10 @@ export class CalendarViewComponent {
     while (day <= endDate) {
       const formattedDate = formatDateForDB(day);
 
-      // Check if the date is in the approvalData array
       const approvalRecord = this.approvalData.find(
         (record) => record.date === formattedDate
       );
 
-      // If the date exists in approvalData, set attendance to 'Pending Approval'
       if (approvalRecord) {
         days.push({
           date: day,
@@ -132,7 +126,6 @@ export class CalendarViewComponent {
           attendance: 'Pending Approval',
         });
       } else {
-        // Otherwise, check the attendance data
         const attendanceRecord = this.attendanceData.find(
           (record) => record.date === formattedDate
         );

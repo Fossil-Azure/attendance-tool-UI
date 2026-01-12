@@ -1,0 +1,48 @@
+<header class="dialog-header">
+    <h2>Attendance Summary</h2>
+    <button mat-icon-button (click)="onCancel()">
+        <mat-icon>close</mat-icon>
+    </button>
+</header>
+
+<mat-dialog-content class="summary-content">
+    <p *ngIf="data.summary.length === 0">No attendance items to show.</p>
+
+    <div *ngIf="data.summary.length">
+        <table class="summary-table" role="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Attendance</th>
+                    <th>Reason / Approval</th>
+                    <th>Approval?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of data.summary">
+                    <td>{{ row.date }}</td>
+                    <td>{{ row.attendance }}</td>
+                    <td>{{ row.reason }}</td>
+                    <td>
+                        <mat-icon *ngIf="row.approvalRequired" aria-hidden="false"
+                            aria-label="Approval required">priority_high</mat-icon>
+                        <mat-icon *ngIf="!row.approvalRequired" aria-hidden="false"
+                            aria-label="No approval required">check_circle</mat-icon>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <div class="summary-meta">
+            <span *ngIf="data.anyApprovalsRequired" class="needs-approval">Some items require approval</span>
+            <span *ngIf="!data.anyApprovalsRequired" class="no-approval">No approvals required</span>
+        </div>
+    </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+    <button mat-stroked-button color="warn" (click)="onCancel()">Cancel</button>
+    <button mat-flat-button color="primary" (click)="onConfirm()">Confirm & Save</button>
+</mat-dialog-actions>

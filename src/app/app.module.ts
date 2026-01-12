@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
-
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -11,20 +11,11 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginPageComponent } from './login-page/login-page.component';
-import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 import { HeaderComponent } from './header/header.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { LoaderComponent } from './loader/loader.component';
 import { MatMenuModule } from '@angular/material/menu';
-import {
-  BaseChartDirective,
-  provideCharts,
-  withDefaultRegisterables,
-} from 'ng2-charts';
-import {
-  provideHttpClient,
-  withInterceptorsFromDi,
-} from '@angular/common/http';
+
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -46,10 +37,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSortModule } from '@angular/material/sort';
 import { UserFormDialogComponent } from './user-form-dialog/user-form-dialog.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { NewHomeComponent } from './new-home/new-home.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatDividerModule } from '@angular/material/divider';
+import { DatePipe } from '@angular/common';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MarkAttendanceComponent } from './mark-attendance/mark-attendance.component';
+import { SummaryDialogComponent } from './summary-dialog/summary-dialog.component';
 
 const routes: Routes = [
   { path: '', component: LoginPageComponent },
-  { path: 'user-dashboard', component: UserDashboardComponent },
   { path: 'admin-panel', component: AdminPanelComponent },
   { path: 'rest-password', component: ResetPasswordComponent },
   { path: 'edit-attendance', component: EditAttendanceComponent },
@@ -57,13 +56,13 @@ const routes: Routes = [
   { path: 'super-admin', component: SuperAdminComponent },
   { path: 'calendar-view', component: CalendarViewComponent },
   { path: 'super-admin', component: SuperAdminComponent },
+  { path: 'home', component: NewHomeComponent },
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginPageComponent,
-    UserDashboardComponent,
     HeaderComponent,
     SidenavComponent,
     LoaderComponent,
@@ -74,7 +73,10 @@ const routes: Routes = [
     SuperAdminComponent,
     CalendarViewComponent,
     SuperAdminComponent,
-    UserFormDialogComponent
+    UserFormDialogComponent,
+    NewHomeComponent,
+    MarkAttendanceComponent,
+    SummaryDialogComponent
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -89,7 +91,6 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forRoot(routes),
     MatMenuModule,
-    BaseChartDirective,
     MatDialogModule,
     MatButtonModule,
     MatDatepickerModule,
@@ -103,11 +104,17 @@ const routes: Routes = [
     MatAutocompleteModule,
     MatIconModule,
     MatSortModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    NgxChartsModule,
+    MatButtonToggleModule,
+    MatDividerModule,
+    MatToolbarModule,
+    MatTooltipModule,
   ],
   providers: [
-    provideCharts(withDefaultRegisterables()),
+    { provide: LOCALE_ID, useValue: 'en-IN' },
     provideHttpClient(withInterceptorsFromDi()),
+    DatePipe,
   ],
 })
 export class AppModule {}

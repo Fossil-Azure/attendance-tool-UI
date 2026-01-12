@@ -1,21 +1,38 @@
 <div class="sidenav">
-    <ul>
-        <li title="Home Page"><a routerLink="/user-dashboard"><mat-icon>home</mat-icon></a></li>
-        <li title="Edit Attendance"><a routerLink="/edit-attendance"><mat-icon>edit</mat-icon></a></li>
-        <li title="Manager's Dashboard" *ngIf="admin"><a routerLink="/admin-panel"><mat-icon>supervisor_account</mat-icon></a></li>
-        <li title="Approval Request" *ngIf="!admin"><a routerLink="/request-status"><mat-icon>assignment_late</mat-icon>
-            </a>
-        </li>
-        <li title="Approval Request" *ngIf="admin">
-            <a routerLink="/request-status">
-                <mat-icon [matBadge]="badgeCount > 0 ? badgeCount : null" matBadgeColor="warn"
-                    matBadgeClass="custom-badge">assignment_late</mat-icon>
-            </a>
-        </li>
-        <li title="Super Admin" *ngIf="superAdmin">
-            <a routerLink="/super-admin">
-                <mat-icon>supervised_user_circle</mat-icon>
-            </a>            
-        </li>
-    </ul>
+  <a routerLink="/home" routerLinkActive="active-link">
+    <mat-icon>home</mat-icon>
+    <span class="nav-text">Home</span>
+  </a>
+
+  <a routerLink="/edit-attendance" routerLinkActive="active-link">
+    <mat-icon>edit</mat-icon>
+    <span class="nav-text">Edit Attendance</span>
+  </a>
+
+  <a *ngIf="admin" routerLink="/admin-panel" routerLinkActive="active-link">
+    <mat-icon>supervisor_account</mat-icon>
+    <span class="nav-text">Reports</span>
+  </a>
+
+  <a *ngIf="!admin" routerLink="/request-status" routerLinkActive="active-link">
+    <mat-icon>assignment_late</mat-icon>
+    <span class="nav-text">My Requests</span>
+  </a>
+
+  <a class="nav-pill" *ngIf="admin" routerLink="/request-status" routerLinkActive="active-link">
+    <span class="icon-wrap">
+      <mat-icon> assignment_late </mat-icon>
+      <span *ngIf="badgeCount" class="badge">{{badgeCount}}</span>
+    </span>
+    <span class="nav-text">Requests</span>
+  </a>
+
+  <a
+    *ngIf="superAdmin"
+    routerLink="/super-admin"
+    routerLinkActive="active-link"
+  >
+    <mat-icon>supervised_user_circle</mat-icon>
+    <span class="nav-text">Super Admin</span>
+  </a>
 </div>

@@ -1,66 +1,117 @@
-@import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
-
 .header {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    overflow-y: hidden;
-    background-color: #5D54A4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  color: #ffffff;
+  font-family: "Raleway", sans-serif;
+  background: linear-gradient(90deg, #5d54a4 0%, #4d4488 100%);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
-.user-icon {
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0;
+
+  .brand-area {
+    display: flex;
+    align-items: center;
+    padding-right: 20px;
+    margin-right: 20px;
+    border-right: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .brand-logo {
+    height: 66px;
+    width: auto;
+    filter: brightness(0) invert(1);
+  }
+
+  .app-title-group {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+
+    .main-app-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 2px;
+    }
+
+    .app-sub-title {
+      font-size: 13px;
+      font-weight: 400;
+      color: #ffffff;
+      opacity: 0.8;
+    }
+  }
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  button[mat-icon-button] {
     color: #ffffff;
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    mat-icon {
+      font-size: 28px;
+      height: 28px;
+      width: 28px;
+    }
+  }
+}
+
+.user-menu-trigger {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 24px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .user-details {
     display: flex;
-    order: 3;
-    right: 10px;
-    font-size: 40px;
-    height: 40px;
-    width: 40px;
-    line-height: 40px;
-    cursor: pointer;
-}
-
-h1 {
-    margin: 0;
-    flex-grow: 1;
-    font-weight: bold;
-    color: #ffffff;
-}
-
-.fossilLogo {
-    width: 120px;
-    height: 25px;
-    mix-blend-mode: multiply;
-}
-
-.user-details {
-    display: flex;
-    order: 2;
     flex-direction: column;
     align-items: flex-end;
-    margin-right: 10px;
-}
+    margin-right: 12px;
+    line-height: 1.3;
+  }
 
-.description-icon {
-    color: #ffffff;
-    order: 1;
-    margin-right: 8px;
-    font-size: 40px;
-    height: 40px;
-    width: 40px;
-    line-height: 40px;
-    cursor: pointer;
-    margin-right: 25px;
-}
+  .username {
+    font-size: 15px;
+    font-weight: 700;
+  }
 
-.username,
-.role {
-    font-size: 16px;
-    color: #ffffff;
-}
-
-.role {
+  .role {
     font-size: 12px;
+    opacity: 0.8;
+  }
+
+  .user-icon {
+    font-size: 36px;
+    height: 36px;
+    width: 36px;
+  }
+}
+
+::ng-deep .mat-menu-panel {
+  margin-top: 8px;
+  .mat-menu-item {
+    line-height: 40px;
+    height: 40px;
+    mat-icon {
+      margin-right: 12px;
+      opacity: 0.7;
+    }
+  }
 }

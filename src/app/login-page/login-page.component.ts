@@ -57,7 +57,7 @@ export class LoginPageComponent {
     const auth = sessionStorage.getItem('auth');
     const reset = sessionStorage.getItem('resetFlag');
     if (auth === 'Authorized') {
-      this.router.navigateByUrl('/user-dashboard');
+      this.router.navigateByUrl('/home');
     }
 
     if (reset === 'true') {
@@ -107,7 +107,7 @@ export class LoginPageComponent {
             sessionStorage.setItem('auth', 'Authorized');
             sessionStorage.setItem('Admin', 'true')
             sessionStorage.setItem('user', JSON.stringify(response));
-            this.router.navigateByUrl("/user-dashboard")
+            this.router.navigateByUrl("/home")
             this.loader.hide();
           },
           error: (error) => {

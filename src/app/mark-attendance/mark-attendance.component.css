@@ -1,0 +1,152 @@
+.dialog-container {
+    width: 920px;
+    max-width: 95vw;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* HEADER */
+.dialog-header {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eef0f4;
+    background: #fafbff;
+}
+
+.dialog-header h2 {
+    margin: 0;
+    font-size: 1.18rem;
+    font-weight: 800;
+    color: #0f1724;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dialog-header h2::before {
+    content: "";
+    width: 6px;
+    height: 24px;
+    border-radius: 4px;
+    background: linear-gradient(180deg, #4f46e5, #7c3aed);
+    margin-right: 8px;
+    display: inline-block;
+}
+
+/* BODY */
+.dialog-body {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 20px;
+    padding: 20px;
+}
+
+/* LEFT */
+.label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.note {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: #666;
+    display: flex;
+    align-items: center;
+}
+
+.note .dot {
+    width: 8px;
+    height: 8px;
+    background: #4f46e5;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+/* SHIFT BOX */
+.shift-box {
+    margin-top: 20px;
+    border: 1px solid #eef0f4;
+    padding: 14px;
+    border-radius: 12px;
+    background: #fafaff;
+}
+
+.shift-box h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.shift-box ul {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.shift-box li {
+    font-size: 0.9rem;
+    color: #444;
+    margin-bottom: 6px;
+}
+
+/* RIGHT */
+.row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* WFA CARD */
+.wfa-card {
+    margin-top: 16px;
+    padding: 16px;
+    border: 1px solid #eef0f4;
+    border-radius: 12px;
+    background: #fdfdff;
+}
+
+.wfa-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.badges {
+    display: flex;
+    gap: 10px;
+}
+
+.badge {
+    background: #bfd4ff;
+    color: #0e5fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+}
+
+.badge.success {
+    background: #e6f9ef;
+    color: #0b8a44;
+}
+
+/* FOOTER */
+.dialog-footer {
+    padding: 14px 20px;
+    border-top: 1px solid #eef0f4;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.full {
+    width: 100%;
+    margin-top: 10px;
+}

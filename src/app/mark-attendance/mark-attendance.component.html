@@ -1,0 +1,103 @@
+<div class="dialog-container">
+    <!-- HEADER -->
+    <header class="dialog-header">
+        <h2>Mark Attendance</h2>
+        <button mat-icon-button (click)="onClose()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </header>
+
+    <!-- BODY -->
+    <div class="dialog-body">
+        <!-- LEFT SECTION -->
+        <div class="left-section">
+            <label class="label">Choose Date(s)</label>
+
+            <p-calendar [(ngModel)]="selectedDates" selectionMode="multiple" [placeholder]="'Pick dates...'"
+                [iconDisplay]="'input'" [showIcon]="true" inputId="attendanceCalendar" [style]="{ width: '100%' }"
+                [styleClass]="'att-calendar'" [minDate]="minDate" [maxDate]="maxDate" (ngModelChange)="onDateChange()"
+                [appendTo]="'body'">
+            </p-calendar>
+
+            <div class="shift-box">
+                <h3>Shift definitions</h3>
+                <ul>
+                    <li><strong>Shift A</strong> — 8:00 AM to 8:00 PM</li>
+                    <li>
+                        <strong>Shift B</strong> — Starts before 8:00 AM or ends 8:00–10:00
+                        PM
+                    </li>
+                    <li>
+                        <strong>Shift C</strong> — Extends beyond 10:00 PM up to midnight
+                    </li>
+                    <li><strong>Shift D</strong> — Extends beyond midnight</li>
+                    <li>
+                        <strong>Shift F</strong> — On-call from home (night & weekly offs)
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- RIGHT SECTION -->
+        <div class="right-section">
+            <!-- ATTENDANCE & SHIFT -->
+            <div class="row-2">
+                <mat-form-field appearance="outline">
+                    <mat-label>Attendance</mat-label>
+                    <!-- call handler when attendance changes -->
+                    <mat-select [(ngModel)]="selectedAttendance" (ngModelChange)="onAttendanceChange($event)"
+                        [disabled]="optForWFA || !selectedDates.length">
+                        <mat-option *ngFor="let o of filteredOptions" [value]="o">{{
+                            o
+                            }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Shift</mat-label>
+                    <mat-select [(ngModel)]="shift" [disabled]="!selectedDates.length || shiftDisabled">
+                        <mat-option *ngFor="let o of currentShiftOptions" [value]="o">{{ o }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <!-- WFA BOX -->
+            <div class="wfa-card">
+                <div class="wfa-header">
+                    <mat-checkbox [(ngModel)]="optForWFA" [disabled]="!selectedDates.length"
+                        (change)="onOptForWFAChange($event)">
+                        Opt for WFA
+                    </mat-checkbox>
+
+                    <div class="badges">
+                        <div class="badge">
+                            Default Shift: <strong>{{ defaultShift }}</strong>
+                        </div>
+                        <div class="badge success">
+                            WFA Balance: <strong>{{ wfhAnyWhere }}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WFA TYPE -->
+                <mat-form-field *ngIf="optForWFA" appearance="outline" class="full">
+                    <mat-label>WFA Type*</mat-label>
+                    <mat-select [(ngModel)]="halfDayFullDay">
+                        <mat-option *ngFor="let o of halfDayOptions" [value]="o">{{
+                            o
+                            }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="dialog-footer">
+        <button mat-stroked-button color="warn" (click)="onClose()">Close</button>
+        <button mat-flat-button color="primary" [disabled]="!selectedAttendance || (optForWFA && !halfDayFullDay)"
+            (click)="onSave()">
+            Save
+        </button>
+    </footer>
+</div>

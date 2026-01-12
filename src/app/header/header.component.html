@@ -1,13 +1,37 @@
 <div class="header">
-    <h1>{{ title }}</h1>
-    <mat-icon title="Feedback Form" class="description-icon" (click)="openFeedbackForm()">description</mat-icon>
-    <div class="user-details">
-        <span class="username">{{username}}</span>
-        <span class="role">{{team}}</span>
+  <div class="header-left">
+    <div class="brand-area">
+      <img
+        src="assets/logo.png"
+        alt="Fossil Group Logo"
+        class="brand-logo"
+      />
     </div>
 
-    <mat-icon class="user-icon" [matMenuTriggerFor]="userMenu" aria-label="User menu">account_circle</mat-icon>
-    <mat-menu #userMenu="matMenu">
-        <button mat-menu-item (click)="logOut()">Log out</button>
+    <div class="app-title-group">
+      <span class="main-app-title">Attendance Tracker</span>
+      <span class="app-sub-title">Digital GBS Platform</span>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <button mat-icon-button title="Feedback Form" (click)="openFeedbackForm()">
+      <mat-icon>description</mat-icon>
+    </button>
+
+    <div class="user-menu-trigger" [matMenuTriggerFor]="userMenu">
+      <div class="user-details">
+        <span class="username">{{ username }}</span>
+        <span class="role">{{ team }}</span>
+      </div>
+      <mat-icon class="user-icon">account_circle</mat-icon>
+    </div>
+
+    <mat-menu #userMenu="matMenu" xPosition="before">
+      <button mat-menu-item (click)="logOut()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Log out</span>
+      </button>
     </mat-menu>
+  </div>
 </div>

@@ -1,0 +1,153 @@
+<div class="main-container">
+  <app-loader></app-loader>
+  <app-header></app-header>
+  <div class="content-wrapper">
+    <app-sidenav></app-sidenav>
+    <div class="content">
+      <div class="calendar">
+        <mat-toolbar color="primary" class="toolbar">
+          <button mat-icon-button (click)="prev()" aria-label="Previous month">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <span class="title">{{ monthLabel }}</span>
+          <button mat-icon-button (click)="next()" aria-label="Next month">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </mat-toolbar>
+
+        <div class="calendar-card" [class.loading]="loading">
+          <div class="weekday-row">
+            <div class="weekday" *ngFor="
+                let d of ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+              ">
+              {{ d }}
+            </div>
+          </div>
+
+          <div class="weeks">
+            <div class="week" *ngFor="let row of weeks">
+              <button class="day" *ngFor="let c of row" [disabled]="!c.inCurrentMonth" [class.out]="!c.inCurrentMonth"
+                [class.weekend]="c.date.getDay() === 0 || c.date.getDay() === 6">
+                <span class="dot" [ngClass]="{
+                    office: c.status === 'office',
+                    leave: c.status === 'leave',
+                    holiday: c.status === 'Holiday',
+                    unmarked: c.status === 'unmarked',
+                    wfa: c.status === 'home' && c.wfaStatus === true,
+                    home: c.status === 'home' && c.wfaStatus === false,
+                    approvalPending: c.approvalPending === true
+                  }" (click)="onDayClick(c.date, $event)" role="button" tabindex="0">
+                  <span class="num">{{ c.date.getDate() }}</span>
+                </span>
+
+                <span class="shift" *ngIf="
+                    c.shift && c.status !== 'leave' && c.status !== 'Pending'
+                  ">
+                  {{ c.shift }}</span>
+
+                <span class="shift" *ngIf="c.shift && c.status == 'leave'">{{
+                  c.shift
+                  }}</span>
+
+                <span class="shift" *ngIf="c.status && c.status == 'Holiday'">{{
+                  c.status
+                  }}</span>
+
+                <span class="shift" *ngIf="c.status && c.status == 'Pending'">{{
+                  c.status
+                  }}</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="legend">
+            <span class="lg"><span class="k office"></span> Office</span>
+            <span class="lg"><span class="k home"></span> Home</span>
+            <span class="lg"><span class="k leave"></span> Leave</span>
+            <span class="lg"><span class="k holiday"></span> Holiday</span>
+            <span class="lg"><span class="k wfa"></span> WFA</span>
+            <span class="lg"><span class="k approvalPending"></span> Approval Pending</span>
+            <span class="lg"><span class="k unmarked"></span> Unmarked</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="data-panel">
+      <div class="panel-content">
+        <div class="summary-header">
+          <button mat-raised-button color="primary" class="mark-btn" (click)="openAttendanceDialog()">Mark
+            Attendance</button>
+        </div>
+        <div class="summary-wrapper">
+          <div class="summary-card mat-elevation-z2" role="region" aria-label="Monthly summary">
+            <div class="stats-row" aria-hidden="false">
+              <div class="stat-chip" id="wfo" role="group" aria-label="Work from Office">
+                <div class="chip-value office">{{ counts.wfo }}</div>
+                <div class="chip-label">Work From Office</div>
+              </div>
+
+              <div class="stat-chip" id="wfh" role="group" aria-label="Work from Home">
+                <div class="chip-value home">{{ counts.wfh }}</div>
+                <div class="chip-label">Work From Home</div>
+              </div>
+
+              <div class="stat-chip" id="leaves" role="group" aria-label="Leaves">
+                <div class="chip-value leave">{{ counts.leaves }}</div>
+                <div class="chip-label">Leaves Taken</div>
+              </div>
+
+              <div class="stat-chip" id="wfa" role="group" aria-label="Work from Anywhere">
+                <div class="chip-value wfa" style="color: rgb(255, 255, 255)">
+                  {{ counts.wfa }}
+                </div>
+                <div class="chip-label">Work From Anywhere</div>
+              </div>
+
+              <div class="stat-chip" id="pending" role="group" aria-label="Pending Approval">
+                <div class="chip-value approvalPending" style="color: rgb(255, 255, 255)">
+                  {{ counts.pending }}
+                </div>
+                <div class="chip-label">Approval Pending</div>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-header">Monthly Attendance Overview</div>
+
+              <div class="chart-container">
+                <ngx-charts-pie-chart [view]="[500, 300]" [results]="pieData" [doughnut]="true"
+                  [tooltipDisabled]="false" [legend]="false" [legendPosition]="LegendPosition.Right" [labels]="false"
+                  [arcWidth]="0.45" [scheme]="colorScheme" [animations]="true"></ngx-charts-pie-chart>
+
+                <div class="chart-center">
+                  {{ totalDays }}
+                  <span>Days</span>
+                </div>
+              </div>
+
+              <div class="sa-card" role="group" aria-label="Shift Allowance">
+                <div class="left">
+                  <div class="label">
+                    <span class="material-icons piggy-bank-icon" style="color: #0d47a1;">savings</span>
+                    <span class="title">Shift Allowance</span>
+                  </div>
+
+                  <div class="amount" style="color: #191919;">
+                    {{ shiftAllowance | currency : "INR" : "symbol" : "1.2-2" : "en-IN" }}
+                  </div>
+
+                  <div class="sub">Total Shift Allowance</div>
+                </div>
+
+                <div class="right">
+                  <span class="material-icons bar-chart-icon"
+                    style="color: #1e88e5; font-size: 3.5rem;">bar_chart</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
