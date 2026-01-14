@@ -81,6 +81,10 @@ export class MarkAttendanceComponent {
     '2026-12-25',
   ];
 
+  superAdminExceptionList = [
+    'ssingh@fossil.com',
+  ];
+
   exceptionList = [
     'bpatil@fossil.com',
     'dn1@fossil.com',
@@ -228,6 +232,9 @@ export class MarkAttendanceComponent {
       const approvals: string[] = [];
       let approvalRequired = false;
 
+      const isSuperAdmin = this.superAdminExceptionList.includes(
+        this.email?.toLowerCase()
+      );
 
       const isFuture = this.isFutureDate(date);
       if (isFuture && finalAttendance !== 'Leave') {
@@ -239,39 +246,34 @@ export class MarkAttendanceComponent {
         return;
       }
 
-      if ((this.isWeekend(date) || this.holiday.includes(dateKey)) && this.selectedAttendance !== 'Leave') {
-        approvals.push('Attendance on weekends/holidays');
-        approvalRequired = true;
-      } else {
-        this.snack.open(
-          'Leave on weekend or Holiday?',
-          'Close',
-          { duration: 3000 }
-        );
-        return;
-      }
-
-      if (finalAttendance === 'Work From Home') {
-        const isMonThu = this.isMonToThu(date);
-        const isExceptionUser = this.exceptionList.includes(
-          this.email?.toLowerCase()
-        );
-        if (isMonThu && !isExceptionUser) {
-          approvals.push('WFH on Mon–Thu');
+      if (!isSuperAdmin) {
+        if (this.isWeekend(date) || this.holiday.includes(dateKey)) {
+          approvals.push('Attendance on weekends/holidays');
           approvalRequired = true;
         }
-      }
 
-      if (this.optForWFA) {
-        approvals.push('Opted for WFA');
-        approvalRequired = true;
-      }
+        if (finalAttendance === 'Work From Home') {
+          const isMonThu = this.isMonToThu(date);
+          const isExceptionUser = this.exceptionList.includes(
+            this.email?.toLowerCase()
+          );
+          if (isMonThu && !isExceptionUser) {
+            approvals.push('WFH on Mon–Thu');
+            approvalRequired = true;
+          }
+        }
 
-      if ((this.shift && this.defaultShift && this.shift !== this.defaultShift) && this.selectedAttendance !== 'Leave') {
-        approvals.push(
-          `Shift change (${this.defaultShift} → ${this.shift})`
-        );
-        approvalRequired = true;
+        if (this.optForWFA) {
+          approvals.push('Opted for WFA');
+          approvalRequired = true;
+        }
+
+        if ((this.shift && this.defaultShift && this.shift !== this.defaultShift) && this.selectedAttendance !== 'Leave') {
+          approvals.push(
+            `Shift change (${this.defaultShift} → ${this.shift})`
+          );
+          approvalRequired = true;
+        }
       }
 
       const reason = approvals.length
@@ -282,7 +284,7 @@ export class MarkAttendanceComponent {
         date: `${dateKey} (${dayName})`,
         attendance: finalAttendance,
         reason,
-        approvalRequired,
+        approvalRequired: isSuperAdmin ? false : approvalRequired,
       });
     }
 
