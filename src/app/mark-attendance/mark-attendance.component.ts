@@ -236,6 +236,8 @@ export class MarkAttendanceComponent {
         this.email?.toLowerCase()
       );
 
+      // -- Disabled future date check as per new requirements --
+
       const isFuture = this.isFutureDate(date);
       if (isFuture && finalAttendance !== 'Leave') {
         this.snack.open(
@@ -376,6 +378,7 @@ export class MarkAttendanceComponent {
         type: 'AttendanceChange',
         year,
         permanent: this.permanent,
+        wfhAnywhere: this.optForWFA,
         halfDayFullDay: this.halfDayFullDay ?? 'Full Day',
       };
     };

@@ -271,6 +271,7 @@ export class ApiCallingService {
         year: data.year,
         permanent: data.permanent,
         halfDayFullDay: data.halfDayFullDay,
+        wfhAnywhere: data.wfhAnywhere
       },
       { headers, responseType: 'text' as 'json' }
     );

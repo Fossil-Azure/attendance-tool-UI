@@ -36,6 +36,7 @@ interface MonthMapEntry {
   styleUrls: ['./new-home.component.css'],
 })
 export class NewHomeComponent implements OnInit {
+
   viewDate = new Date(); // current month
   weeks: DayCell[][] = [];
   loading = false;
@@ -105,6 +106,8 @@ export class NewHomeComponent implements OnInit {
   defaultShift: any;
   wfhAnyWhere: any;
   managerId: any;
+  subOrdinateList: any[] = [];
+  selectedEmail: any;
 
   constructor(
     private api: ApiCallingService,
@@ -114,7 +117,16 @@ export class NewHomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.holidaySet = new Set(this.holidays);
-    this.load();
+    const userDataString = sessionStorage.getItem('user');
+    if (userDataString) {
+      const userData = JSON.parse(userDataString);
+      this.email = userData.emailId;
+      this.selectedEmail = this.email;
+      this.permanent = userData.permanent;
+      this.defaultShift = userData.shift;
+      this.managerId = userData.managerId;
+    }
+    this.load(this.email);
   }
 
   get monthLabel(): string {
@@ -130,7 +142,7 @@ export class NewHomeComponent implements OnInit {
       this.viewDate.getMonth() - 1,
       1
     );
-    this.load();
+    this.load(this.selectedEmail);
   }
 
   next(): void {
@@ -139,7 +151,7 @@ export class NewHomeComponent implements OnInit {
       this.viewDate.getMonth() + 1,
       1
     );
-    this.load();
+    this.load(this.selectedEmail);
   }
 
   private buildGrid(): void {
@@ -215,21 +227,13 @@ export class NewHomeComponent implements OnInit {
     this.shiftAllowance = Math.round(total * 100) / 100;
   }
 
-  private load(): void {
+  private load(emailId: string): void {
+    console.log(emailId)
     this.loading = true;
     this.loader.show();
 
-    const userDataString = sessionStorage.getItem('user');
-    if (userDataString) {
-      const userData = JSON.parse(userDataString);
-      this.email = userData.emailId;
-      this.permanent = userData.permanent;
-      this.defaultShift = userData.shift;
-      this.managerId = userData.managerId;
-    }
-
     const payload = {
-      emailId: this.email,
+      emailId: emailId || this.email,
       year: this.viewDate.getFullYear(),
       month: String(this.viewDate.getMonth() + 1).padStart(2, '0'),
     };
@@ -242,6 +246,7 @@ export class NewHomeComponent implements OnInit {
     forkJoin({
       calendar: this.api.calendarData(payload),
       requests: this.api.requestApproval(payload2),
+      subOrdinates: this.api.getListofSubOrdinates(this.email),
     }).pipe(
       finalize(() => {
         // always run on complete/error
@@ -249,7 +254,7 @@ export class NewHomeComponent implements OnInit {
         this.loader.hide();
       })
     ).subscribe({
-      next: ({ calendar, requests }) => {
+      next: ({ calendar, requests, subOrdinates }) => {
         const mapObj: Record<string, {
           wfa: boolean;
           status: AttendanceStatus | string;
@@ -313,6 +318,9 @@ export class NewHomeComponent implements OnInit {
             };
           }
         });
+
+        this.subOrdinateList = (subOrdinates as any[] || [])
+          .sort((a: any, b: any) => a.name.localeCompare(b.name));
 
         this.monthMap = mapObj;
         this.buildGrid();
@@ -445,7 +453,7 @@ export class NewHomeComponent implements OnInit {
       )
       .subscribe((result) => {
         if (result?.saved) {
-          this.load();
+          this.load(this.email);
         }
       });
   }
@@ -456,5 +464,9 @@ export class NewHomeComponent implements OnInit {
       event.preventDefault();
     }
     this.openAttendanceDialog(date);
+  }
+
+  refreshData(emailId: string) {
+    this.load(emailId);
   }
 }

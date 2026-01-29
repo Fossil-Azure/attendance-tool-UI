@@ -36,7 +36,7 @@
                     wfa: c.status === 'home' && c.wfaStatus === true,
                     home: c.status === 'home' && c.wfaStatus === false,
                     approvalPending: c.approvalPending === true
-                  }" (click)="onDayClick(c.date, $event)" role="button" tabindex="0">
+                  }" (click)="selectedEmail === email && onDayClick(c.date, $event)" role="button" tabindex="0">
                   <span class="num">{{ c.date.getDate() }}</span>
                 </span>
 
@@ -75,7 +75,18 @@
     <div class="data-panel">
       <div class="panel-content">
         <div class="summary-header">
-          <button mat-raised-button color="primary" class="mark-btn" (click)="openAttendanceDialog()">Mark
+          <mat-form-field appearance="outline">
+            <mat-label>View Attendance</mat-label>
+
+            <mat-select [(ngModel)]="selectedEmail" name="reportee" (ngModelChange)="refreshData(selectedEmail)">
+              @for (option of subOrdinateList; track option.emailId) {
+              <mat-option [value]="option.emailId">
+                {{ option.name }}
+              </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <button mat-raised-button *ngIf="selectedEmail == email" color="primary" class="mark-btn" (click)="openAttendanceDialog()">Mark
             Attendance</button>
         </div>
         <div class="summary-wrapper">

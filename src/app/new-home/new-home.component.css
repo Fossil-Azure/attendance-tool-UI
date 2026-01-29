@@ -1,13 +1,13 @@
 .content-wrapper {
   display: flex;
   flex: 1;
-  height: calc(100vh - 64px);
-  overflow-y: hidden;
+  min-height: calc(100vh - 64px);
+  overflow-y: auto;
 }
 
 .content {
-  display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   height: 100%;
   padding: 16px;
@@ -26,10 +26,10 @@
 }
 
 .calendar {
-  --cell-size: clamp(36px, 6.8vw, 84px);
+  --cell-size: clamp(36px, 5.8vw, 5.5vw);
   --gap: 6px;
   width: 100%;
-  max-width: 750px;
+  max-width: 65vw;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -51,6 +51,7 @@
 }
 
 .calendar-card {
+  max-height: 75vh;
   padding: 8px;
   width: 100%;
   box-sizing: border-box;
@@ -139,17 +140,17 @@
 }
 
 .office {
-  background: #2979FF;
+  background: #2979ff;
   color: white;
 }
 
 .home {
-  background: #1E8E6A;
+  background: #1e8e6a;
   color: white;
 }
 
 .leave {
-  background: #E53935;
+  background: #e53935;
   color: white;
 }
 
@@ -158,12 +159,12 @@
 }
 
 .wfa {
-  background: #5E35B1;
+  background: #5e35b1;
   color: white;
 }
 
 .approvalPending {
-  background: #FB8C00;
+  background: #fb8c00;
   color: white;
 }
 
@@ -223,13 +224,13 @@
 }
 
 .legend .k.office {
-  background: #2979FF;
+  background: #2979ff;
 }
 .legend .k.home {
-  background: #1E8E6A;
+  background: #1e8e6a;
 }
 .legend .k.leave {
-  background: #E53935;
+  background: #e53935;
 }
 .legend .k.unmarked {
   background: #d4d7de;
@@ -238,10 +239,10 @@
   background: #5eff00;
 }
 .legend .k.wfa {
-  background: #5E35B1;
+  background: #5e35b1;
 }
 .legend .k.approvalPending {
-  background: #FB8C00;
+  background: #fb8c00;
 }
 
 @media (max-width: 1200px) {
@@ -317,7 +318,6 @@
 .summary-header {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 12px;
 }
 
 .mark-btn {
@@ -506,6 +506,13 @@
   bottom: 28px;
 }
 
+@media (max-height: 800px), (max-width: 1100px) {
+  .sa-card.bottom-right {
+    position: static;
+    margin-top: 12px;
+  }
+}
+
 /* responsive */
 @media (max-width: 900px) {
   .sa-card {
@@ -663,4 +670,11 @@
 .mark-btn:active {
   transform: translateY(0px);
   box-shadow: 0 4px 10px rgba(79, 70, 229, 0.18);
+}
+
+@media (max-width: 1200px) {
+  .summary-card {
+    width: 100%;
+    margin: 8px;
+  }
 }
