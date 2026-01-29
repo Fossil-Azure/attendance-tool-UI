@@ -27,18 +27,18 @@ export class EditAttendanceComponent {
   email: any;
   team: any;
   monthNames: { [key: string]: string } = {
-    1: 'January',
-    2: 'February',
-    3: 'March',
-    4: 'April',
-    5: 'May',
-    6: 'June',
-    7: 'July',
-    8: 'August',
-    9: 'September',
-    10: 'October',
-    11: 'November',
-    12: 'December'
+    '01': 'January',
+    '02': 'February',
+    '03': 'March',
+    '04': 'April',
+    '05': 'May',
+    '06': 'June',
+    '07': 'July',
+    '08': 'August',
+    '09': 'September',
+    '10': 'October',
+    '11': 'November',
+    '12': 'December'
   };
   attendanceData: any;
   detailedAttendanceData: any;
@@ -99,7 +99,7 @@ export class EditAttendanceComponent {
       this.now = moment.tz('Asia/Kolkata');
       this.currentYear = this.now.year();
       this.currentQuarter = this.now.quarter();
-      this.currentMonth = this.now.month() + 1;
+      this.currentMonth = this.now.format('MM');
       this.time = this.now.format("DD-MMMM-YYYY HH:mm:ss");
       resolve();
     });
@@ -131,16 +131,16 @@ export class EditAttendanceComponent {
   openDetailedAttendance() {
     this.loader.show();
     let qtr;
-    if (this.selectedMonth == 1 || this.selectedMonth == 2 || this.selectedMonth == 3) {
+    if (this.selectedMonth == '01' || this.selectedMonth == '02' || this.selectedMonth == '03') {
       qtr = 1;
-    } else if (this.selectedMonth == 4 || this.selectedMonth == 5 || this.selectedMonth == 6) {
+    } else if (this.selectedMonth == '04' || this.selectedMonth == '05' || this.selectedMonth == '06') {
       qtr = 2;
-    } else if (this.selectedMonth == 7 || this.selectedMonth == 8 || this.selectedMonth == 9) {
+    } else if (this.selectedMonth == '07' || this.selectedMonth == '08' || this.selectedMonth == '09') {
       qtr = 3;
-    } else if (this.selectedMonth == 10 || this.selectedMonth == 11 || this.selectedMonth == 12) {
+    } else if (this.selectedMonth == '10' || this.selectedMonth == '11' || this.selectedMonth == '12') {
       qtr = 4;
     }
-    this.api.getDetailedAttendance(this.email, this.currentYear.toString(), "Q" + qtr, this.selectedMonth).subscribe({
+    this.api.getDetailedAttendance(this.email, this.selectedYear.toString(), "Q" + qtr, this.selectedMonth).subscribe({
       next: (response) => {
         this.detailedAttendanceData = response;
         this.sortData('date')
@@ -196,7 +196,7 @@ export class EditAttendanceComponent {
       this.isWfa = false;
     }
 
-    if( item.halfDayOrFullDay === 'Half Day') {
+    if (item.halfDayOrFullDay === 'Half Day') {
       this.halfDayFullDay = 'Half Day';
     } else {
       this.halfDayFullDay = 'Full Day';
@@ -250,14 +250,14 @@ export class EditAttendanceComponent {
     const selDate = moment(this.popUpDate);
     const year = selDate.year();
     const quarter = selDate.quarter();
-    const month = selDate.month();
+    const month = selDate.format('MM');
 
     const approvalList = {
       id: this.email + formattedDate,
       date: formattedDate,
       year: year.toString(),
       quarter: "Q" + quarter,
-      month: (month + 1).toString(),
+      month: month,
       raisedBy: this.email,
       name: this.username,
       raisedTo: this.managerId,

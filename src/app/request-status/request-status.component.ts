@@ -43,7 +43,7 @@ export class RequestStatusComponent {
     private http: HttpClient,
     private dialog: MatDialog,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loader.show();
@@ -92,7 +92,7 @@ export class RequestStatusComponent {
   approve(item: any) {
     let flag: string;
     item.status = 'Approved';
-    if (item.type === 'Work From Anywhere - Opted') {
+    if (item.wfhAnywhere) {
       item.isWfhAnywhere = true;
       flag = 'reduce';
     } else if (item.type === 'WFA Change') {
@@ -100,13 +100,12 @@ export class RequestStatusComponent {
     } else {
       item.isWfhAnywhere = false;
     }
-    console.log('Approving item:', item);
     this.dialogRef.close();
     this.loader.show();
     this.api.updateAttendanceApproval(item).subscribe({
       next: () => {
         if (
-          item.type === 'Work From Anywhere - Opted' ||
+          item.wfhAnywhere ||
           item.type === 'WFA Change'
         ) {
           this.api
@@ -209,7 +208,7 @@ export class RequestStatusComponent {
         concatMap((element) => {
           element.status = 'Approved';
           let flag: string;
-          if (element.type === 'Work From Anywhere - Opted') {
+          if (element.wfhAnywhere) {
             element.isWfhAnywhere = true;
             flag = 'reduce';
           } else if (element.type === 'WFA Change') {
