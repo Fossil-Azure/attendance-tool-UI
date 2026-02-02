@@ -186,7 +186,6 @@ export class EditAttendanceComponent {
     this.textComment = "";
     this.popUpDate = this.parseDateString(item.date);
 
-    const week = this.getDayOfWeek(this.popUpDate);
     this.popUpAttendance = item.attendance;
     this.oldPopUpAttendance = this.popUpAttendance;
 
@@ -204,11 +203,8 @@ export class EditAttendanceComponent {
 
     this.popUpShift = item.shift;
     this.oldPopUpShift = this.popUpShift;
-    if (week === 'Friday' && !this.isWfa) {
-      this.options = ['Work From Home - Friday', 'Work From Office - Friday', 'Leave'];
-    } else {
-      this.options = ['Work From Office', 'Work From Home', 'Leave'];
-    }
+
+    this.options = ['Work From Office', 'Work From Home', 'Leave'];
 
     if (item.attendance == 'Leave') {
       this.shiftOptions = ['Absent']

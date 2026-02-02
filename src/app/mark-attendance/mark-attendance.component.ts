@@ -385,7 +385,7 @@ export class MarkAttendanceComponent {
 
     const approvalCalls: any[] = [];
     const saveCalls: any[] = [];
-
+    const now = new Date().toLocaleString();
     for (const s of summary) {
       const attendanceNormalized = normalizeAttendance(s.attendance);
       const { year, quarter, month } = this.extractYearQuarterMonth(s.date);
@@ -404,7 +404,7 @@ export class MarkAttendanceComponent {
           this.api.attendance(
             this.email, this.email, this.formatPrettyDate(s.date),
             s.attendance, year, quarter, month,
-            this.email, "", shiftForItem,
+            this.email, now, shiftForItem,
             allowance, foodAllowance,
             this.optForWFA, this.halfDayFullDay
           ).pipe(
