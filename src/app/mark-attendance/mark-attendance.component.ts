@@ -76,13 +76,14 @@ export class MarkAttendanceComponent {
     '2026-05-28',
     '2026-09-14',
     '2026-10-02',
-    '2026-10-21',
+    '2026-10-20',
     '2026-11-09',
     '2026-12-25',
   ];
 
   superAdminExceptionList = [
     'ssingh@fossil.com',
+    'anshika@fossil.com'
   ];
 
   exceptionList = [

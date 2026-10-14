@@ -50,7 +50,7 @@ export class CalendarViewComponent {
     '28-May-2026',
     '14-September-2026',
     '02-October-2026',
-    '21-October-2026',
+    '20-October-2026',
     '09-November-2026',
     '25-December-2026',
   ];

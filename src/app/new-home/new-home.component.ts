@@ -76,7 +76,7 @@ export class NewHomeComponent implements OnInit {
     '2026-05-28',
     '2026-09-14',
     '2026-10-02',
-    '2026-10-21',
+    '2026-10-20',
     '2026-11-09',
     '2026-12-25',
   ];
@@ -160,7 +160,10 @@ export class NewHomeComponent implements OnInit {
 
     const first = new Date(y, m, 1);
     const start = new Date(first);
-    start.setDate(first.getDate() - ((first.getDay() + 6) % 7));
+
+    // CHANGED: Subtracting first.getDay() directly defaults to a Sunday start
+    start.setDate(first.getDate() - first.getDay());
+
     const startMs = start.getTime();
     this.weeks = [];
     this.computeMonthStats();
